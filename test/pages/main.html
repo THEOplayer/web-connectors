@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Connector test page</title>
+        <link rel="stylesheet" type="text/css" href="/local/ui.css" />
+        <script src="/local/THEOplayer.js"></script>
+        <script src="/dist/bundle/connector_yospace_web-latest.js"></script>
+    </head>
+    <body>
+        <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+        <script type="text/javascript">
+            const element = document.querySelector("#THEOplayer");
+            const player = new THEOplayer.Player(element, {
+                ui: {
+                    fluid: true
+                },
+                libraryLocation: "/local/"
+            });
+
+            //
+            // Add your connector setup logic here
+            //
+
+            // Set a source that works with your connector
+            player.source = {
+                sources: [{ src: "insert manifest url here" }]
+            };
+        </script>
+    </body>
+</html>
