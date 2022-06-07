@@ -26,6 +26,7 @@
     "import/no-unresolved": 1,
     "no-shadow": "off",
     "no-use-before-define": 0,
+    "max-classes-per-file": ["error", 5],
     "@typescript-eslint/no-unused-vars": ["warn", {"argsIgnorePattern": "^_"}],
     "@typescript-eslint/no-shadow": 1
   },
