@@ -5,7 +5,6 @@ A connector implementing Yospace for web.
 ## Getting started
 
 -   `npm install`
--   Add the declaration file `THEOplayer.d.ts` with all exported TypeScript types as `src/THEOplayer.d.ts`.
 
 ## Testing and code quality
 
