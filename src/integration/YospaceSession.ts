@@ -7,6 +7,7 @@ import {ResultCode, SessionResult, YospaceSessionManager} from "../yospace/Yospa
 import {YospaceWindow} from "../yospace/YospaceWindow";
 import {YospaceAdHandler} from "./YospaceAdHandler";
 import {YospaceUiHandler} from "./YospaceUIHandler";
+import {YospaceID3MetadataHandler} from "./YospaceID3MetadataHandler";
 
 export class YospaceManager {
     private readonly player: ChromelessPlayer
@@ -14,6 +15,8 @@ export class YospaceManager {
     private yospaceSessionManager: YospaceSessionManager | undefined;
 
     private adHandler: YospaceAdHandler | undefined;
+
+    private id3MetadataHandler: YospaceID3MetadataHandler | undefined;
 
     private sourceDescription: SourceDescription | undefined;
 
@@ -79,6 +82,8 @@ export class YospaceManager {
         this.addEventListenersToNotifyYospace();
         if (!this.needsTimedMetadata) {
             this.playbackPositionUpdater = setInterval(this.updateYospaceWithPlaybackPosition, 250);
+        } else {
+            this.id3MetadataHandler = new YospaceID3MetadataHandler(this.player.textTracks, sessionManager);
         }
     }
 
@@ -202,6 +207,8 @@ export class YospaceManager {
 
         this.adHandler?.reset();
         this.adHandler = undefined;
+        this.id3MetadataHandler?.reset();
+        this.id3MetadataHandler = undefined;
         this.yospaceTypedSource = undefined;
         this.yospaceSessionManager = undefined;
         this.needsTimedMetadata = false;
