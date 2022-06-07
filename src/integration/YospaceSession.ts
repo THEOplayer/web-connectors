@@ -5,11 +5,14 @@ import {PlayerEvent} from "../yospace/PlayerEvent";
 import {toSources} from "../utils/SourceUtils";
 import {ResultCode, SessionResult, YospaceSessionManager} from "../yospace/YospaceSessionManager";
 import {YospaceWindow} from "../yospace/YospaceWindow";
+import {YospaceAdHandler} from "./YospaceAdHandler";
 
 export class YospaceManager {
     private readonly player: ChromelessPlayer
 
     private yospaceSessionManager: YospaceSessionManager | undefined;
+
+    private adHandler: YospaceAdHandler | undefined;
 
     private sourceDescription: SourceDescription | undefined;
 
@@ -69,6 +72,7 @@ export class YospaceManager {
 
     private initialiseSession(sessionManager: YospaceSessionManager) {
         this.yospaceSessionManager = sessionManager;
+        this.adHandler = new YospaceAdHandler(sessionManager);
         this.addEventListenersToNotifyYospace();
         if (!this.needsTimedMetadata) {
             this.playbackPositionUpdater = setInterval(this.updateYospaceWithPlaybackPosition, 250);
@@ -195,6 +199,7 @@ export class YospaceManager {
 
         this.yospaceTypedSource = undefined;
         this.yospaceSessionManager = undefined;
+        this.adHandler = undefined;
         this.needsTimedMetadata = false;
         this.isMuted = false;
         this.isStalling = false;
