@@ -36,10 +36,10 @@ export class YospaceAdHandler {
      */
     private initialiseAdSession(): void {
         const callbackObject: AnalyticEventObserver = {
-            onAdvertBreakEarlyReturn: (adBreak: AdBreak) => {
+            onAdvertBreakEarlyReturn: (_adBreak: AdBreak) => {
                 // No operation.
             },
-            onAdvertBreakStart: (adBreak: AdBreak) => {
+            onAdvertBreakStart: (_adBreak: AdBreak) => {
                 // No operation.
             },
             onAdvertBreakEnd: () => {
@@ -58,7 +58,7 @@ export class YospaceAdHandler {
             onAnalyticUpdate: () => {
                 // No operation.
             },
-            onTrackingEvent: (type: string) => {
+            onTrackingEvent: (_type: string) => {
                 // No operation.
             }
         }
