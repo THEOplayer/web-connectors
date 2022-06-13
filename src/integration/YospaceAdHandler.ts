@@ -1,22 +1,33 @@
+import {ChromelessPlayer} from "theoplayer";
 import {AnalyticEventObserver} from "../yospace/AnalyticEventObserver";
 import {AdBreak, AdVert, ResourceType} from "../yospace/AdBreak";
-import {YospaceSessionManager} from "../yospace/YospaceSessionManager";
 import {YospaceUiHandler} from "./YospaceUIHandler";
 import {YoSpaceLinearAd, YoSpaceNonLinearAd} from "./YospaceAd";
+import {YospaceManager} from "./YospaceSession";
 
 export class YospaceAdHandler {
 
-    private sessionManager: YospaceSessionManager;
+    private yospaceManager: YospaceManager;
 
     private uiHandler: YospaceUiHandler;
 
-    constructor(sessionManager: YospaceSessionManager, uiHandler: YospaceUiHandler) {
-        this.sessionManager = sessionManager;
+    private player: ChromelessPlayer;
+
+    private advertStartListener: (() => void | undefined) | undefined;
+
+    constructor(yospaceManager: YospaceManager, uiHandler: YospaceUiHandler, player: ChromelessPlayer) {
+        this.yospaceManager = yospaceManager;
         this.uiHandler = uiHandler;
+        this.player = player;
         this.initialiseAdSession();
     }
 
     private onAdvertStart(advert: AdVert) {
+        if (this.advertStartListener) {
+            this.player.removeEventListener('play', this.advertStartListener);
+            this.advertStartListener = undefined;
+        }
+
         const linearCreative = advert.getLinearCreative();
         if (linearCreative) {
             this.uiHandler.createLinearClickThrough(new YoSpaceLinearAd(linearCreative.getClickThroughUrl()));
@@ -46,7 +57,12 @@ export class YospaceAdHandler {
                 // No operation.
             },
             onAdvertStart: (advert: AdVert) => {
-                this.onAdvertStart(advert);
+                if (this.yospaceManager.startedPlaying) {
+                    this.onAdvertStart(advert);
+                } else {
+                    this.advertStartListener = () => { this.onAdvertStart(advert); }
+                    this.player.addEventListener('play', this.advertStartListener);
+                }
             },
             onAdvertEnd: () => {
                 // Function gets called at the end of each advert within a break.
@@ -62,7 +78,7 @@ export class YospaceAdHandler {
                 // No operation.
             }
         }
-        this.sessionManager.addAnalyticObserver(callbackObject);
+        this.yospaceManager.sessionManager?.addAnalyticObserver(callbackObject);
     }
 
     reset(): void {

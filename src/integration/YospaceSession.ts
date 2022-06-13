@@ -46,6 +46,10 @@ export class YospaceManager {
         return this.yospaceSessionManager;
     }
 
+    get startedPlaying(): boolean {
+        return this.didFirstPlay;
+    }
+
     async createYospaceSource(sourceDescription: SourceDescription): Promise<void> {
         this.yospaceSourceDescriptionDefined.abort();
         this.yospaceSourceDescriptionDefined = new PromiseController<void>();
@@ -83,7 +87,7 @@ export class YospaceManager {
         this.yospaceSessionManager = sessionManager;
 
         const yospaceUiHandler = new YospaceUiHandler(this.player.element, sessionManager);
-        this.adHandler = new YospaceAdHandler(sessionManager, yospaceUiHandler);
+        this.adHandler = new YospaceAdHandler(this, yospaceUiHandler, this.player);
         this.addEventListenersToNotifyYospace();
         if (!this.needsTimedMetadata) {
             this.playbackPositionUpdater = setInterval(this.updateYospaceWithPlaybackPosition, 250);
@@ -220,5 +224,6 @@ export class YospaceManager {
         this.needsTimedMetadata = false;
         this.isMuted = false;
         this.isStalling = false;
+        this.didFirstPlay = false;
     }
 }
