@@ -27,6 +27,8 @@ export class YospaceManager {
 
     private yospaceSourceDescriptionDefined: PromiseController<void>;
 
+    private didFirstPlay: boolean = false;
+
     private isMuted: boolean = false;
 
     private isStalling: boolean = false;
@@ -143,7 +145,7 @@ export class YospaceManager {
 
     private addEventListenersToNotifyYospace = () => {
         this.player.addEventListener('volumechange', this.handleVolumeChange);
-        this.player.addEventListener('play', this.handleFirstPlay);
+        this.player.addEventListener('play', this.handlePlay);
         this.player.addEventListener('ended', this.handleEnded);
         this.player.addEventListener('pause', this.handlePause);
         this.player.addEventListener('seeked', this.handleSeeked);
@@ -153,8 +155,7 @@ export class YospaceManager {
 
     private removeEventListenersToNotifyYospace = () => {
         this.player.removeEventListener('volumechange', this.handleVolumeChange);
-        this.player.removeEventListener('play', this.handleFirstPlay);
-        this.player.removeEventListener('play', this.handleResume);
+        this.player.removeEventListener('play', this.handlePlay);
         this.player.removeEventListener('ended', this.handleEnded);
         this.player.removeEventListener('pause', this.handlePause);
         this.player.removeEventListener('seeked', this.handleSeeked);
@@ -170,13 +171,12 @@ export class YospaceManager {
         }
     };
 
-    private handleFirstPlay = () => {
-        this.player.removeEventListener('play', this.handleFirstPlay);
-        this.player.addEventListener('play', this.handleResume);
-        this.sessionManager?.onPlayerEvent(PlayerEvent.START, this.player.currentTime);
-    };
-
-    private handleResume = () => {
+    private handlePlay = () => {
+        if (!this.didFirstPlay) {
+            this.didFirstPlay = true;
+            this.sessionManager?.onPlayerEvent(PlayerEvent.START, this.player.currentTime);
+            return;
+        }
         this.sessionManager?.onPlayerEvent(PlayerEvent.RESUME, this.player.currentTime);
     };
 
