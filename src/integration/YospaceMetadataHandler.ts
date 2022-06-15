@@ -1,4 +1,6 @@
 import {AddTrackEvent, TextTrack, TextTrackCue, TextTrackCueChangeEvent, TextTracksList} from 'theoplayer';
+import {YospaceWindow} from "../yospace/YospaceWindow";
+import {YospaceSessionManager} from "../yospace/YospaceSessionManager";
 
 export interface YospaceMetadata {
     YMID: string;
@@ -6,16 +8,20 @@ export interface YospaceMetadata {
     YTYP: string;
     YDUR: string;
     YCSP: string;
+    startTime: number;
 }
 
 export type YospaceReport = Partial<YospaceMetadata>;
 
 export abstract class YospaceMetadataHandler {
 
-   private textTrackList: TextTracksList;
+    private textTrackList: TextTracksList;
 
-    protected constructor(textTrackList: TextTracksList) {
+    private sessionManager: YospaceSessionManager;
+
+    constructor(textTrackList: TextTracksList, session: YospaceSessionManager) {
         this.textTrackList = textTrackList;
+        this.sessionManager = session;
         this.textTrackList.addEventListener('addtrack', this.handleAddTrack);
     }
 
@@ -35,6 +41,14 @@ export abstract class YospaceMetadataHandler {
     }
 
     protected abstract doHandleCueChange(cueChangeEvent: TextTrackCueChangeEvent): void;
+
+
+    protected reportData(report: YospaceReport) {
+        if (report.YMID && report.YDUR && report.YSEQ && report.YTYP && report.startTime) {
+            const timedMetadata = (window as unknown as YospaceWindow).YospaceAdManagement.TimedMetadata.createFromMetadata(report.YMID, report.YSEQ, report.YTYP, report.YDUR, report.startTime * 1000)
+            this.sessionManager.onTimedMetadata(timedMetadata);
+        }
+    }
 
     reset(): void {
         this.textTrackList.forEach((track) => track.removeEventListener('cuechange', this.handleCueChange));

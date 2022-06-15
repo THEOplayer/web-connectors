@@ -1,7 +1,5 @@
-import {EmsgCue, TextTrackCue, TextTrackCueChangeEvent, TextTracksList, YospaceId} from "theoplayer";
-import {YospaceMetadata, YospaceMetadataHandler, YospaceReport} from "./YospaceMetadataHandler";
-import {YospaceWindow} from "../yospace/YospaceWindow";
-import {YospaceSessionManager} from "../yospace/YospaceSessionManager";
+import {EmsgCue, TextTrackCue, TextTrackCueChangeEvent, YospaceId} from "theoplayer";
+import {YospaceMetadataHandler, YospaceReport} from "./YospaceMetadataHandler";
 
 export const YOSPACE_EMSG_SCHEME_ID_URI = 'urn:yospace:a:id3:2016';
 
@@ -9,7 +7,7 @@ function isValidYospaceSchemeIDURI(schemeIDURI: string): boolean {
     return schemeIDURI === YOSPACE_EMSG_SCHEME_ID_URI;
 }
 
-function parseEmsgYospaceMetadata(data: number[]): YospaceMetadata {
+function parseEmsgYospaceMetadata(data: number[]): YospaceReport {
     const emsgString = String.fromCharCode(...data);
     const parsedEmsg = emsgString.split(',');
     const result: YospaceReport = {};
@@ -17,17 +15,10 @@ function parseEmsgYospaceMetadata(data: number[]): YospaceMetadata {
         const [key, value] = metadataElement.split('=');
         result[key as YospaceId] = value;
     });
-    return result as YospaceMetadata;
+    return result;
 }
 
 export class YospaceEMSGMetadataHandler extends YospaceMetadataHandler {
-
-    private session: YospaceSessionManager;
-
-    constructor(textTrackList: TextTracksList, session: YospaceSessionManager) {
-        super(textTrackList);
-        this.session = session;
-    }
 
     protected doHandleCueChange(cueChangeEvent: TextTrackCueChangeEvent): void {
         const {track} = cueChangeEvent;
@@ -39,10 +30,9 @@ export class YospaceEMSGMetadataHandler extends YospaceMetadataHandler {
 
         for (let i = 0; i < filteredCues.length; i += i) {
             const cue = filteredCues[i];
-            const metadata: YospaceMetadata = parseEmsgYospaceMetadata(cue.content);
-            const {startTime} = cue;
-            const timedMetadata = (window as unknown as YospaceWindow).YospaceAdManagement.TimedMetadata.createFromMetadata(metadata.YMID!, metadata.YSEQ!, metadata.YTYP!, metadata.YDUR!, startTime * 1000)
-            this.session.onTimedMetadata(timedMetadata);
+            const metadata: YospaceReport = parseEmsgYospaceMetadata(cue.content);
+            metadata.startTime = cue.startTime;
+            this.reportData(metadata);
         }
     }
 
