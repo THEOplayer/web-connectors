@@ -1,4 +1,4 @@
-import {ID3Cue, ID3Frame, ID3Yospace, TextTrackCue, TextTracksList} from "theoplayer";
+import {ID3Cue, ID3Frame, ID3Yospace, TextTrackCue, TextTrackCueChangeEvent, TextTracksList} from "theoplayer";
 import {YospaceMetadataHandler, YospaceReport} from "./YospaceMetadataHandler";
 import {YospaceWindow} from "../yospace/YospaceWindow";
 import {YospaceSessionManager} from "../yospace/YospaceSessionManager";
@@ -25,15 +25,11 @@ export class YospaceID3MetadataHandler extends YospaceMetadataHandler {
         this.session = session;
     }
 
-    protected handleCueChange = (cueExitEvent: any): void => {
-        const {track} = cueExitEvent;
-        const {activeCues} = track;
-        this.reportMetadataToYospace(activeCues);
-    }
-
-    private reportMetadataToYospace(cues: ID3Cue[]): void {
-        const filteredCues = cues.filter((c: ID3Cue) => this.isCorrectCueType(c));
-        if (filteredCues.length < 5) {
+    protected doHandleCueChange(cueChangeEvent: TextTrackCueChangeEvent): void {
+        const {track} = cueChangeEvent;
+        const cues = track.activeCues;
+        const filteredCues = cues?.filter((c: TextTrackCue) => this.isCorrectCueType(c));
+        if (!filteredCues || filteredCues.length < 5) {
             return;
         }
 
@@ -56,7 +52,7 @@ export class YospaceID3MetadataHandler extends YospaceMetadataHandler {
         }
     }
 
-    protected isCorrectCueType = (cue: TextTrackCue): boolean => {
+    protected isCorrectCueType(cue: TextTrackCue): boolean {
         return cue.content.id && isID3YospaceFrame(cue.content);
     }
 }

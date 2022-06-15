@@ -29,7 +29,7 @@ export class YospaceEMSGMetadataHandler extends YospaceMetadataHandler {
         this.session = session;
     }
 
-    protected handleCueChange = (cueChangeEvent: TextTrackCueChangeEvent): void => {
+    protected doHandleCueChange(cueChangeEvent: TextTrackCueChangeEvent): void {
         const {track} = cueChangeEvent;
         const cues = track.activeCues;
         const filteredCues = cues?.filter((cue: TextTrackCue) => this.isCorrectCueType(cue));
@@ -46,7 +46,7 @@ export class YospaceEMSGMetadataHandler extends YospaceMetadataHandler {
         }
     }
 
-    protected isCorrectCueType = (cue: TextTrackCue): boolean => {
+    protected isCorrectCueType(cue: TextTrackCue): boolean {
         const emsgCue = cue as EmsgCue;
         return isValidYospaceSchemeIDURI(emsgCue.schemeIDURI);
     }

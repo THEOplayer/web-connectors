@@ -12,6 +12,7 @@
   },
   "plugins": ["@typescript-eslint", "import"],
   "rules": {
+    "class-methods-use-this": 0,
     "import/extensions": [
       "error",
       "ignorePackages",

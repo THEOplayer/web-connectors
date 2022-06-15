@@ -28,9 +28,13 @@ export abstract class YospaceMetadataHandler {
         track.addEventListener('cuechange', this.handleCueChange);
     }
 
-    protected abstract isCorrectCueType: (cue: TextTrackCue) => boolean;
+    protected abstract isCorrectCueType(cue: TextTrackCue): boolean;
 
-    protected abstract handleCueChange: (cueChangeEvent: TextTrackCueChangeEvent) => void;
+    private handleCueChange = (cueChangeEvent: TextTrackCueChangeEvent) => {
+        this.doHandleCueChange(cueChangeEvent);
+    }
+
+    protected abstract doHandleCueChange(cueChangeEvent: TextTrackCueChangeEvent): void;
 
     reset(): void {
         this.textTrackList.forEach((track) => track.removeEventListener('cuechange', this.handleCueChange));
