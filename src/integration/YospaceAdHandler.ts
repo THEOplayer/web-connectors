@@ -3,7 +3,7 @@ import {AnalyticEventObserver} from "../yospace/AnalyticEventObserver";
 import {AdBreak, AdVert, ResourceType} from "../yospace/AdBreak";
 import {YospaceUiHandler} from "./YospaceUIHandler";
 import {YoSpaceLinearAd, YoSpaceNonLinearAd} from "./YospaceAd";
-import {YospaceManager} from "./YospaceSession";
+import {YospaceManager} from "./YospaceManager";
 
 export class YospaceAdHandler {
 

@@ -1,5 +1,5 @@
 import {ChromelessPlayer, SourceDescription} from "theoplayer";
-import {YospaceManager} from "./YospaceSession";
+import {YospaceManager} from "./YospaceManager";
 
 export class YospaceIntegration {
 
