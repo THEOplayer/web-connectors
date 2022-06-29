@@ -9,6 +9,7 @@ import {YospaceAdHandler} from "./YospaceAdHandler";
 import {YospaceUiHandler} from "./YospaceUIHandler";
 import {YospaceID3MetadataHandler} from "./YospaceID3MetadataHandler";
 import {YospaceEMSGMetadataHandler} from "./YospaceEMSGMetadataHandler";
+import {SessionProperties} from "../yospace/SessionProperties";
 
 export class YospaceManager {
     private readonly player: ChromelessPlayer
@@ -50,14 +51,14 @@ export class YospaceManager {
         return this.didFirstPlay;
     }
 
-    async createYospaceSource(sourceDescription: SourceDescription): Promise<void> {
+    async createYospaceSource(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): Promise<void> {
         this.yospaceSourceDescriptionDefined.abort();
         this.yospaceSourceDescriptionDefined = new PromiseController<void>();
-        this.createSession(sourceDescription);
+        this.createSession(sourceDescription, sessionProperties);
         await this.yospaceSourceDescriptionDefined.promise;
     }
 
-    createSession(sourceDescription: SourceDescription): void {
+    createSession(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): void {
         this.reset();
 
         const {sources} = sourceDescription;
@@ -65,7 +66,7 @@ export class YospaceManager {
         this.yospaceTypedSource = sources ? toSources(sources).find(isYospaceTypedSource) : undefined;
         if (yoSpaceWebSdkIsAvailable() && this.yospaceTypedSource?.src) {
             const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement
-            const properties = new yospaceWindow.SessionProperties();
+            const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
             properties.setUserAgent(navigator.userAgent);
             switch (this.yospaceTypedSource?.ssai.streamType) {
                 case 'vod':
