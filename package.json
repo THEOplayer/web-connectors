@@ -2,8 +2,19 @@
   "name": "@theoplayer/yospace-connector-web",
   "version": "1.0.0",
   "description": "A connector implementing Yospace for web.",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/yospace-connector.umd.js",
+  "module": "dist/yospace-connector.esm.js",
+  "types": "dist/yospace-connector.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/yospace-connector.d.ts",
+      "import": "./dist/yospace-connector.esm.js",
+      "require": "./dist/yospace-connector.umd.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package": "./package.json",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "clean": "rimraf lib dist",
     "bundle": "rollup -c ./rollup.config.js",
