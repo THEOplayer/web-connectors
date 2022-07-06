@@ -20,7 +20,6 @@
   "license": "MIT",
   "files": [
     "dist/",
-    "!dist/bundle",
     "README.md",
     "package.json"
   ],
