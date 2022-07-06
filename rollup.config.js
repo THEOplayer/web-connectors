@@ -5,13 +5,13 @@ import dts from "rollup-plugin-dts";
 
 export default [{
     input: {
-        connector_yospace_web: "src/index.ts"
+        "yospace-connector": "src/index.ts"
     },
     output: [
         {
             dir: "dist",
             entryFileNames: "[name].umd.js",
-            name: "connector_yospace_web",
+            name: "THEOplayerYospaceConnector",
             format: "umd",
             globals: { THEOplayer: "THEOplayer" }
         },
@@ -36,7 +36,7 @@ export default [{
     ]
 }, {
     input: {
-        connector_yospace_web: "src/index.ts"
+        "yospace-connector": "src/index.ts"
     },
     output: [
         {

@@ -5,7 +5,7 @@
     <title>Yospace Connector Test page</title>
     <link rel="stylesheet" type="text/css" href="/local/ui.css"/>
     <script src="/local/THEOplayer.js"></script>
-    <script src="/dist/connector_yospace_web.umd.js"></script>
+    <script src="/dist/yospace-connector.umd.js"></script>
     <script type="application/javascript" src="admanagement-sdk-3.4.0.min.js"></script>
 </head>
 <body>
@@ -20,7 +20,7 @@
     });
 
     async function setupYospaceConnector(player) {
-        const yospace = new connector_yospace_web.YospaceIntegration(player);
+        const yospace = new THEOplayerYospaceConnector.YospaceIntegration(player);
         const source = {
             sources: [
                 {
