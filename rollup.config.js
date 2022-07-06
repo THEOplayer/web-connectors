@@ -14,7 +14,7 @@ const banner = `
 /**
  * @type {import("rollup").RollupOptions[]}
  */
-export default [{
+const options = [{
     input: {
         [fileName]: "src/index.ts"
     },
@@ -65,3 +65,4 @@ export default [{
         })
     ]
 }];
+export default options;
