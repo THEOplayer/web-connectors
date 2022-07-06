@@ -1,6 +1,6 @@
 export enum YospaceAdType {
-    LINEAR = 'linear',
-    NON_LINEAR = 'nonlinear'
+    LINEAR = "linear",
+    NON_LINEAR = "nonlinear"
 }
 
 export abstract class YoSpaceAd {
@@ -11,7 +11,6 @@ export abstract class YoSpaceAd {
     protected constructor(type: YospaceAdType, clickThroughUrl: string) {
         this.clickThroughUrl = clickThroughUrl;
         this.type = type;
-
     }
 }
 

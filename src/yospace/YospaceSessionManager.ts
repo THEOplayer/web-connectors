@@ -1,6 +1,6 @@
-import {PlayerEvent} from "./PlayerEvent";
-import {TimedMetadata} from "./TimedMetadata";
-import {AnalyticEventObserver} from "./AnalyticEventObserver";
+import { PlayerEvent } from "./PlayerEvent";
+import { TimedMetadata } from "./TimedMetadata";
+import { AnalyticEventObserver } from "./AnalyticEventObserver";
 
 export enum ResultCode {
     CONNECTION_ERROR = -1,
@@ -20,12 +20,12 @@ export enum SessionResult {
 export type YospaceSessionCallback = (state: SessionResult, result: ResultCode) => void;
 export type YospaceSessionManagerCreator = {
     create(url: string, properties: object, successCallback: YospaceSessionCallback): void;
-}
+};
 
 export interface YospaceSessionManager {
     getPlaybackUrl(): string;
 
-    getResultCode(): number
+    getResultCode(): number;
 
     getSessionResult(): SessionResult;
 
@@ -37,7 +37,7 @@ export interface YospaceSessionManager {
 
     onTimedMetadata(metadata: TimedMetadata): void;
 
-    addAnalyticObserver(observer: AnalyticEventObserver): void
+    addAnalyticObserver(observer: AnalyticEventObserver): void;
 
     shutdown(): void;
 }

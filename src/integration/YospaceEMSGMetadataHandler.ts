@@ -1,7 +1,7 @@
-import {EmsgCue, TextTrackCue, TextTrackCueChangeEvent, YospaceId} from "theoplayer";
-import {YospaceMetadataHandler, YospaceReport} from "./YospaceMetadataHandler";
+import { EmsgCue, TextTrackCue, TextTrackCueChangeEvent, YospaceId } from "theoplayer";
+import { YospaceMetadataHandler, YospaceReport } from "./YospaceMetadataHandler";
 
-export const YOSPACE_EMSG_SCHEME_ID_URI = 'urn:yospace:a:id3:2016';
+export const YOSPACE_EMSG_SCHEME_ID_URI = "urn:yospace:a:id3:2016";
 
 function isValidYospaceSchemeIDURI(schemeIDURI: string): boolean {
     return schemeIDURI === YOSPACE_EMSG_SCHEME_ID_URI;
@@ -9,19 +9,18 @@ function isValidYospaceSchemeIDURI(schemeIDURI: string): boolean {
 
 function parseEmsgYospaceMetadata(data: number[]): YospaceReport {
     const emsgString = String.fromCharCode(...data);
-    const parsedEmsg = emsgString.split(',');
+    const parsedEmsg = emsgString.split(",");
     const result: YospaceReport = {};
-    parsedEmsg.forEach(metadataElement => {
-        const [key, value] = metadataElement.split('=');
+    parsedEmsg.forEach((metadataElement) => {
+        const [key, value] = metadataElement.split("=");
         result[key as YospaceId] = value;
     });
     return result;
 }
 
 export class YospaceEMSGMetadataHandler extends YospaceMetadataHandler {
-
     protected doHandleCueChange(cueChangeEvent: TextTrackCueChangeEvent): void {
-        const {track} = cueChangeEvent;
+        const { track } = cueChangeEvent;
         const cues = track.activeCues;
         const filteredCues = cues?.filter((cue: TextTrackCue) => this.isCorrectCueType(cue));
         if (!filteredCues) {
@@ -40,5 +39,4 @@ export class YospaceEMSGMetadataHandler extends YospaceMetadataHandler {
         const emsgCue = cue as EmsgCue;
         return isValidYospaceSchemeIDURI(emsgCue.schemeIDURI);
     }
-
 }

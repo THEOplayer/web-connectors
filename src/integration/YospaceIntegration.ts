@@ -1,9 +1,8 @@
-import {ChromelessPlayer, SourceDescription} from "theoplayer";
-import {YospaceManager} from "./YospaceManager";
-import {SessionProperties} from "../yospace/SessionProperties";
+import { ChromelessPlayer, SourceDescription } from "theoplayer";
+import { YospaceManager } from "./YospaceManager";
+import { SessionProperties } from "../yospace/SessionProperties";
 
 export class YospaceIntegration {
-
     private player: ChromelessPlayer;
 
     private yospaceManager: YospaceManager;
@@ -19,8 +18,10 @@ export class YospaceIntegration {
      * @param sourceDescription the source that will be used to create the Yospace session.
      * @param sessionProperties the properties that will be used set to customize the Yospace session.
      */
-    async setupYospaceSession(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): Promise<void> {
+    async setupYospaceSession(
+        sourceDescription: SourceDescription,
+        sessionProperties?: SessionProperties
+    ): Promise<void> {
         await this.yospaceManager.createYospaceSource(sourceDescription, sessionProperties);
     }
-
 }

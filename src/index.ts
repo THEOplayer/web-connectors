@@ -1,1 +1,1 @@
-export {YospaceIntegration} from "./integration/YospaceIntegration";
+export { YospaceIntegration } from "./integration/YospaceIntegration";

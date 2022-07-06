@@ -1,4 +1,4 @@
-import {AdBreak, AdVert} from "./AdBreak";
+import { AdBreak, AdVert } from "./AdBreak";
 
 export interface AnalyticEventObserver {
     onAnalyticUpdate: () => void;
