@@ -6,9 +6,8 @@
   "types": "dist/src/index.d.ts",
   "scripts": {
     "clean": "rimraf lib dist",
-    "compile": "tsc --project ./tsconfig.compile.json",
     "bundle": "rollup -c ./rollup.config.js",
-    "build": "npm run clean && npm run compile && npm run bundle",
+    "build": "npm run clean && npm run bundle",
     "serve": "http-server",
     "lint": "eslint \"src/**/*.ts\" \"test*/**/*.ts\"",
     "lint:fix": "npm run lint -- --fix",
@@ -41,12 +40,13 @@
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.33.2",
+    "rollup-plugin-dts": "^4.2.2",
     "rollup-plugin-terser": "^7.0.2",
+    "theoplayer": "^3.5.0",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.0.0",
     "tslib": "^2.0.3",
-    "typescript": "^4.0.5",
-    "theoplayer": "^3.5.0"
+    "typescript": "^4.0.5"
   },
   "peerDependencies": {
     "theoplayer": "^3.5.0"
