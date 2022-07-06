@@ -2,9 +2,14 @@ import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
+import {version} from "./package.json";
 
 const fileName = "yospace-connector";
 const globalName = "THEOplayerYospaceConnector";
+const banner = `
+/**
+ * THEOplayer Yospace Connector v${version}
+ */`.trim();
 
 /**
  * @type {import("rollup").RollupOptions[]}
@@ -19,12 +24,14 @@ export default [{
             entryFileNames: "[name].umd.js",
             name: globalName,
             format: "umd",
+            banner,
             globals: { THEOplayer: "THEOplayer" }
         },
         {
             dir: "dist",
             entryFileNames: "[name].esm.js",
-            format: "esm"
+            format: "esm",
+            banner
         }
     ],
     plugins: [
@@ -47,7 +54,8 @@ export default [{
     output: [
         {
             dir: "dist",
-            format: "esm"
+            format: "esm",
+            banner
         }
     ],
     plugins: [
