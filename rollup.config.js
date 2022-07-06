@@ -24,6 +24,7 @@ const options = [{
             entryFileNames: "[name].umd.js",
             name: globalName,
             format: "umd",
+            indent: false,
             banner,
             globals: { THEOplayer: "THEOplayer" }
         },
@@ -31,6 +32,7 @@ const options = [{
             dir: "dist",
             entryFileNames: "[name].esm.js",
             format: "esm",
+            indent: false,
             banner
         }
     ],
