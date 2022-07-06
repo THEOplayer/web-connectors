@@ -55,7 +55,8 @@ export default [{
         {
             dir: "dist",
             format: "esm",
-            banner
+            banner,
+            footer: `export as namespace ${globalName};`
         }
     ],
     plugins: [
