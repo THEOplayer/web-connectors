@@ -27,9 +27,6 @@ CI will automatically verify whether the code passes all necessary quality gates
 
 ## Manual testing
 
--   Include a THEOplayer build in the root folder under `local/`. It should contain:
-    -   The THEOplayer javascript libraries e.g. `THEOplayer.js` and/or `THEOplayer.chomeless.js`. Also include any necessary worker files.
-    -   The `ui.css` file.
 -   Run `npm run serve` to start `http-server` in the root folder by running.
 -   Run `npm run build` to create the integrations library `yospace-connector.umd.js` under `dist/`.
 -   Navigate to `localhost:8080/test/pages/main.html` or add an alternative test page.
