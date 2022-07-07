@@ -2,7 +2,7 @@ import { ChromelessPlayer, SourceDescription } from "theoplayer";
 import { YospaceManager } from "./YospaceManager";
 import { SessionProperties } from "../yospace/SessionProperties";
 
-export class YospaceIntegration {
+export class YospaceConnector {
     private player: ChromelessPlayer;
 
     private yospaceManager: YospaceManager;
