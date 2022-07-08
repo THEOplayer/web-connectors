@@ -17,10 +17,12 @@ stepdefinitions:
       caches:
         - npm
       script:
-        - echo -e "$NPMRC_CONTENT" > .npmrc
         - npm ci --prefer-offline --no-audit
         - npm run build
-        - npm publish
+        - pipe: atlassian/npm-publish:0.2.0
+          variables:
+            EXTRA_ARGS: "--access public"
+            NPM_TOKEN: $NPM_TOKEN
   - publish-s3: &publish-s3
       name: Build and publish bundle to s3
       caches:
@@ -34,7 +36,7 @@ stepdefinitions:
             AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
             AWS_DEFAULT_REGION: "eu-west-1"
             S3_BUCKET: "theoplayer-cdn/connectors"
-            LOCAL_PATH: "dist/bundle"
+            LOCAL_PATH: "dist/"
 
 pipelines:
   default:
