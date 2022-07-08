@@ -14,12 +14,12 @@ export class YospaceIntegration {
     }
 
     /**
-     * Creates a yospace session and set the source of the player with the yospace source.
+     * Creates the Yospace session and sets the Yospace source from the session to the player.
      *
-     * @param sourceDescription
-     * @param sessionProperties
+     * @param sourceDescription the source that will be used to create the Yospace session.
+     * @param sessionProperties the properties that will be used set to customize the Yospace session.
      */
-    async createYospaceSource(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): Promise<void> {
+    async setupYospaceSession(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): Promise<void> {
         await this.yospaceManager.createYospaceSource(sourceDescription, sessionProperties);
     }
 
