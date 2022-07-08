@@ -1,13 +1,13 @@
-import {ID3Frame, ID3Yospace, TextTrackCue, TextTrackCueChangeEvent} from "theoplayer";
-import {YospaceMetadataHandler, YospaceReport} from "./YospaceMetadataHandler";
+import { ID3Frame, ID3Yospace, TextTrackCue, TextTrackCueChangeEvent } from "theoplayer";
+import { YospaceMetadataHandler, YospaceReport } from "./YospaceMetadataHandler";
 
 function isID3YospaceFrame(frame: ID3Frame): frame is ID3Yospace {
     switch (frame.id) {
-        case 'YMID':
-        case 'YTYP':
-        case 'YSEQ':
-        case 'YDUR':
-        case 'YCSP':
+        case "YMID":
+        case "YTYP":
+        case "YSEQ":
+        case "YDUR":
+        case "YCSP":
             return true;
         default:
             return false;
@@ -15,9 +15,8 @@ function isID3YospaceFrame(frame: ID3Frame): frame is ID3Yospace {
 }
 
 export class YospaceID3MetadataHandler extends YospaceMetadataHandler {
-
     protected doHandleCueChange(cueChangeEvent: TextTrackCueChangeEvent): void {
-        const {track} = cueChangeEvent;
+        const { track } = cueChangeEvent;
         const cues = track.activeCues;
         const filteredCues = cues?.filter((c: TextTrackCue) => this.isCorrectCueType(c));
         if (!filteredCues) {

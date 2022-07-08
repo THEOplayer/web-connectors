@@ -20,7 +20,7 @@ export interface NonLinearCreative {
 }
 
 export interface AdVert {
-    getLinearCreative(): LinearCreative
+    getLinearCreative(): LinearCreative;
 
     getNonLinearCreativesByType(type: ResourceType): NonLinearCreative[];
 }

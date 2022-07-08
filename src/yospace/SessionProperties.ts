@@ -1,5 +1,5 @@
 export interface SessionProperties {
-    new(): SessionProperties;
+    new (): SessionProperties;
 
     getAllowCorsForAnalytics(): boolean;
     getApplyEncryptedTracking(): boolean;

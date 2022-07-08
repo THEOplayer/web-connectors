@@ -1,44 +1,39 @@
 import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
-import { terser } from "rollup-plugin-terser";
+import dts from "rollup-plugin-dts";
+import {version} from "./package.json";
 
-const { version } = require("./package.json");
+const fileName = "yospace-connector";
+const globalName = "THEOplayerYospaceConnector";
+const banner = `
+/**
+ * THEOplayer Yospace Connector v${version}
+ */`.trim();
 
-export default {
+/**
+ * @type {import("rollup").RollupOptions[]}
+ */
+const options = [{
     input: {
-        connector_yospace_web: "src/index.ts"
+        [fileName]: "src/index.ts"
     },
     output: [
         {
             dir: "dist",
             entryFileNames: "[name].umd.js",
-            name: "connector_yospace_web",
+            name: globalName,
             format: "umd",
+            indent: false,
+            banner,
             globals: { THEOplayer: "THEOplayer" }
         },
         {
             dir: "dist",
             entryFileNames: "[name].esm.js",
-            format: "esm"
-        },
-        {
-            dir: "dist/bundle",
-            entryFileNames: `[name]-${version}.js`,
-            name: "connector_yospace_web",
-            format: "iife",
-            exports: "auto",
-            globals: { THEOplayer: "THEOplayer" },
-            plugins: [terser()]
-        },
-        {
-            dir: "dist/bundle",
-            entryFileNames: "[name]-latest.js",
-            name: "connector_yospace_web",
-            format: "iife",
-            exports: "auto",
-            globals: { THEOplayer: "THEOplayer" },
-            plugins: [terser()]
+            format: "esm",
+            indent: false,
+            banner
         }
     ],
     plugins: [
@@ -54,4 +49,22 @@ export default {
             include: ["src/**/*"]
         })
     ]
-};
+}, {
+    input: {
+        [fileName]: "src/index.ts"
+    },
+    output: [
+        {
+            dir: "dist",
+            format: "esm",
+            banner,
+            footer: `export as namespace ${globalName};`
+        }
+    ],
+    plugins: [
+        dts({
+            tsconfig: "tsconfig.json",
+        })
+    ]
+}];
+export default options;

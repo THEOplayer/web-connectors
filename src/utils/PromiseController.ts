@@ -27,8 +27,7 @@ export class PromiseController<T> {
     }
 
     abort(): void {
-        this.promise.catch(() => {
-        });
+        this.promise.catch(() => {});
         this.reject(new Error());
     }
 

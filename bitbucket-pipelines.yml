@@ -20,7 +20,6 @@ stepdefinitions:
         - echo -e "$NPMRC_CONTENT" > .npmrc
         - npm ci --prefer-offline --no-audit
         - npm run build
-        - mv PACKAGE_README.md README.md
         - npm publish
   - publish-s3: &publish-s3
       name: Build and publish bundle to s3
