@@ -14,11 +14,22 @@ export class YospaceAdHandler {
 
     private advertStartListener: (() => void | undefined) | undefined;
 
+    private analyticEventObservers: AnalyticEventObserver[] = [];
+
     constructor(yospaceManager: YospaceManager, uiHandler: YospaceUiHandler, player: ChromelessPlayer) {
         this.yospaceManager = yospaceManager;
         this.uiHandler = uiHandler;
         this.player = player;
         this.initialiseAdSession();
+    }
+
+    registerAnalyticEventObserver(analyticsEventObserver: AnalyticEventObserver) {
+        this.analyticEventObservers.push(analyticsEventObserver);
+    }
+
+    unregisterAnalyticEventObserver(analyticsEventObserver: AnalyticEventObserver) {
+        const index = this.analyticEventObservers.indexOf(analyticsEventObserver);
+        this.analyticEventObservers.splice(index, 1);
     }
 
     private onAdvertStart(advert: AdVert) {
@@ -48,14 +59,14 @@ export class YospaceAdHandler {
      */
     private initialiseAdSession(): void {
         const callbackObject: AnalyticEventObserver = {
-            onAdvertBreakEarlyReturn: (_adBreak: AdBreak) => {
-                // No operation.
+            onAdvertBreakEarlyReturn: (adBreak: AdBreak) => {
+                this.analyticEventObservers.forEach((observer: AnalyticEventObserver) => observer.onAdvertBreakEarlyReturn(adBreak));
             },
-            onAdvertBreakStart: (_adBreak: AdBreak) => {
-                // No operation.
+            onAdvertBreakStart: (adBreak: AdBreak) => {
+                this.analyticEventObservers.forEach((observer: AnalyticEventObserver) => observer.onAdvertBreakStart(adBreak));
             },
             onAdvertBreakEnd: () => {
-                // No operation.
+                this.analyticEventObservers.forEach((observer) => observer.onAdvertBreakEnd());
             },
             onAdvertStart: (advert: AdVert) => {
                 if (this.yospaceManager.startedPlaying) {
@@ -66,25 +77,28 @@ export class YospaceAdHandler {
                     };
                     this.player.addEventListener("play", this.advertStartListener);
                 }
+                this.analyticEventObservers.forEach((observer) => observer.onAdvertStart(advert));
             },
             onAdvertEnd: () => {
                 // Function gets called at the end of each advert within a break.
                 this.uiHandler.removeAllAds();
+                this.analyticEventObservers.forEach((observer) => observer.onAdvertEnd());
             },
             onSessionTimeout: () => {
-                // No operation.
+                this.analyticEventObservers.forEach((observer) => observer.onSessionTimeout());
             },
             onAnalyticUpdate: () => {
-                // No operation.
+                this.analyticEventObservers.forEach((observer) => observer.onAnalyticUpdate());
             },
-            onTrackingEvent: (_type: string) => {
-                // No operation.
+            onTrackingEvent: (type: string) => {
+                this.analyticEventObservers.forEach((observer) => observer.onTrackingEvent(type));
             }
         };
         this.yospaceManager.sessionManager?.addAnalyticObserver(callbackObject);
     }
 
     reset(): void {
+        this.analyticEventObservers = [];
         this.uiHandler.reset();
     }
 }

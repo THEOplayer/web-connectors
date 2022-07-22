@@ -1,6 +1,7 @@
-import { ChromelessPlayer, SourceDescription } from "theoplayer";
-import { YospaceManager } from "./YospaceManager";
-import { SessionProperties } from "../yospace/SessionProperties";
+import {ChromelessPlayer, SourceDescription} from "theoplayer";
+import {YospaceManager} from "./YospaceManager";
+import {SessionProperties} from "../yospace/SessionProperties";
+import {AnalyticEventObserver} from "../yospace/AnalyticEventObserver";
 
 export class YospaceConnector {
     private player: ChromelessPlayer;
@@ -23,5 +24,24 @@ export class YospaceConnector {
         sessionProperties?: SessionProperties
     ): Promise<void> {
         await this.yospaceManager.createYospaceSource(sourceDescription, sessionProperties);
+    }
+
+    /**
+     * Register an analytics event observer to the Yospace SDK.
+     *
+     * @param analyticEventObserver the observer that will be registered to the Yospace SDK.
+     * @throws `Error` if the session is not yet initialised.
+     */
+    registerAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
+        this.yospaceManager.registerAnalyticEventObserver(analyticEventObserver);
+    }
+
+    /**
+     * Unregister an analytics event observer from the Yospace SDK.
+     *
+     * @param analyticEventObserver the observer that will be unregistered from the Yospace SDK.
+     */
+    unregisterAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
+        this.yospaceManager.unregisterAnalyticEventObserver(analyticEventObserver);
     }
 }

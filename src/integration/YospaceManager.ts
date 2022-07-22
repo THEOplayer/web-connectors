@@ -1,15 +1,16 @@
-import { ChromelessPlayer, SourceDescription, YospaceTypedSource } from "theoplayer";
-import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from "../utils/YospaceUtils";
-import { PromiseController } from "../utils/PromiseController";
-import { PlayerEvent } from "../yospace/PlayerEvent";
-import { toSources } from "../utils/SourceUtils";
-import { ResultCode, SessionResult, YospaceSessionManager } from "../yospace/YospaceSessionManager";
-import { YospaceWindow } from "../yospace/YospaceWindow";
-import { YospaceAdHandler } from "./YospaceAdHandler";
-import { YospaceUiHandler } from "./YospaceUIHandler";
-import { YospaceID3MetadataHandler } from "./YospaceID3MetadataHandler";
-import { YospaceEMSGMetadataHandler } from "./YospaceEMSGMetadataHandler";
-import { SessionProperties } from "../yospace/SessionProperties";
+import {ChromelessPlayer, SourceDescription, YospaceTypedSource} from "theoplayer";
+import {isYospaceTypedSource, yoSpaceWebSdkIsAvailable} from "../utils/YospaceUtils";
+import {PromiseController} from "../utils/PromiseController";
+import {PlayerEvent} from "../yospace/PlayerEvent";
+import {toSources} from "../utils/SourceUtils";
+import {ResultCode, SessionResult, YospaceSessionManager} from "../yospace/YospaceSessionManager";
+import {YospaceWindow} from "../yospace/YospaceWindow";
+import {YospaceAdHandler} from "./YospaceAdHandler";
+import {YospaceUiHandler} from "./YospaceUIHandler";
+import {YospaceID3MetadataHandler} from "./YospaceID3MetadataHandler";
+import {YospaceEMSGMetadataHandler} from "./YospaceEMSGMetadataHandler";
+import {SessionProperties} from "../yospace/SessionProperties";
+import {AnalyticEventObserver} from "../yospace/AnalyticEventObserver";
 
 export class YospaceManager {
     private readonly player: ChromelessPlayer;
@@ -61,7 +62,18 @@ export class YospaceManager {
         await this.yospaceSourceDescriptionDefined.promise;
     }
 
-    createSession(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): void {
+    registerAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
+        if (!this.adHandler) {
+            throw new Error('The observer can\'t be registered because the session is not yet initialised');
+        }
+        this.adHandler.registerAnalyticEventObserver(analyticEventObserver);
+    }
+
+    unregisterAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
+        this.adHandler?.unregisterAnalyticEventObserver(analyticEventObserver);
+    }
+
+    private createSession(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): void {
         this.reset();
 
         const { sources } = sourceDescription;
