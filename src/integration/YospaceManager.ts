@@ -1,18 +1,21 @@
-import {ChromelessPlayer, SourceDescription, YospaceTypedSource} from "theoplayer";
-import {isYospaceTypedSource, yoSpaceWebSdkIsAvailable} from "../utils/YospaceUtils";
-import {PromiseController} from "../utils/PromiseController";
-import {PlayerEvent} from "../yospace/PlayerEvent";
-import {toSources} from "../utils/SourceUtils";
-import {ResultCode, SessionResult, YospaceSessionManager} from "../yospace/YospaceSessionManager";
-import {YospaceWindow} from "../yospace/YospaceWindow";
-import {YospaceAdHandler} from "./YospaceAdHandler";
-import {YospaceUiHandler} from "./YospaceUIHandler";
-import {YospaceID3MetadataHandler} from "./YospaceID3MetadataHandler";
-import {YospaceEMSGMetadataHandler} from "./YospaceEMSGMetadataHandler";
-import {SessionProperties} from "../yospace/SessionProperties";
-import {AnalyticEventObserver} from "../yospace/AnalyticEventObserver";
+import { ChromelessPlayer, SourceDescription, YospaceTypedSource } from "theoplayer";
+import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from "../utils/YospaceUtils";
+import { PromiseController } from "../utils/PromiseController";
+import { PlayerEvent } from "../yospace/PlayerEvent";
+import { toSources } from "../utils/SourceUtils";
+import { ResultCode, SessionResult, YospaceSessionManager } from "../yospace/YospaceSessionManager";
+import { YospaceWindow } from "../yospace/YospaceWindow";
+import { YospaceAdHandler } from "./YospaceAdHandler";
+import { YospaceUiHandler } from "./YospaceUIHandler";
+import { YospaceID3MetadataHandler } from "./YospaceID3MetadataHandler";
+import { YospaceEMSGMetadataHandler } from "./YospaceEMSGMetadataHandler";
+import { SessionProperties } from "../yospace/SessionProperties";
+import { AnalyticEventObserver } from "../yospace/AnalyticEventObserver";
+import { DefaultEventDispatcher } from "../utils/DefaultEventDispatcher";
+import { YospaceEventMap } from "./YospaceConnector";
+import {BaseEvent} from "../utils/event/Event";
 
-export class YospaceManager {
+export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap>{
     private readonly player: ChromelessPlayer;
 
     private yospaceSessionManager: YospaceSessionManager | undefined;
@@ -40,6 +43,7 @@ export class YospaceManager {
     private playbackPositionUpdater: any;
 
     constructor(player: ChromelessPlayer) {
+        super();
         this.player = player;
         this.yospaceSourceDescriptionDefined = new PromiseController<void>();
     }
@@ -144,6 +148,7 @@ export class YospaceManager {
                 }
             ]
         };
+        this.dispatchEvent(new BaseEvent("sessionavailable"))
         this.yospaceSourceDescriptionDefined.resolve();
     }
 
