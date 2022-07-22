@@ -1,5 +1,5 @@
-import {Event} from "./event/Event";
-import {EventDispatcher, EventMap, StringKeyOf} from "./event/EventDispatcher";
+import { Event } from "./event/Event";
+import { EventDispatcher, EventMap, StringKeyOf } from "./event/EventDispatcher";
 
 export type EventListener<TEvent extends Event = Event> = (event: TEvent) => void;
 export type EventListenerList<TEvent extends Event> = Array<EventListener<TEvent>> | EventListener<TEvent> | undefined;
@@ -19,13 +19,13 @@ export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> im
     }
 
     addEventListener<K extends StringKeyOf<TMap>>(types: K | readonly K[], listener: EventListener<TMap[K]>): void {
-        if (typeof listener !== 'function') {
+        if (typeof listener !== "function") {
             return;
         }
-        if (typeof types === 'string') {
+        if (typeof types === "string") {
             this.addSingleEventListener(types, listener);
         } else {
-            types.forEach(type => {
+            types.forEach((type) => {
                 this.addSingleEventListener(type, listener);
             });
         }
@@ -36,7 +36,7 @@ export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> im
         if (!eventListeners) {
             // Optimize case of single listener, don't allocate extra array
             this.eventListeners[type] = listener;
-        } else if (typeof eventListeners === 'function') {
+        } else if (typeof eventListeners === "function") {
             // Migrate from single listener to array of listeners
             this.eventListeners[type] = [eventListeners, listener];
         } else {
@@ -62,13 +62,13 @@ export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> im
     };
 
     removeEventListener<K extends StringKeyOf<TMap>>(types: K | readonly K[], listener: EventListener<TMap[K]>): void {
-        if (typeof listener !== 'function') {
+        if (typeof listener !== "function") {
             return;
         }
-        if (typeof types === 'string') {
+        if (typeof types === "string") {
             this.removeSingleEventListener(types, listener);
         } else {
-            types.forEach(type => {
+            types.forEach((type) => {
                 this.removeSingleEventListener(type, listener);
             });
         }
@@ -77,7 +77,7 @@ export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> im
     private removeSingleEventListener<K extends StringKeyOf<TMap>>(type: K, listener: EventListener<TMap[K]>): void {
         const eventListeners: EventListenerList<TMap[K]> = this.eventListeners[type];
         if (eventListeners) {
-            if (typeof eventListeners === 'function') {
+            if (typeof eventListeners === "function") {
                 // Remove single listener
                 if (eventListeners === listener) {
                     this.eventListeners[type] = undefined;
@@ -115,8 +115,10 @@ export function createDictionaryObject<K extends string, V>(): Record<K, V> {
     return map;
 }
 
-export function copyEventListenerList<TEvent extends Event>(list: EventListenerList<TEvent>): EventListenerList<TEvent> {
-    if (!list || typeof list === 'function') {
+export function copyEventListenerList<TEvent extends Event>(
+    list: EventListenerList<TEvent>
+): EventListenerList<TEvent> {
+    if (!list || typeof list === "function") {
         // No listeners, or single listener
         // No need to copy
         return list;
@@ -124,18 +126,21 @@ export function copyEventListenerList<TEvent extends Event>(list: EventListenerL
     // Array of listeners
     // Create a copy to handle adding/removing listeners while dispatching an event
     return list.slice();
-
 }
 
-export function callEventListenerList<TEvent extends Event>(scope: object, event: TEvent, list: EventListenerList<TEvent>): void {
+export function callEventListenerList<TEvent extends Event>(
+    scope: object,
+    event: TEvent,
+    list: EventListenerList<TEvent>
+): void {
     if (!list) {
         // No listeners
-    } else if (typeof list === 'function') {
+    } else if (typeof list === "function") {
         // Single listener
         list.call(scope, event);
     } else {
         // Array of listeners
-        list.forEach(listener => {
+        list.forEach((listener) => {
             listener.call(scope, event);
         });
     }

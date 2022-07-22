@@ -1,9 +1,9 @@
-import {ChromelessPlayer, SourceDescription} from "theoplayer";
-import {YospaceManager} from "./YospaceManager";
-import {SessionProperties} from "../yospace/SessionProperties";
-import {AnalyticEventObserver} from "../yospace/AnalyticEventObserver";
-import {EventDispatcher, EventListener, StringKeyOf} from "../utils/event/EventDispatcher";
-import {BaseEvent} from "../utils/event/Event";
+import { ChromelessPlayer, SourceDescription } from "theoplayer";
+import { YospaceManager } from "./YospaceManager";
+import { SessionProperties } from "../yospace/SessionProperties";
+import { AnalyticEventObserver } from "../yospace/AnalyticEventObserver";
+import { EventDispatcher, EventListener, StringKeyOf } from "../utils/event/EventDispatcher";
+import { BaseEvent } from "../utils/event/Event";
 
 export interface YospaceEventMap {
     /**
@@ -12,7 +12,7 @@ export interface YospaceEventMap {
     sessionavailable: BaseEvent<'sessionavailable'>;
 }
 
-export class YospaceConnector implements EventDispatcher<YospaceEventMap>{
+export class YospaceConnector implements EventDispatcher<YospaceEventMap> {
     private player: ChromelessPlayer;
 
     private yospaceManager: YospaceManager;
@@ -54,11 +54,17 @@ export class YospaceConnector implements EventDispatcher<YospaceEventMap>{
         this.yospaceManager.unregisterAnalyticEventObserver(analyticEventObserver);
     }
 
-    addEventListener<TType extends StringKeyOf<YospaceEventMap>>(type: TType[] | TType, listener: EventListener<YospaceEventMap[TType]>): void {
+    addEventListener<TType extends StringKeyOf<YospaceEventMap>>(
+        type: TType[] | TType,
+        listener: EventListener<YospaceEventMap[TType]>
+    ): void {
         this.yospaceManager.addEventListener(type, listener);
     }
 
-    removeEventListener<TType extends StringKeyOf<YospaceEventMap>>(type: TType[] | TType, listener: EventListener<YospaceEventMap[TType]>): void {
+    removeEventListener<TType extends StringKeyOf<YospaceEventMap>>(
+        type: TType[] | TType,
+        listener: EventListener<YospaceEventMap[TType]>
+    ): void {
         this.yospaceManager.removeEventListener(type, listener);
     }
 }

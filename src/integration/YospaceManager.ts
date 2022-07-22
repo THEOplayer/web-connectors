@@ -13,9 +13,9 @@ import { SessionProperties } from "../yospace/SessionProperties";
 import { AnalyticEventObserver } from "../yospace/AnalyticEventObserver";
 import { DefaultEventDispatcher } from "../utils/DefaultEventDispatcher";
 import { YospaceEventMap } from "./YospaceConnector";
-import {BaseEvent} from "../utils/event/Event";
+import { BaseEvent } from "../utils/event/Event";
 
-export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap>{
+export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private readonly player: ChromelessPlayer;
 
     private yospaceSessionManager: YospaceSessionManager | undefined;
@@ -68,7 +68,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap>{
 
     registerAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
         if (!this.adHandler) {
-            throw new Error('The observer can\'t be registered because the session is not yet initialised');
+            throw new Error("The observer can't be registered because the session is not yet initialised");
         }
         this.adHandler.registerAnalyticEventObserver(analyticEventObserver);
     }
@@ -148,7 +148,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap>{
                 }
             ]
         };
-        this.dispatchEvent(new BaseEvent("sessionavailable"))
+        this.dispatchEvent(new BaseEvent("sessionavailable"));
         this.yospaceSourceDescriptionDefined.resolve();
     }
 

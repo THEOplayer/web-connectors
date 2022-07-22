@@ -1,4 +1,4 @@
-import {Event} from "./Event";
+import { Event } from "./Event";
 
 /**
  * The keys of T which are strings.
@@ -19,7 +19,10 @@ export interface EventDispatcher<TEventMap extends EventMap<StringKeyOf<TEventMa
      * @param type - The type of the event.
      * @param listener - The callback which is executed when the event occurs.
      */
-    addEventListener<TType extends StringKeyOf<TEventMap>>(type: TType | readonly TType[], listener: EventListener<TEventMap[TType]>): void;
+    addEventListener<TType extends StringKeyOf<TEventMap>>(
+        type: TType | readonly TType[],
+        listener: EventListener<TEventMap[TType]>
+    ): void;
 
     /**
      * Remove the given listener for the given event type(s).
@@ -27,5 +30,8 @@ export interface EventDispatcher<TEventMap extends EventMap<StringKeyOf<TEventMa
      * @param type - The type of the event.
      * @param listener - The callback which will be removed.
      */
-    removeEventListener<TType extends StringKeyOf<TEventMap>>(type: TType | readonly TType[], listener: EventListener<TEventMap[TType]>): void;
+    removeEventListener<TType extends StringKeyOf<TEventMap>>(
+        type: TType | readonly TType[],
+        listener: EventListener<TEventMap[TType]>
+    ): void;
 }

@@ -60,10 +60,14 @@ export class YospaceAdHandler {
     private initialiseAdSession(): void {
         const callbackObject: AnalyticEventObserver = {
             onAdvertBreakEarlyReturn: (adBreak: AdBreak) => {
-                this.analyticEventObservers.forEach((observer: AnalyticEventObserver) => observer.onAdvertBreakEarlyReturn(adBreak));
+                this.analyticEventObservers.forEach((observer: AnalyticEventObserver) =>
+                    observer.onAdvertBreakEarlyReturn(adBreak)
+                );
             },
             onAdvertBreakStart: (adBreak: AdBreak) => {
-                this.analyticEventObservers.forEach((observer: AnalyticEventObserver) => observer.onAdvertBreakStart(adBreak));
+                this.analyticEventObservers.forEach((observer: AnalyticEventObserver) =>
+                    observer.onAdvertBreakStart(adBreak)
+                );
             },
             onAdvertBreakEnd: () => {
                 this.analyticEventObservers.forEach((observer) => observer.onAdvertBreakEnd());
