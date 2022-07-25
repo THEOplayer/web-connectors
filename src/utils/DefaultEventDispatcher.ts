@@ -146,7 +146,7 @@ export function callEventListenerList<TEvent extends Event>(
     }
 }
 
-function arrayRemove<T>(array: T[], element: T): boolean {
+export function arrayRemove<T>(array: T[], element: T): boolean {
     const index = array.indexOf(element);
     if (index === -1) {
         return false;

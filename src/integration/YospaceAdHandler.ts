@@ -4,6 +4,7 @@ import { AdBreak, AdVert, ResourceType } from "../yospace/AdBreak";
 import { YospaceUiHandler } from "./YospaceUIHandler";
 import { YoSpaceLinearAd, YoSpaceNonLinearAd } from "./YospaceAd";
 import { YospaceManager } from "./YospaceManager";
+import {arrayRemove} from "../utils/DefaultEventDispatcher";
 
 export class YospaceAdHandler {
     private yospaceManager: YospaceManager;
@@ -28,8 +29,7 @@ export class YospaceAdHandler {
     }
 
     unregisterAnalyticEventObserver(analyticsEventObserver: AnalyticEventObserver) {
-        const index = this.analyticEventObservers.indexOf(analyticsEventObserver);
-        this.analyticEventObservers.splice(index, 1);
+        arrayRemove(this.analyticEventObservers, analyticsEventObserver);
     }
 
     private onAdvertStart(advert: AdVert) {
