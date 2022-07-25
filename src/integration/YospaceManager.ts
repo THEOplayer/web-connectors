@@ -81,9 +81,10 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.reset();
 
         const { sources } = sourceDescription;
+        const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
         this.sourceDescription = sourceDescription;
         this.yospaceTypedSource = sources ? toSources(sources).find(isYospaceTypedSource) : undefined;
-        if (yoSpaceWebSdkIsAvailable() && this.yospaceTypedSource?.src) {
+        if (isYospaceSDKAvailable && this.yospaceTypedSource?.src) {
             const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
             const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
             properties.setUserAgent(navigator.userAgent);
@@ -100,6 +101,10 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
                     yospaceWindow.SessionLive.create(this.yospaceTypedSource.src, properties, this.onInitComplete);
             }
             this.isMuted = this.player.muted;
+        } else if (this.yospaceTypedSource && !isYospaceSDKAvailable) {
+            throw new Error('The Yospace Ad Management SDK has not been loaded.');
+        } else {
+            throw new Error("The given source is not a Yospace source.");
         }
     }
 
@@ -242,6 +247,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.emsgMetadataHandler = undefined;
         this.yospaceTypedSource = undefined;
         this.yospaceSessionManager = undefined;
+        this.sourceDescription = undefined;
         this.needsTimedMetadata = false;
         this.isMuted = false;
         this.isStalling = false;
