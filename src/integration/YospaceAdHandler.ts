@@ -4,7 +4,7 @@ import { AdBreak, AdVert, ResourceType } from "../yospace/AdBreak";
 import { YospaceUiHandler } from "./YospaceUIHandler";
 import { YoSpaceLinearAd, YoSpaceNonLinearAd } from "./YospaceAd";
 import { YospaceManager } from "./YospaceManager";
-import {arrayRemove} from "../utils/DefaultEventDispatcher";
+import { arrayRemove } from "../utils/DefaultEventDispatcher";
 
 export class YospaceAdHandler {
     private yospaceManager: YospaceManager;

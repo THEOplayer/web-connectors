@@ -9,7 +9,7 @@ export interface YospaceEventMap {
     /**
      * Fired when a new Yospace session starts.
      */
-    sessionavailable: BaseEvent<'sessionavailable'>;
+    sessionavailable: BaseEvent<"sessionavailable">;
 }
 
 export class YospaceConnector implements EventDispatcher<YospaceEventMap> {

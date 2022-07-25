@@ -102,7 +102,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
             }
             this.isMuted = this.player.muted;
         } else if (this.yospaceTypedSource && !isYospaceSDKAvailable) {
-            throw new Error('The Yospace Ad Management SDK has not been loaded.');
+            throw new Error("The Yospace Ad Management SDK has not been loaded.");
         } else {
             throw new Error("The given source is not a Yospace source.");
         }
