@@ -10,8 +10,12 @@ import { YospaceUiHandler } from "./YospaceUIHandler";
 import { YospaceID3MetadataHandler } from "./YospaceID3MetadataHandler";
 import { YospaceEMSGMetadataHandler } from "./YospaceEMSGMetadataHandler";
 import { SessionProperties } from "../yospace/SessionProperties";
+import { AnalyticEventObserver } from "../yospace/AnalyticEventObserver";
+import { DefaultEventDispatcher } from "../utils/DefaultEventDispatcher";
+import { YospaceEventMap } from "./YospaceConnector";
+import { BaseEvent } from "../utils/event/Event";
 
-export class YospaceManager {
+export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private readonly player: ChromelessPlayer;
 
     private yospaceSessionManager: YospaceSessionManager | undefined;
@@ -39,6 +43,7 @@ export class YospaceManager {
     private playbackPositionUpdater: any;
 
     constructor(player: ChromelessPlayer) {
+        super();
         this.player = player;
         this.yospaceSourceDescriptionDefined = new PromiseController<void>();
     }
@@ -61,13 +66,25 @@ export class YospaceManager {
         await this.yospaceSourceDescriptionDefined.promise;
     }
 
-    createSession(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): void {
+    registerAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
+        if (!this.adHandler) {
+            throw new Error("The observer can't be registered because the session is not yet initialised");
+        }
+        this.adHandler.registerAnalyticEventObserver(analyticEventObserver);
+    }
+
+    unregisterAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
+        this.adHandler?.unregisterAnalyticEventObserver(analyticEventObserver);
+    }
+
+    private createSession(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): void {
         this.reset();
 
         const { sources } = sourceDescription;
+        const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
         this.sourceDescription = sourceDescription;
         this.yospaceTypedSource = sources ? toSources(sources).find(isYospaceTypedSource) : undefined;
-        if (yoSpaceWebSdkIsAvailable() && this.yospaceTypedSource?.src) {
+        if (isYospaceSDKAvailable && this.yospaceTypedSource?.src) {
             const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
             const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
             properties.setUserAgent(navigator.userAgent);
@@ -84,6 +101,10 @@ export class YospaceManager {
                     yospaceWindow.SessionLive.create(this.yospaceTypedSource.src, properties, this.onInitComplete);
             }
             this.isMuted = this.player.muted;
+        } else if (this.yospaceTypedSource && !isYospaceSDKAvailable) {
+            throw new Error("The Yospace Ad Management SDK has not been loaded.");
+        } else {
+            throw new Error("The given source is not a Yospace source.");
         }
     }
 
@@ -132,6 +153,7 @@ export class YospaceManager {
                 }
             ]
         };
+        this.dispatchEvent(new BaseEvent("sessionavailable"));
         this.yospaceSourceDescriptionDefined.resolve();
     }
 
@@ -225,6 +247,7 @@ export class YospaceManager {
         this.emsgMetadataHandler = undefined;
         this.yospaceTypedSource = undefined;
         this.yospaceSessionManager = undefined;
+        this.sourceDescription = undefined;
         this.needsTimedMetadata = false;
         this.isMuted = false;
         this.isStalling = false;
