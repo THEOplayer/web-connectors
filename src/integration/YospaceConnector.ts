@@ -27,6 +27,8 @@ export class YospaceConnector implements EventDispatcher<YospaceEventMap> {
      *
      * @param sourceDescription the source that will be used to create the Yospace session.
      * @param sessionProperties the properties that will be used set to customize the Yospace session.
+     * @throws `Error` if the Yospace Ad Management SDK is not available.
+     * @throws `Error` if something goes wrong in setting up the session.
      */
     async setupYospaceSession(
         sourceDescription: SourceDescription,
