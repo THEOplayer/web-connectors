@@ -13,13 +13,16 @@ interface Resource {
     isEncoded(): boolean;
 }
 
-export interface LinearCreative {
+export interface Creative {
+    getCreativeIdentifier(): string;
+}
+
+export interface LinearCreative extends Creative {
     getClickThroughUrl(): string;
 }
 
-export interface NonLinearCreative {
+export interface NonLinearCreative extends Creative {
     getClickThroughUrl(): string;
-
     getResource(type: ResourceType): Resource | undefined;
 }
 
