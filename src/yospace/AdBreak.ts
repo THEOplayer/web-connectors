@@ -29,9 +29,15 @@ export interface AdVert {
     getNonLinearCreativesByType(type: ResourceType): NonLinearCreative[];
 }
 
+export interface VASTProperty {
+    getAttributes(): Map<string, string>;
+    getName(): string;
+    getValue(): string;
+}
+
 export interface AdVerification {
     getParameters(): string;
-    getResources(): Resource[]
+    getResources(): Resource[];
     getVendor(): string;
 }
 
