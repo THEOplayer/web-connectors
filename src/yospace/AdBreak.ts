@@ -27,8 +27,15 @@ export interface NonLinearCreative extends Creative {
 }
 
 export interface AdVert {
+    addMacroSubstitution(key: string, value: string): void;
+    getAdType(): string;
+    getAdVerifications(): AdVerification[];
     getLinearCreative(): LinearCreative;
 
+    getDuration(): number;
+    getIdentifier(): string;
+    getProperty(name: string): VASTProperty;
+    isFiller(): boolean;
     getNonLinearCreativesByType(type: ResourceType): NonLinearCreative[];
 }
 
