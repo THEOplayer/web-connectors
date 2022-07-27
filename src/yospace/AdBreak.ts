@@ -6,7 +6,11 @@ export enum ResourceType {
 }
 
 interface Resource {
+    getByteData(): number[];
+    getCreativeType(): string;
+    getResourceType(): ResourceType;
     getStringData(): string;
+    isEncoded(): boolean;
 }
 
 export interface LinearCreative {
