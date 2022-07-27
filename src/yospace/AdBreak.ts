@@ -29,6 +29,12 @@ export interface AdVert {
     getNonLinearCreativesByType(type: ResourceType): NonLinearCreative[];
 }
 
+export interface AdVerification {
+    getParameters(): string;
+    getResources(): Resource[]
+    getVendor(): string;
+}
+
 export interface AdBreak {
     adverts: AdVert[];
 }
