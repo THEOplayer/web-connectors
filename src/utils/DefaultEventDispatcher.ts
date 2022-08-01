@@ -88,19 +88,6 @@ export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> im
             }
         }
     }
-
-    nextEvent<K extends StringKeyOf<TMap>>(types: K | readonly K[], abortSignal?: AbortSignal): Promise<TMap[K]> {
-        return new Promise<TMap[K]>((resolve) => {
-            const listener: EventListener<TMap[K]> = (event) => {
-                cleanup();
-                resolve(event);
-            };
-            const cleanup = () => {
-                this.removeEventListener(types, listener);
-            };
-            this.addEventListener(types, listener);
-        });
-    }
 }
 
 export function createDictionaryObject<K extends string, V>(): Record<K, V> {
