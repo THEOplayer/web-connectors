@@ -18,8 +18,11 @@ export class YospaceID3MetadataHandler extends YospaceMetadataHandler {
     protected doHandleCueChange(cueChangeEvent: TextTrackCueChangeEvent): void {
         const { track } = cueChangeEvent;
         const cues = track.activeCues;
-        const filteredCues = cues?.filter((c: TextTrackCue) => this.isCorrectCueType(c));
-        if (!filteredCues) {
+        if (!cues) {
+            return;
+        }
+        const filteredCues = cues.filter((c: TextTrackCue) => this.isCorrectCueType(c));
+        if (filteredCues.length === 0) {
             return;
         }
 

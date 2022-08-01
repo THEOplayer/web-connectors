@@ -22,8 +22,11 @@ export class YospaceEMSGMetadataHandler extends YospaceMetadataHandler {
     protected doHandleCueChange(cueChangeEvent: TextTrackCueChangeEvent): void {
         const { track } = cueChangeEvent;
         const cues = track.activeCues;
-        const filteredCues = cues?.filter((cue: TextTrackCue) => this.isCorrectCueType(cue));
-        if (!filteredCues) {
+        if (!cues) {
+            return;
+        }
+        const filteredCues = cues.filter((cue: TextTrackCue) => this.isCorrectCueType(cue));
+        if (filteredCues.length === 0) {
             return;
         }
 
