@@ -2,9 +2,13 @@
   "printWidth": 120,
   "tabWidth": 4,
   "trailingComma": "none",
+  "singleQuote": true,
   "overrides": [
     {
-      "files": ["**/*.json", "**/*.yml"],
+      "files": [
+        "**/*.json",
+        "**/*.yml"
+      ],
       "options": {
         "tabWidth": 2
       }

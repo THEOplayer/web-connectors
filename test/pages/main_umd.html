@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Connector test page</title>
+    <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css"/>
+    <script src="/node_modules/theoplayer/THEOplayer.js"></script>
+    <script src="/dist/conviva-connector.umd.js"></script>
+</head>
+<body>
+<div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+<script type="text/javascript">
+    const element = document.querySelector('#THEOplayer');
+    const player = new THEOplayer.Player(element, {
+        ui: {
+            fluid: true
+        },
+        libraryLocation: '/node_modules/theoplayer/',
+        license: "CUSTOMER_LICENSE_GOES_HERE"
+    });
+
+    const srcUrl = 'https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8';
+
+    // Set up the ConvivaConnector.
+    const convivaMetadata = {
+        ['Conviva.assetName']: 'Main page',
+        ['Conviva.streamUrl']: srcUrl,
+        ['Conviva.streamType']: 'VOD',
+        ['Conviva.applicationName']: 'THEOplayer',
+        ['Conviva.viewerId']: 'your_viewer_id'
+    };
+
+    const convivaConfig = {
+        debug: false,
+        gatewayUrl: 'CUSTOMER_GATEWAY_GOES_HERE',
+        customerKey: 'CUSTOMER_KEY_GOES_HERE' // Can be a test or production key.
+    };
+
+    const convivaIntegration = new THEOplayerConvivaConnector.ConvivaConnector(
+        player,
+        convivaMetadata,
+        convivaConfig
+    );
+
+    player.source = {
+        sources: [{src: srcUrl}]
+    };
+</script>
+</body>
+</html>

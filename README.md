@@ -1,60 +1,101 @@
 # conviva-connector-web
 
-A connector implementing Conviva for web.
+The Conviva connector provides a Conviva integration for THEOplayer.
 
-## Getting started
+## Prerequisites
+In order to use this connector, a [THEOplayer](https://www.npmjs.com/package/theoplayer) build with a valid license is required. You can use your existing THEOplayer HTML5 SDK license or request yours via [THEOportal](https://portal.theoplayer.com/).
 
--   `npm install`
+For setting up a valid Conviva session, you must have access to a [Conviva developer account](https://pulse.conviva.com/) with access to a debug or production key.
 
-## Testing and code quality
+## Installation
 
-A test stack is set up and can be used by adding tests to the `test/unit/` folder. Run these tests with
+Install using your favorite package manager for Node (such as `npm` or `yarn`):
 
-```
-npm run test
-```
+### Install via npm
 
-This project is set up with [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/). You can run these checks with
-
-```
-npm run lint
-npm run prettier
+```bash
+npm install @theoplayer/conviva-connector-web
 ```
 
-but it's a good idea to set up the necessary IDE integration for both.
+### Install via yarn
 
-CI will automatically verify whether the code passes all necessary quality gates.
+```bash
+yarn add @theoplayer/conviva-connector-web
+```
 
-## Manual testing
+## Usage
 
--   Include a THEOplayer build in the root folder under `local/`. It should contain:
-    -   The THEOplayer javascript libraries e.g. `THEOplayer.js` and/or `THEOplayer.chomeless.js`. Also include any necessary worker files.
-    -   The `ui.css` file.
--   Run `npm run serve` to start `http-server` in the root folder by running.
--   Run `npm run build` to create the integrations library `connector_conviva_web-latest.js` under `dist/bundle/`.
--   Navigate to `localhost:8080/test/pages/main.html` or add an alternative test page.
+First you need to define the Conviva metadata and configuration:
 
-## Release process
+```javascript
+    const convivaMetadata = {
+        ['Conviva.assetName']: 'ASSET_NAME_GOES_HERE',
+        ['Conviva.streamUrl']: 'CUSTOMER_STREAM_URL_GOES_HERE',
+        ['Conviva.streamType']: 'STREAM_TYPE_GOES_HERE', // VOD or LIVE
+        ['Conviva.applicationName']: 'APPLICATION_NAME_GOES_HERE',
+        ['Conviva.viewerId']: 'VIEWER_ID_GOES_HERE'
+    };
 
-This release process is based on the assumption that the `master` branch is the default branch, and working branches are branched off from it and PR's back to it.
-It is mostly automated by creating tags with a specific format on the `master` branch.
+    const convivaConfig = {
+        debug: false,
+        gatewayUrl: 'CUSTOMER_GATEWAY_GOES_HERE',
+        customerKey: 'CUSTOMER_KEY_GOES_HERE' // Can be a test or production key.
+    };
+```
 
-### Prerequisites
+Using these configs you can create the Conviva connector with THEOplayer.
 
--   All the necesary code for the release is present on the `master` branch.
--   The `PACKAGE_README.md` file contains the necessary information for an external developer to use the connector. This will be published along with the code.
--   Bitbucket Pipelines has been correctly enabled for the repository.
-    -   Github Actions integration is on the roadmap.
--   The necessary variables have been configured for Bitbucket Pipelines:
-    -   `NPMRC_CONTENT`: the full content of an `.npmrc` file to be used during publishing. Linebreaks in the file can be substituted by `\n` in the variable.
-    -   `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`: The AWS credentials necessary to publish a bundle to CDN.
-        -   This might be replaced with a Github release artifact later.
+* Add as a regular script:
 
-### Creating a release
+```html
+<script type="text/javascript" src="path/to/conviva-connector.umd.js"></script>
+<script type="text/javascript">
+    const player = new THEOplayer.Player(element, configuration);
+    const convivaIntegration = new THEOplayerConvivaConnector.ConvivaConnector(
+            player,
+            convivaMetadata,
+            convivaConfig
+    );
+</script>
+```
 
-These steps assume that the new release version is `X.Y.Z`.
+* Add as an ES2015 module:
 
--   Create a new version bump commit on the `master` branch to bump the project version to the release version.
--   Create a tag on the version bump commit of the format `vX.Y.Z`.
--   Verify that the release pipeline correctly runs for your new tag.
--   Verify that the correct artifacts have been published once the pipeline has completed.
+```html
+<script type="module">
+    import { ConvivaConnector } from "path/to/conviva-connector.esm.js";
+    const player = new THEOplayer.Player(element, configuration);
+    const convivaIntegration = new ConvivaConnector(player, convivaMetadata, convivaConfig);
+</script>
+```
+
+The Conviva connector is now ready to start a session once THEOplayer starts playing a source.
+
+## Usage with Yospace connector
+
+If you have a Yospace SSAI stream and want to also report ad related events to Conviva, you can use this connector in combination with the Yospace connector: [@theoplayer/yospace-connector-web](https://www.npmjs.com/package/@theoplayer/yospace-connector-web)
+
+After configuring the Yospace connector, can pass it to the Conviva connector:
+
+```javascript
+async function setupYospaceConnector(player) {
+        const yospaceConnector = new THEOplayerYospaceConnector.YospaceConnector(player);
+        const source = {
+            sources: [
+                {
+                    src: "https://csm-e-sdk-validation.bln1.yospace.com/csm/extlive/yospace02,hlssample42.m3u8?yo.br=true&yo.av=4",
+                    ssai: {
+                        integration: "yospace"
+                    }
+                }
+            ]
+        };
+        const convivaConnector = new THEOplayerConvivaConnector.ConvivaConnector(
+            player,
+            convivaMetadata,
+            convivaConfig,
+            yospaceConnector
+        );
+        await yospaceConnector.setupYospaceSession(source);
+    }
+```

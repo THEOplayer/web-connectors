@@ -4,13 +4,20 @@
     "es2021": true,
     "jest": true
   },
-  "extends": ["airbnb-base", "eslint:recommended", "prettier"],
+  "extends": [
+    "airbnb-base",
+    "eslint:recommended",
+    "prettier"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "import"],
+  "plugins": [
+    "@typescript-eslint",
+    "import"
+  ],
   "rules": {
     "import/extensions": [
       "error",
@@ -23,7 +30,13 @@
       }
     ],
     "import/prefer-default-export": 0,
-    "import/no-unresolved": 1
+    "import/no-unresolved": 1,
+    "no-useless-return": 0,
+    "prefer-destructuring": 0,
+    "no-console": 0,
+    "no-plusplus": 0,
+    "lines-between-class-members": 0,
+    "no-unused-vars": "off"
   },
   "settings": {
     "import/resolver": {
@@ -33,5 +46,8 @@
       }
     }
   },
-  "ignorePatterns": ["lib/**/*", "dist/**/*"]
+  "ignorePatterns": [
+    "lib/**/*",
+    "dist/**/*"
+  ]
 }

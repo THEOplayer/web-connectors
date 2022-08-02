@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Connector test page</title>
+    <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css"/>
+    <script src="/node_modules/theoplayer/THEOplayer.js"></script>
+    <script src="/dist/conviva-connector.umd.js"></script>
+    <script src="/node_modules/@theoplayer/yospace-connector-web/dist/yospace-connector.umd.js"></script>
+    <script src="admanagement-sdk-3.4.0.min.js"></script>
+</head>
+<body>
+<div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+<script type="text/javascript">
+    const element = document.querySelector('#THEOplayer');
+    const player = new THEOplayer.Player(element, {
+        ui: {
+            fluid: true
+        },
+        libraryLocation: '/node_modules/theoplayer/',
+        license: "CUSTOMER_LICENSE_GOES_HERE"
+    });
+
+    async function setupConvivaWithYospace(player) {
+        // Define the source.
+        const srcUrl = 'https://csm-e-sdk-validation.bln1.yospace.com/csm/extlive/yospace02,hlssample42.m3u8?yo.br=true&yo.av=4';
+        const sourceDescription = {
+            sources: [
+                {
+                    src: srcUrl,
+                    ssai: {
+                        integration: "yospace"
+                    }
+                }
+            ]
+        };
+
+        // Set up the ConvivaConnector.
+        const convivaMetadata = {
+            ['Conviva.assetName']: 'Main page',
+            ['Conviva.streamUrl']: srcUrl,
+            ['Conviva.streamType']: 'VOD',
+            ['Conviva.applicationName']: 'THEOplayer',
+            ['Conviva.viewerId']: 'your_viewer_id'
+        };
+
+        const convivaConfig = {
+            debug: false, // Must be be true during development to see your session in Conviva Touchstone.
+            gatewayUrl: 'CUSTOMER_GATEWAY_GOES_HERE',
+            customerKey: 'CUSTOMER_KEY_GOES_HERE' // Can be a test or production key.
+        };
+
+        // Create the connectors.
+        const yospace = new THEOplayerYospaceConnector.YospaceConnector(player);
+        const conviva = new THEOplayerConvivaConnector.ConvivaConnector(player, convivaMetadata, convivaConfig);
+
+        // Link ConvivaConnector with the YospaceConnector.
+        conviva.connect(yospace);
+
+        // Set the source.
+        await yospace.setupYospaceSession(sourceDescription);
+    }
+
+    setupConvivaWithYospace(player);
+</script>
+</body>
+</html>
