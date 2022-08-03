@@ -75,11 +75,10 @@ The Conviva connector is now ready to start a session once THEOplayer starts pla
 
 If you have a Yospace SSAI stream and want to also report ad related events to Conviva, you can use this connector in combination with the Yospace connector: [@theoplayer/yospace-connector-web](https://www.npmjs.com/package/@theoplayer/yospace-connector-web)
 
-After configuring the Yospace connector, can pass it to the Conviva connector:
+After configuring the Yospace connector, can link it to the Conviva connector:
 
 ```javascript
 async function setupYospaceConnector(player) {
-        const yospaceConnector = new THEOplayerYospaceConnector.YospaceConnector(player);
         const source = {
             sources: [
                 {
@@ -90,12 +89,15 @@ async function setupYospaceConnector(player) {
                 }
             ]
         };
-        const convivaConnector = new THEOplayerConvivaConnector.ConvivaConnector(
-            player,
-            convivaMetadata,
-            convivaConfig,
-            yospaceConnector
-        );
-        await yospaceConnector.setupYospaceSession(source);
+        
+        // Create the connectors.
+        const yospace = new THEOplayerYospaceConnector.YospaceConnector(player);
+        const conviva = new THEOplayerConvivaConnector.ConvivaConnector(player, convivaMetadata, convivaConfig);
+    
+        // Link ConvivaConnector with the YospaceConnector.
+        conviva.connect(yospace);
+        
+        // Set the source.
+        await yospace.setupYospaceSession(source);
     }
 ```

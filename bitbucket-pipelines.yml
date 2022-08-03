@@ -5,13 +5,14 @@ definitions:
     npm: $HOME/.npm
 
 stepdefinitions:
-  - tests: &tests
-      name: Run tests and quality gate
+  - tests: &test-and-build
+      name: Run tests and build package
       script:
         - npm ci --prefer-offline --no-audit
         - npm run test
         - npm run prettier
         - npm run lint
+        - npm run build
   - publish-npm: &publish-npm
       name: Build and publish npm package
       caches:
@@ -25,9 +26,10 @@ stepdefinitions:
             NPM_TOKEN: $NPM_TOKEN
 
 pipelines:
-  default:
-    - step: *tests
+  pull-requests:
+    "**":
+      - step: *test-and-build
   tags:
     v*:
-      - step: *tests
+      - step: *test-and-build
       - step: *publish-npm
