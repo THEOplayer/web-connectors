@@ -75,7 +75,7 @@ export class ConvivaHandler {
         this.addEventListeners();
     }
 
-    connect(connector: YospaceConnector) {
+    connect(connector: YospaceConnector): void {
         this.yospaceAdReporter?.destroy();
         this.yospaceAdReporter = new YospaceAdReporter(
             this.player,
@@ -84,6 +84,14 @@ export class ConvivaHandler {
             this.convivaMetadata,
             connector
         );
+    }
+
+    setContentInfo(metadata: ConvivaMetadata): void {
+        this.convivaVideoAnalytics.setContentInfo(metadata);
+    }
+
+    setAdInfo(metadata: ConvivaMetadata): void {
+        this.convivaAdAnalytics.setAdInfo(metadata);
     }
 
     private addEventListeners(): void {

@@ -17,8 +17,24 @@ export class ConvivaConnector {
      * Optionally connects the ConvivaConnector to the YospaceConnector to report SSAI.
      * @param connector the YospaceConnector
      */
-    connect(connector: YospaceConnector) {
+    connect(connector: YospaceConnector): void {
         this.convivaHandler.connect(connector);
+    }
+
+    /**
+     * Sets Conviva metadata on the Conviva video analytics.
+     * @param metadata object of key value pairs
+     */
+    setContentInfo(metadata: ConvivaMetadata): void {
+        this.convivaHandler.setContentInfo(metadata);
+    }
+
+    /**
+     * Sets Conviva metadata on the Conviva ad analytics.
+     * @param metadata object of key value pairs
+     */
+    setAdInfo(metadata: ConvivaMetadata): void {
+        this.convivaHandler.setAdInfo(metadata);
     }
 
     /**
