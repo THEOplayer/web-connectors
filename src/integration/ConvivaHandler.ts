@@ -204,7 +204,7 @@ export class ConvivaHandler {
     };
 
     private readonly onError = () => {
-        this.convivaVideoAnalytics.reportPlaybackFailed('Fatal error occured');
+        this.convivaVideoAnalytics.reportPlaybackFailed(this.player.errorObject?.message ?? 'Fatal error occurred');
     };
 
     private readonly onSegmentNotFound = () => {
