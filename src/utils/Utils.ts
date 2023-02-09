@@ -6,10 +6,11 @@ import {
     ConvivaPlayerInfo
 } from '@convivainc/conviva-js-coresdk';
 import { AdVert } from '@theoplayer/yospace-connector-web';
-import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd, VerizonMediaAd, VerizonMediaAdBreak } from 'theoplayer';
+import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd, VerizonMediaAd, VerizonMediaAdBreak, version } from 'theoplayer';
 import { ConvivaConfiguration } from '../integration/ConvivaHandler';
 
 export function collectDeviceMetadata(): ConvivaDeviceMetadata {
+    // Most device metadata is auto-collected by Conviva.
     return {
         [Constants.DeviceMetadata.CATEGORY]: Constants.DeviceCategory.WEB
     };
@@ -60,8 +61,7 @@ export function calculateConvivaOptions(config: ConvivaConfiguration): ConvivaOp
 export function collectPlayerInfo(): ConvivaPlayerInfo {
     return {
         [Constants.FRAMEWORK_NAME]: 'THEOplayer HTML5',
-        // Not applicable for HTML5
-        [Constants.FRAMEWORK_VERSION]: 'NaForHTML5'
+        [Constants.FRAMEWORK_VERSION]: version
     };
 }
 
