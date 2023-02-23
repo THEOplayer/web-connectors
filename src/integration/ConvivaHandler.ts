@@ -110,6 +110,8 @@ export class ConvivaHandler {
         this.player.addEventListener('destroy', this.onDestroy);
 
         this.player.network.addEventListener('offline', this.onNetworkOffline);
+
+        document.addEventListener('visibilitychange', this.onVisibilityChange);
     }
 
     private removeEventListeners(): void {
@@ -128,6 +130,8 @@ export class ConvivaHandler {
         this.player.removeEventListener('destroy', this.onDestroy);
 
         this.player.network.removeEventListener('offline', this.onNetworkOffline);
+
+        document.removeEventListener('visibilitychange', this.onVisibilityChange);
     }
 
     private convivaCallback = () => {
@@ -219,6 +223,15 @@ export class ConvivaHandler {
             'A Video Playback Failure has occurred: Waiting for the manifest to come back online',
             Constants.ErrorSeverity.FATAL
         );
+    };
+
+    // eslint-disable-next-line class-methods-use-this
+    private readonly onVisibilityChange = (event: Event) => {
+        if (document.visibilityState === 'visible') {
+            Analytics.reportAppForegrounded();
+        } else {
+            Analytics.reportAppBackgrounded();
+        }
     };
 
     private readonly onSourceChange = () => {
