@@ -273,9 +273,6 @@ export class ConvivaHandler {
     };
 
     private readonly onSourceChange = () => {
-        if (this.player.source === this.currentSource) {
-            return;
-        }
         this.maybeReportPlaybackEnded();
         this.reset(true);
         this.currentSource = this.player.source;
