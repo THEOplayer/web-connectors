@@ -112,6 +112,7 @@ export class ConvivaHandler {
         this.player.network.addEventListener('offline', this.onNetworkOffline);
 
         document.addEventListener('visibilitychange', this.onVisibilityChange);
+        window.addEventListener('beforeunload', this.onBeforeUnload);
     }
 
     private removeEventListeners(): void {
@@ -132,6 +133,7 @@ export class ConvivaHandler {
         this.player.network.removeEventListener('offline', this.onNetworkOffline);
 
         document.removeEventListener('visibilitychange', this.onVisibilityChange);
+        window.removeEventListener('beforeunload', this.onBeforeUnload);
     }
 
     private convivaCallback = () => {
@@ -232,6 +234,11 @@ export class ConvivaHandler {
         } else {
             Analytics.reportAppBackgrounded();
         }
+    };
+
+
+    private readonly onBeforeUnload = (event: Event) => {
+        this.maybeReportPlaybackEnded();
     };
 
     private readonly onSourceChange = () => {
