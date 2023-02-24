@@ -202,10 +202,12 @@ export class ConvivaHandler {
         const src = this.player.src ?? '';
         const streamType = this.player.duration === Infinity ? Constants.StreamType.LIVE : Constants.StreamType.VOD
         const assetName = this.customMetadata[Constants.ASSET_NAME] ?? 'Default name';
+        const playerName = this.customMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
         const metadata = {
-            [ Constants.STREAM_URL ]: src,
-            [ Constants.IS_LIVE ]: streamType,
-            [Constants.ASSET_NAME]: assetName
+            [Constants.STREAM_URL]: src,
+            [Constants.IS_LIVE]: streamType,
+            [Constants.ASSET_NAME]: assetName,
+            [Constants.PLAYER_NAME]: playerName
         }
         this.setContentInfo(metadata);
     }
