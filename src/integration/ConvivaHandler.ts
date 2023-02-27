@@ -275,8 +275,7 @@ export class ConvivaHandler {
         }
     };
 
-
-    private readonly onBeforeUnload = (event: Event) => {
+    private readonly onBeforeUnload = () => {
         this.maybeReportPlaybackEnded();
     };
 
