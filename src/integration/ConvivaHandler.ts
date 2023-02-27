@@ -281,14 +281,12 @@ export class ConvivaHandler {
 
     private readonly onSourceChange = () => {
         this.maybeReportPlaybackEnded();
-        this.reset(true);
         this.currentSource = this.player.source;
     };
 
     private readonly onEnded = () => {
         this.convivaVideoAnalytics?.reportPlaybackMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.STOPPED);
         this.maybeReportPlaybackEnded();
-        this.reset(false);
     };
 
     private readonly onDurationChange = () => {
@@ -306,13 +304,6 @@ export class ConvivaHandler {
     private readonly onDestroy = () => {
         this.destroy();
     };
-
-    private reset(resetSource: boolean = true): void {
-        if (resetSource) {
-            this.currentSource = undefined;
-        }
-        this.playbackRequested = false;
-    }
 
     private releaseSession(): void {
         this.convivaAdAnalytics?.release();
