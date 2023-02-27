@@ -72,8 +72,6 @@ export function collectContentMetadata(
     // @ts-ignore
     return {
         ...configuredContentMetadata,
-        [Constants.STREAM_URL]: player.src,
-        [Constants.PLAYER_NAME]: 'THEOplayer',
         [Constants.DURATION]: player.duration
     };
 }
@@ -83,7 +81,6 @@ export function collectYospaceAdMetadata(player: ChromelessPlayer, ad: AdVert): 
         [Constants.ASSET_NAME]: ad.getProperty('AdTitle')?.getValue(),
         [Constants.STREAM_URL]: player.src!,
         [Constants.DURATION]: (ad.getDuration() / 1000) as any,
-        [Constants.IS_LIVE]: Constants.StreamType.VOD,
         'c3.ad.technology': Constants.AdType.SERVER_SIDE,
         'c3.ad.id': ad.getIdentifier(),
         'c3.ad.system': ad.getProperty('AdSystem')?.getValue(),
@@ -97,12 +94,9 @@ export function collectYospaceAdMetadata(player: ChromelessPlayer, ad: AdVert): 
     };
 }
 
-export function collectVerizonAdMetadata(ad: VerizonMediaAd, metadata: ConvivaMetadata): ConvivaMetadata {
+export function collectVerizonAdMetadata(ad: VerizonMediaAd): ConvivaMetadata {
     const adMetadata: ConvivaMetadata = {
-        [Constants.PLAYER_NAME]: 'THEOplayer',
-        [Constants.DURATION]: ad.duration as any,
-        [Constants.IS_LIVE]: Constants.StreamType.VOD,
-        [Constants.VIEWER_ID]: metadata[Constants.VIEWER_ID]!
+        [Constants.DURATION]: ad.duration as any
     };
     const assetName = ad.creative;
     if (assetName) {
@@ -112,12 +106,9 @@ export function collectVerizonAdMetadata(ad: VerizonMediaAd, metadata: ConvivaMe
     return adMetadata;
 }
 
-export function collectAdMetadata(ad: Ad, metadata: ConvivaMetadata): ConvivaMetadata {
+export function collectAdMetadata(ad: Ad): ConvivaMetadata {
     const adMetadata: ConvivaMetadata = {
-        [Constants.PLAYER_NAME]: 'THEOplayer',
         [Constants.DURATION]: ad.duration as any,
-        [Constants.IS_LIVE]: Constants.StreamType.VOD,
-        [Constants.VIEWER_ID]: metadata[Constants.VIEWER_ID]!
     };
     const streamUrl = (ad as GoogleImaAd).mediaUrl! || ad.resourceURI;
     if (streamUrl) {

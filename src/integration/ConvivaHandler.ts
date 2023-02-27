@@ -64,8 +64,7 @@ export class ConvivaHandler {
             this.adReporter = new CsaiAdReporter(
                 this.player,
                 this.convivaVideoAnalytics,
-                this.convivaAdAnalytics,
-                this.convivaMetadata
+                this.convivaAdAnalytics
             );
         }
 
@@ -73,8 +72,7 @@ export class ConvivaHandler {
             this.verizonAdReporter = new VerizonAdReporter(
                 this.player,
                 this.convivaVideoAnalytics,
-                this.convivaAdAnalytics,
-                this.convivaMetadata
+                this.convivaAdAnalytics
             );
         }
     }
@@ -88,7 +86,6 @@ export class ConvivaHandler {
             this.player,
             this.convivaVideoAnalytics!,
             this.convivaAdAnalytics!,
-            this.convivaMetadata,
             connector
         );
     }

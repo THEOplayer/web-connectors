@@ -1,25 +1,22 @@
 import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd } from 'theoplayer';
-import { AdAnalytics, Constants, ConvivaMetadata, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { AdAnalytics, Constants, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
 import { calculateCurrentAdBreakInfo, collectAdMetadata, collectPlayerInfo } from '../../utils/Utils';
 
 export class CsaiAdReporter {
     private readonly player: ChromelessPlayer;
     private readonly convivaVideoAnalytics: VideoAnalytics;
     private readonly convivaAdAnalytics: AdAnalytics;
-    private readonly metadata: ConvivaMetadata;
 
     private currentAdBreak: AdBreak | undefined;
 
     constructor(
         player: ChromelessPlayer,
         videoAnalytics: VideoAnalytics,
-        adAnalytics: AdAnalytics,
-        metadata: ConvivaMetadata
+        adAnalytics: AdAnalytics
     ) {
         this.player = player;
         this.convivaVideoAnalytics = videoAnalytics;
         this.convivaAdAnalytics = adAnalytics;
-        this.metadata = metadata;
         this.convivaAdAnalytics.setCallback(this.convivaAdCallback);
         this.convivaAdAnalytics.setAdPlayerInfo(collectPlayerInfo());
         this.addEventListeners();
@@ -44,7 +41,7 @@ export class CsaiAdReporter {
         if (currentAd.type !== 'linear') {
             return;
         }
-        const adMetadata = collectAdMetadata(currentAd, this.metadata);
+        const adMetadata = collectAdMetadata(currentAd);
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
         this.convivaAdAnalytics.reportAdStarted(adMetadata);

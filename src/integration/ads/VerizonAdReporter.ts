@@ -7,27 +7,24 @@ import {
     VerizonMediaRemoveAdBreakEvent,
     VideoQuality
 } from 'theoplayer';
-import { AdAnalytics, Constants, ConvivaMetadata, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { AdAnalytics, Constants, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
 import { calculateVerizonAdBreakInfo, collectPlayerInfo, collectVerizonAdMetadata } from '../../utils/Utils';
 
 export class VerizonAdReporter {
     private readonly player: ChromelessPlayer;
     private readonly convivaVideoAnalytics: VideoAnalytics;
     private readonly convivaAdAnalytics: AdAnalytics;
-    private readonly metadata: ConvivaMetadata;
 
     private currentAdBreak: VerizonMediaAdBreak | undefined;
 
     constructor(
         player: ChromelessPlayer,
         videoAnalytics: VideoAnalytics,
-        adAnalytics: AdAnalytics,
-        metadata: ConvivaMetadata
+        adAnalytics: AdAnalytics
     ) {
         this.player = player;
         this.convivaVideoAnalytics = videoAnalytics;
         this.convivaAdAnalytics = adAnalytics;
-        this.metadata = metadata;
         this.convivaAdAnalytics.setAdPlayerInfo(collectPlayerInfo());
         this.addEventListeners();
     }
@@ -53,7 +50,7 @@ export class VerizonAdReporter {
     };
 
     private onAdBegin = (event: VerizonMediaAdBeginEvent) => {
-        const adMetadata = collectVerizonAdMetadata(event.ad, this.metadata);
+        const adMetadata = collectVerizonAdMetadata(event.ad);
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdStarted(adMetadata);
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
