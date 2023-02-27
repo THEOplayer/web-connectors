@@ -20,6 +20,7 @@ export class CsaiAdReporter {
         this.convivaVideoAnalytics = videoAnalytics;
         this.convivaAdAnalytics = adAnalytics;
         this.metadata = metadata;
+        this.convivaAdAnalytics.setCallback(this.convivaAdCallback);
         this.convivaAdAnalytics.setAdPlayerInfo(collectPlayerInfo());
         this.addEventListeners();
     }
@@ -93,6 +94,11 @@ export class CsaiAdReporter {
             return;
         }
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PAUSED);
+    };
+
+    private convivaAdCallback = () => {
+        const currentTime = this.player.currentTime * 1000;
+        this.convivaAdAnalytics!.reportAdMetric(Constants.Playback.PLAY_HEAD_TIME, currentTime);
     };
 
     private addEventListeners(): void {
