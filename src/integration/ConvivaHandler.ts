@@ -267,7 +267,7 @@ export class ConvivaHandler {
     };
 
     // eslint-disable-next-line class-methods-use-this
-    private readonly onVisibilityChange = (event: Event) => {
+    private readonly onVisibilityChange = () => {
         if (document.visibilityState === 'visible') {
             Analytics.reportAppForegrounded();
         } else {
