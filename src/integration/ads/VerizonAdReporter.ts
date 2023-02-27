@@ -8,7 +8,7 @@ import {
     VideoQuality
 } from 'theoplayer';
 import { AdAnalytics, Constants, ConvivaMetadata, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
-import { calculateVerizonAdBreakInfo, collectVerizonAdMetadata } from '../../utils/Utils';
+import { calculateVerizonAdBreakInfo, collectPlayerInfo, collectVerizonAdMetadata } from '../../utils/Utils';
 
 export class VerizonAdReporter {
     private readonly player: ChromelessPlayer;
@@ -28,6 +28,7 @@ export class VerizonAdReporter {
         this.convivaVideoAnalytics = videoAnalytics;
         this.convivaAdAnalytics = adAnalytics;
         this.metadata = metadata;
+        this.convivaAdAnalytics.setAdPlayerInfo(collectPlayerInfo());
         this.addEventListeners();
     }
 

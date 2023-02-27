@@ -1,6 +1,6 @@
 import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd } from 'theoplayer';
 import { AdAnalytics, Constants, ConvivaMetadata, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
-import { calculateCurrentAdBreakInfo, collectAdMetadata } from '../../utils/Utils';
+import { calculateCurrentAdBreakInfo, collectAdMetadata, collectPlayerInfo } from '../../utils/Utils';
 
 export class CsaiAdReporter {
     private readonly player: ChromelessPlayer;
@@ -20,6 +20,7 @@ export class CsaiAdReporter {
         this.convivaVideoAnalytics = videoAnalytics;
         this.convivaAdAnalytics = adAnalytics;
         this.metadata = metadata;
+        this.convivaAdAnalytics.setAdPlayerInfo(collectPlayerInfo());
         this.addEventListeners();
     }
 
