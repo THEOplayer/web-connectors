@@ -60,7 +60,7 @@ export function calculateConvivaOptions(config: ConvivaConfiguration): ConvivaOp
 
 export function collectPlayerInfo(): ConvivaPlayerInfo {
     return {
-        [Constants.FRAMEWORK_NAME]: 'THEOplayer HTML5',
+        [Constants.FRAMEWORK_NAME]: 'THEOplayer',
         [Constants.FRAMEWORK_VERSION]: version
     };
 }
