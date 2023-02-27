@@ -108,6 +108,11 @@ export class ConvivaHandler {
         this.convivaAdAnalytics!.setAdInfo(metadata);
     }
 
+    reportPlaybackFailed(errorMessage: string): void {
+        this.convivaVideoAnalytics?.reportPlaybackFailed(errorMessage);
+        this.releaseSession();
+    }
+
     private addEventListeners(): void {
         this.player.addEventListener('play', this.onPlay);
         this.player.addEventListener('playing', this.onPlaying);
