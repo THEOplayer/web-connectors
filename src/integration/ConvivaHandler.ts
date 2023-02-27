@@ -201,7 +201,7 @@ export class ConvivaHandler {
     private reportMetadata() {
         const src = this.player.src ?? '';
         const streamType = this.player.duration === Infinity ? Constants.StreamType.LIVE : Constants.StreamType.VOD
-        const assetName = this.customMetadata[Constants.ASSET_NAME] ?? 'Default name';
+        const assetName = this.customMetadata[Constants.ASSET_NAME] ?? this.currentSource?.metadata?.title ?? 'NA';
         const playerName = this.customMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
         const metadata = {
             [Constants.STREAM_URL]: src,
