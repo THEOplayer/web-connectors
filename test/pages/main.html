@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <title>Connector test page</title>
-        <link rel="stylesheet" type="text/css" href="/local/ui.css" />
-        <script src="/local/THEOplayer.js"></script>
+        <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css" />
+        <script src="/node_modules/theoplayer/THEOplayer.js"></script>
         <script src="/dist/THEOplayerNielsenConnector.umd.js"></script>
     </head>
     <body>
@@ -15,16 +15,20 @@
                 ui: {
                     fluid: true
                 },
-                libraryLocation: "/local/"
+                libraryLocation: "/node_modules/theoplayer/"
             });
 
             //
             // Add your connector setup logic here
             //
+            const appId = 'P77E3B909-D4B5-4E5C-9B5F-77B0E8FE27F5';
+            const instanceName = 'instance name';
+            // const nSdkInstance = NOLBUNDLE.nlsQ(appId, instanceName, {containerId: 'THEOplayer', nol_sdkDebug: "debug"})
+            const nielsenConnector = new THEOplayerNielsenConnector.NielsenConnector(player, appId, instanceName, true);
 
             // Set a source that works with your connector
             player.source = {
-                sources: [{ src: "insert manifest url here" }]
+                sources: [{ src: "https://www.nielseninternet.com/DTVR/RTVOD_(PC-FD)_C3/prog_index.m3u8" }]
             };
         </script>
     </body>
