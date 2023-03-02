@@ -8,13 +8,9 @@ export class NielsenConnector {
 
     private nSdkInstance: any; // TODO fix type?
 
-    constructor(player: ChromelessPlayer, appId: string, instanceName: string, debug: boolean) {
+    constructor(player: ChromelessPlayer, appId: string, instanceName: string, options: NielsenOptions) {
         this.player = player;
-        const nielsenOptions: NielsenOptions = {};
-        if (debug) {
-            nielsenOptions.nol_sdkDebug = 'debug';
-        }
-        this.nSdkInstance = loadNielsenLibrary(appId, instanceName, nielsenOptions);
+        this.nSdkInstance = loadNielsenLibrary(appId, instanceName, options);
 
         this.addEventListeners();
     }

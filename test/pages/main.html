@@ -23,8 +23,11 @@
             //
             const appId = 'P77E3B909-D4B5-4E5C-9B5F-77B0E8FE27F5';
             const instanceName = 'instance name';
-            // const nSdkInstance = NOLBUNDLE.nlsQ(appId, instanceName, {containerId: 'THEOplayer', nol_sdkDebug: "debug"})
-            const nielsenConnector = new THEOplayerNielsenConnector.NielsenConnector(player, appId, instanceName, true);
+            const options = {
+                // containerId: 'THEOplayer',
+                nol_sdkDebug: 'debug'
+            }
+            const nielsenConnector = new THEOplayerNielsenConnector.NielsenConnector(player, appId, instanceName, options);
 
             // Set a source that works with your connector
             player.source = {
