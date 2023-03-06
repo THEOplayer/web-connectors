@@ -17,6 +17,8 @@ export class NielsenConnector {
 
     private nSdkInstance: any; // TODO fix type?
 
+    private sessionInProgress: boolean = false;
+
     constructor(player: ChromelessPlayer, appId: string, instanceName: string, options: NielsenOptions) {
         this.player = player;
         this.nSdkInstance = loadNielsenLibrary(appId, instanceName, options);
@@ -101,12 +103,18 @@ export class NielsenConnector {
     }
 
     private onEnd = () => {
-        this.nSdkInstance.ggPM('end', this.getPlayHeadPosition());
+        if (this.sessionInProgress) {
+            this.sessionInProgress = false;
+            this.nSdkInstance.ggPM('end', this.getPlayHeadPosition());
+        }
     }
 
     private onPlay = () => {
-        // TODO pass metadataObject instead? https://engineeringportal.nielsen.com/docs/play_(Browser)
-        this.nSdkInstance.ggPM('play', this.getPlayHeadPosition());
+        if (!this.sessionInProgress) {
+            this.sessionInProgress = true;
+            // TODO pass metadataObject instead? https://engineeringportal.nielsen.com/docs/play_(Browser)
+            this.nSdkInstance.ggPM('play', this.getPlayHeadPosition());
+        }
     }
 
     private onAdBegin = (event: Event) => {
