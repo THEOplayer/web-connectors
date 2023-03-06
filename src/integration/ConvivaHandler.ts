@@ -35,6 +35,8 @@ export class ConvivaHandler {
     private currentSource: SourceDescription | undefined;
     private playbackRequested: boolean = false;
 
+    private yospaceConnector: YospaceConnector | undefined;
+
     constructor(player: ChromelessPlayer, convivaMetaData: ConvivaMetadata, config: ConvivaConfiguration) {
         this.player = player;
         this.convivaMetadata = convivaMetaData;
@@ -73,6 +75,15 @@ export class ConvivaHandler {
                 this.convivaAdAnalytics
             );
         }
+
+        if (this.yospaceConnector !== undefined) {
+            this.yospaceAdReporter = new YospaceAdReporter(
+                this.player,
+                this.convivaVideoAnalytics!,
+                this.convivaAdAnalytics!,
+                this.yospaceConnector
+            );
+        }
     }
 
     connect(connector: YospaceConnector): void {
@@ -86,6 +97,7 @@ export class ConvivaHandler {
             this.convivaAdAnalytics!,
             connector
         );
+        this.yospaceConnector = connector;
     }
 
     setContentInfo(metadata: ConvivaMetadata): void {
