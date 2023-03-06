@@ -52,12 +52,10 @@ export class ConvivaHandler {
     }
 
     private initializeSession(): void {
-        // This object will be used throughout the entire application lifecycle to report video related events.
         this.convivaVideoAnalytics = Analytics.buildVideoAnalytics();
         this.convivaVideoAnalytics.setPlayerInfo(collectPlayerInfo());
         this.convivaVideoAnalytics.setCallback(this.convivaCallback);
 
-        // This object will be used throughout the entire application lifecycle to report ad related events.
         this.convivaAdAnalytics = Analytics.buildAdAnalytics(this.convivaVideoAnalytics);
 
         if (this.player.ads !== undefined) {
@@ -307,13 +305,21 @@ export class ConvivaHandler {
         this.convivaVideoAnalytics?.release();
         this.convivaAdAnalytics = undefined
         this.convivaVideoAnalytics = undefined;
+        
+        this.adReporter?.destroy();
+        this.verizonAdReporter?.destroy();
+        this.yospaceAdReporter?.destroy();
+        this.adReporter = undefined;
+        this.verizonAdReporter = undefined;
+        this.yospaceAdReporter = undefined;
+
         this.customMetadata = {};
     }
+
 
     destroy(): void {
         this.maybeReportPlaybackEnded();
         this.removeEventListeners();
-        this.adReporter?.destroy();
         Analytics.release();
     }
 }
