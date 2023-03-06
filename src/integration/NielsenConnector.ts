@@ -40,6 +40,8 @@ export class NielsenConnector {
         if (this.player.ads) {
             this.player.ads.addEventListener('adbegin', this.onAdBegin);
         }
+
+        window.addEventListener('beforeunload', this.onEnd);
     }
 
     private removeEventListeners(): void {
@@ -50,6 +52,8 @@ export class NielsenConnector {
         this.player.removeEventListener('play', this.onPlay);
 
         this.player.textTracks.removeEventListener('addtrack', this.onAddTrack);
+
+        window.removeEventListener('beforeunload', this.onEnd);
     }
 
     // TODO check if necessary?
