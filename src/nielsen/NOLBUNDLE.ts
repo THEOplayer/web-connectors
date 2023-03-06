@@ -25,7 +25,7 @@ export function loadNielsenLibrary(appId: string, instanceName: string, options:
                         i.parentNode.insertBefore(r, i),
                         (t[n][o] = t[n][o] || {
                             g: c || {},
-                            ggPM: function (e: any, c: any, r: any, s: any, i: any) {
+                            ggPM: function (e: any, c: any, r?: any, s?: any, i?: any) {
                                 // @ts-ignore
                                 (t[n][o].q = t[n][o].q || []).push([e, c, r, s, i]);
                             },
