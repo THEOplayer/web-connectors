@@ -19,10 +19,6 @@ export class NielsenConnector {
         this.nSdkInstance.ggPM('updateMetadata', metadata);
     }
 
-    setAdMetadata(metadata: AdMetadata): void {
-        // TODO
-    }
-
     private addEventListeners(): void {
         this.player.addEventListener('volumechange', this.onVolumeChange);
         this.player.addEventListener('loadedmetadata', this.onLoadMetadata);
