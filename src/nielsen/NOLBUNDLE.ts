@@ -36,7 +36,6 @@ export function loadNielsenLibrary(appId: string, instanceName: string, options:
         };
     })(window, 'NOLBUNDLE');
 
-    console.log('loading', options);
     if (options) {
         return (window as any).NOLBUNDLE.nlsQ(
             appId,
