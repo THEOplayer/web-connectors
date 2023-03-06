@@ -47,6 +47,7 @@ export class NielsenConnector {
         this.player.removeEventListener('loadedmetadata', this.onLoadMetadata);
         this.player.removeEventListener('ended', this.onEnd);
         this.player.removeEventListener('sourcechange', this.onEnd);
+        this.player.removeEventListener('play', this.onPlay);
 
         this.player.textTracks.removeEventListener('addtrack', this.onAddTrack);
     }
