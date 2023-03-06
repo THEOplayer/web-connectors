@@ -31,11 +31,11 @@ export class NielsenConnector {
     }
 
     private addEventListeners(): void {
-        this.player.addEventListener('volumechange', this.onVolumeChange);
-        this.player.addEventListener('loadedmetadata', this.onLoadMetadata);
+        this.player.addEventListener('play', this.onPlay);
         this.player.addEventListener('ended', this.onEnd);
         this.player.addEventListener('sourcechange', this.onEnd);
-        this.player.addEventListener('play', this.onPlay);
+        this.player.addEventListener('loadedmetadata', this.onLoadMetadata);
+        this.player.addEventListener('volumechange', this.onVolumeChange);
 
         this.player.textTracks.addEventListener('addtrack', this.onAddTrack);
 
@@ -47,11 +47,11 @@ export class NielsenConnector {
     }
 
     private removeEventListeners(): void {
-        this.player.removeEventListener('volumechange', this.onVolumeChange);
-        this.player.removeEventListener('loadedmetadata', this.onLoadMetadata);
+        this.player.removeEventListener('play', this.onPlay);
         this.player.removeEventListener('ended', this.onEnd);
         this.player.removeEventListener('sourcechange', this.onEnd);
-        this.player.removeEventListener('play', this.onPlay);
+        this.player.removeEventListener('loadedmetadata', this.onLoadMetadata);
+        this.player.removeEventListener('volumechange', this.onVolumeChange);
 
         this.player.textTracks.removeEventListener('addtrack', this.onAddTrack);
 
