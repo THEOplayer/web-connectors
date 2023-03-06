@@ -1,5 +1,6 @@
 import {
-    Constants, ConvivaAdBreakInfo,
+    Constants,
+    ConvivaAdBreakInfo,
     ConvivaDeviceMetadata,
     ConvivaMetadata,
     ConvivaOptions,
@@ -105,7 +106,7 @@ export function collectVerizonAdMetadata(ad: VerizonMediaAd): ConvivaMetadata {
 
 export function collectAdMetadata(ad: Ad): ConvivaMetadata {
     const adMetadata: ConvivaMetadata = {
-        [Constants.DURATION]: ad.duration as any,
+        [Constants.DURATION]: ad.duration as any
     };
     const streamUrl = (ad as GoogleImaAd).mediaUrl! || ad.resourceURI;
     if (streamUrl) {

@@ -18,11 +18,7 @@ export class VerizonAdReporter {
     private currentAdBreak: VerizonMediaAdBreak | undefined;
     private adBreakCounter: number = 0;
 
-    constructor(
-        player: ChromelessPlayer,
-        videoAnalytics: VideoAnalytics,
-        adAnalytics: AdAnalytics
-    ) {
+    constructor(player: ChromelessPlayer, videoAnalytics: VideoAnalytics, adAnalytics: AdAnalytics) {
         this.player = player;
         this.convivaVideoAnalytics = videoAnalytics;
         this.convivaAdAnalytics = adAnalytics;

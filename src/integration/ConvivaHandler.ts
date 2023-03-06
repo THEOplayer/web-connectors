@@ -61,11 +61,7 @@ export class ConvivaHandler {
         this.convivaAdAnalytics = Analytics.buildAdAnalytics(this.convivaVideoAnalytics);
 
         if (this.player.ads !== undefined) {
-            this.adReporter = new CsaiAdReporter(
-                this.player,
-                this.convivaVideoAnalytics,
-                this.convivaAdAnalytics
-            );
+            this.adReporter = new CsaiAdReporter(this.player, this.convivaVideoAnalytics, this.convivaAdAnalytics);
         }
 
         if (this.player.verizonMedia !== undefined) {
@@ -104,7 +100,7 @@ export class ConvivaHandler {
         if (!this.convivaVideoAnalytics) {
             this.initializeSession();
         }
-        this.customMetadata = {...this.customMetadata, ...metadata};
+        this.customMetadata = { ...this.customMetadata, ...metadata };
         this.convivaVideoAnalytics!.setContentInfo(metadata);
     }
 
@@ -178,7 +174,10 @@ export class ConvivaHandler {
         const activeQuality = activeVideoTrack?.activeQuality;
         if (activeQuality) {
             const frameRate = (activeQuality as VideoQuality).frameRate;
-            this.convivaVideoAnalytics!.reportPlaybackMetric(Constants.Playback.BITRATE, activeQuality.bandwidth / 1000);
+            this.convivaVideoAnalytics!.reportPlaybackMetric(
+                Constants.Playback.BITRATE,
+                activeQuality.bandwidth / 1000
+            );
             if (frameRate) {
                 this.convivaVideoAnalytics!.reportPlaybackMetric(Constants.Playback.RENDERED_FRAMERATE, frameRate);
             }
@@ -212,7 +211,7 @@ export class ConvivaHandler {
 
     private reportMetadata() {
         const src = this.player.src ?? '';
-        const streamType = this.player.duration === Infinity ? Constants.StreamType.LIVE : Constants.StreamType.VOD
+        const streamType = this.player.duration === Infinity ? Constants.StreamType.LIVE : Constants.StreamType.VOD;
         const assetName = this.customMetadata[Constants.ASSET_NAME] ?? this.currentSource?.metadata?.title ?? 'NA';
         const playerName = this.customMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
         const metadata = {
@@ -220,12 +219,15 @@ export class ConvivaHandler {
             [Constants.IS_LIVE]: streamType,
             [Constants.ASSET_NAME]: assetName,
             [Constants.PLAYER_NAME]: playerName
-        }
+        };
         this.setContentInfo(metadata);
     }
 
     private readonly onPlaying = () => {
-        this.convivaVideoAnalytics?.reportPlaybackMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
+        this.convivaVideoAnalytics?.reportPlaybackMetric(
+            Constants.Playback.PLAYER_STATE,
+            Constants.PlayerState.PLAYING
+        );
     };
 
     private readonly onPause = () => {
@@ -292,7 +294,10 @@ export class ConvivaHandler {
     };
 
     private readonly onEnded = () => {
-        this.convivaVideoAnalytics?.reportPlaybackMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.STOPPED);
+        this.convivaVideoAnalytics?.reportPlaybackMetric(
+            Constants.Playback.PLAYER_STATE,
+            Constants.PlayerState.STOPPED
+        );
         this.maybeReportPlaybackEnded();
     };
 
@@ -315,7 +320,7 @@ export class ConvivaHandler {
     private releaseSession(): void {
         this.convivaAdAnalytics?.release();
         this.convivaVideoAnalytics?.release();
-        this.convivaAdAnalytics = undefined
+        this.convivaAdAnalytics = undefined;
         this.convivaVideoAnalytics = undefined;
 
         this.adReporter?.destroy();
@@ -327,7 +332,6 @@ export class ConvivaHandler {
 
         this.customMetadata = {};
     }
-
 
     destroy(): void {
         this.maybeReportPlaybackEnded();
