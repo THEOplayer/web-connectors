@@ -8,6 +8,7 @@ export class CsaiAdReporter {
     private readonly convivaAdAnalytics: AdAnalytics;
 
     private currentAdBreak: AdBreak | undefined;
+    private adBreakCounter: number = 0;
 
     constructor(
         player: ChromelessPlayer,
@@ -27,8 +28,9 @@ export class CsaiAdReporter {
         this.convivaVideoAnalytics.reportAdBreakStarted(
             Constants.AdType.CLIENT_SIDE,
             Constants.AdPlayer.CONTENT,
-            calculateCurrentAdBreakInfo(this.currentAdBreak)
+            calculateCurrentAdBreakInfo(this.currentAdBreak, this.adBreakCounter)
         );
+        this.adBreakCounter++;
     };
 
     private readonly onAdBreakEnd = () => {
@@ -130,6 +132,10 @@ export class CsaiAdReporter {
         this.player.ads.removeEventListener('adskip', this.onAdSkip);
         this.player.ads.removeEventListener('adbuffering', this.onAdBuffering);
         this.player.ads.removeEventListener('aderror', this.onAdError);
+    }
+
+    reset(): void {
+        this.adBreakCounter = 0;
     }
 
     destroy(): void {

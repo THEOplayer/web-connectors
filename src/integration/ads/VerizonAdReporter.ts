@@ -16,6 +16,7 @@ export class VerizonAdReporter {
     private readonly convivaAdAnalytics: AdAnalytics;
 
     private currentAdBreak: VerizonMediaAdBreak | undefined;
+    private adBreakCounter: number = 0;
 
     constructor(
         player: ChromelessPlayer,
@@ -34,8 +35,9 @@ export class VerizonAdReporter {
         this.convivaVideoAnalytics.reportAdBreakStarted(
             Constants.AdType.SERVER_SIDE,
             Constants.AdPlayer.CONTENT,
-            calculateVerizonAdBreakInfo(this.currentAdBreak)
+            calculateVerizonAdBreakInfo(this.currentAdBreak, this.adBreakCounter)
         );
+        this.adBreakCounter++;
     };
 
     private onAdBreakEnd = () => {

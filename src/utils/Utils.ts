@@ -1,5 +1,5 @@
 import {
-    Constants,
+    Constants, ConvivaAdBreakInfo,
     ConvivaDeviceMetadata,
     ConvivaMetadata,
     ConvivaOptions,
@@ -17,17 +17,15 @@ export function collectDeviceMetadata(): ConvivaDeviceMetadata {
 }
 
 type AdBreakPosition = 'preroll' | 'midroll' | 'postroll';
-let adBreakCounter = 1;
 
-export function calculateVerizonAdBreakInfo(adBreak: VerizonMediaAdBreak): object | undefined {
-    // TODO improve types
+export function calculateVerizonAdBreakInfo(adBreak: VerizonMediaAdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
     return {
         [Constants.POD_DURATION]: adBreak.duration!,
-        [Constants.POD_INDEX]: adBreakCounter++
+        [Constants.POD_INDEX]: adBreakIndex
     };
 }
 
-export function calculateCurrentAdBreakInfo(adBreak: AdBreak): object | undefined {
+export function calculateCurrentAdBreakInfo(adBreak: AdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
     const currentAdBreakTimeOffset = adBreak.timeOffset;
     let currentAdBreakPosition: AdBreakPosition;
     if (currentAdBreakTimeOffset === 0) {
@@ -37,12 +35,11 @@ export function calculateCurrentAdBreakInfo(adBreak: AdBreak): object | undefine
     } else {
         currentAdBreakPosition = 'midroll';
     }
-    const currentAdBreakIndex = adBreakCounter++;
-    // TODO improve types
+
     return {
         [Constants.POD_POSITION]: currentAdBreakPosition,
         [Constants.POD_DURATION]: adBreak.maxDuration!,
-        [Constants.POD_INDEX]: currentAdBreakIndex
+        [Constants.POD_INDEX]: adBreakIndex
     };
 }
 

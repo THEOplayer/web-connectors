@@ -305,7 +305,7 @@ export class ConvivaHandler {
         this.convivaVideoAnalytics?.release();
         this.convivaAdAnalytics = undefined
         this.convivaVideoAnalytics = undefined;
-        
+
         this.adReporter?.destroy();
         this.verizonAdReporter?.destroy();
         this.yospaceAdReporter?.destroy();
