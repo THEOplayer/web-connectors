@@ -8,7 +8,7 @@ import {
     VolumeChangeEvent
 } from "theoplayer";
 import { loadNielsenLibrary } from "../nielsen/NOLBUNDLE";
-import { ContentMetadata, NielsenOptions } from "../nielsen/Types";
+import { AdMetadata, ContentMetadata, NielsenOptions } from "../nielsen/Types";
 import { getAdType } from "../utils/Util";
 
 export class NielsenConnector {
@@ -123,10 +123,10 @@ export class NielsenConnector {
         }
 
         const type = getAdType(this.player.ads!.currentAdBreak!);
-        const adMetadata = {
+        const adMetadata: AdMetadata = {
             type,
             // TODO check if id is always filled
-            assetid: currentAd[ 0 ].id
+            assetid: currentAd[ 0 ].id!
         }
         this.nSdkInstance.ggPM('loadMetadata', adMetadata);
     }
