@@ -65,7 +65,6 @@ export class NielsenConnector {
     }
 
     private onLoadMetadata = () => {
-        console.log('SENDING LOADMETADATA');
         const data: ContentMetadata = {
             type: 'content',
             adModel: '1'
