@@ -58,7 +58,6 @@ export class NielsenConnector {
         window.removeEventListener('beforeunload', this.onEnd);
     }
 
-    // TODO check if necessary?
     private onVolumeChange = (event: VolumeChangeEvent) => {
         const volumeLevel = this.player.muted ? 0 : event.volume * 100;
         this.nSdkInstance.ggPM('setVolume', volumeLevel);
@@ -67,13 +66,12 @@ export class NielsenConnector {
     private onLoadMetadata = () => {
         const data: ContentMetadata = {
             type: 'content',
-            adModel: '1'
+            adModel: '1' // Always '1' for DTVR
         }
         this.nSdkInstance.ggPM('loadmetadata', data);
     }
 
     private onAddTrack = (event: AddTrackEvent) => {
-        console.log('added track', event.track);
         if (event.track.kind === 'metadata') {
             const track = ( event.track as TextTrack );
             if (track.type === 'id3' || track.type === 'emsg') {
@@ -85,7 +83,6 @@ export class NielsenConnector {
         }
     }
 
-    // On add cue? exit cue? enter cue??? Enter cue seems best tbh
     private onEnterCue = (event: TextTrackEnterCueEvent) => {
         const { cue } = event;
         if (cue.track.type === 'id3') {
