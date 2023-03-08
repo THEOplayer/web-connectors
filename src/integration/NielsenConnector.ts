@@ -106,10 +106,13 @@ export class NielsenConnector {
     }
 
     private onPlay = () => {
-        if (!this.sessionInProgress) {
+        if (!this.sessionInProgress) {          // TODO confirm we should only call it once!
             this.sessionInProgress = true;
-            // TODO pass metadataObject instead? https://engineeringportal.nielsen.com/docs/play_(Browser)
-            this.nSdkInstance.ggPM('play', this.getPlayHeadPosition());
+            const metadataObject = {
+                "channelName": "channelName",
+                "length": this.player.duration // TODO make sure duration is known!
+            }
+            this.nSdkInstance.ggPM('play', metadataObject);
         }
     }
 
