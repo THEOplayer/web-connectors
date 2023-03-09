@@ -72,6 +72,6 @@
     }
   },
   "dependencies": {
-    "@convivainc/conviva-js-coresdk": "^4.5.13"
+    "@convivainc/conviva-js-coresdk": "^4.6.1"
   }
 }
