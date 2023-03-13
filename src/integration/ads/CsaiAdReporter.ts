@@ -8,7 +8,7 @@ export class CsaiAdReporter {
     private readonly convivaAdAnalytics: AdAnalytics;
 
     private currentAdBreak: AdBreak | undefined;
-    private adBreakCounter: number = 0;
+    private adBreakCounter: number = 1;
 
     constructor(player: ChromelessPlayer, videoAnalytics: VideoAnalytics, adAnalytics: AdAnalytics) {
         this.player = player;
