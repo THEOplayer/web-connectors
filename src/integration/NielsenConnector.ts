@@ -1,12 +1,4 @@
-import {
-    Ad,
-    AddTrackEvent,
-    ChromelessPlayer,
-    Event,
-    TextTrack,
-    TextTrackEnterCueEvent,
-    VolumeChangeEvent
-} from "theoplayer";
+import { Ad, AddTrackEvent, ChromelessPlayer, TextTrack, TextTrackEnterCueEvent, VolumeChangeEvent } from "theoplayer";
 import { loadNielsenLibrary } from "../nielsen/NOLBUNDLE";
 import { AdMetadata, ContentMetadata, NielsenOptions } from "../nielsen/Types";
 import { getAdType } from "../utils/Util";
