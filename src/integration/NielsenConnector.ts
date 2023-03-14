@@ -19,6 +19,8 @@ export class NielsenConnector {
 
     private sessionInProgress: boolean = false;
 
+    private duration: number = NaN;
+
     constructor(player: ChromelessPlayer, appId: string, instanceName: string, options: NielsenOptions) {
         this.player = player;
         this.nSdkInstance = loadNielsenLibrary(appId, instanceName, options);
@@ -36,6 +38,7 @@ export class NielsenConnector {
         this.player.addEventListener('sourcechange', this.onEnd);
         this.player.addEventListener('loadedmetadata', this.onLoadMetadata);
         this.player.addEventListener('volumechange', this.onVolumeChange);
+        this.player.addEventListener('durationchange', this.onDurationChange);
 
         this.player.textTracks.addEventListener('addtrack', this.onAddTrack);
 
@@ -61,6 +64,11 @@ export class NielsenConnector {
     private onVolumeChange = (event: VolumeChangeEvent) => {
         const volumeLevel = this.player.muted ? 0 : event.volume * 100;
         this.nSdkInstance.ggPM('setVolume', volumeLevel);
+    }
+
+    private onDurationChange = () => {
+        this.duration = this.player.duration;
+        this.maybeSendPlayEvent();
     }
 
     private onLoadMetadata = () => {
@@ -106,11 +114,15 @@ export class NielsenConnector {
     }
 
     private onPlay = () => {
-        if (!this.sessionInProgress) {          // TODO confirm we should only call it once!
+        this.maybeSendPlayEvent();
+    }
+
+    private maybeSendPlayEvent(): void {
+        if (!this.sessionInProgress && !Number.isNaN(this.duration)) {          // TODO confirm we should only call it once!
             this.sessionInProgress = true;
             const metadataObject = {
                 "channelName": "channelName",
-                "length": this.player.duration // TODO make sure duration is known!
+                "length": this.duration
             }
             this.nSdkInstance.ggPM('play', metadataObject);
         }
