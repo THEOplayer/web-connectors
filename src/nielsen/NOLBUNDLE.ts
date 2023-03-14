@@ -7,7 +7,7 @@ export function loadNielsenLibrary(appId: string, instanceName: string, options:
     // @ts-ignore
     !(function (t: Window, n: any) {
         t[n] = t[n] || {
-            nlsQ: function (e: any, o: any, c: any, r: any, s: any, i: any) {
+            nlsQ: function (e: any, o: any, c?: any, r?: any, s?: any, i?: any) {
                 // @ts-ignore
                 return (
                     (s = t.document),
