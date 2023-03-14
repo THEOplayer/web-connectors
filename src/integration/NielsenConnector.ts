@@ -35,10 +35,9 @@ export class NielsenConnector {
     private addEventListeners(): void {
         this.player.addEventListener('play', this.onPlay);
         this.player.addEventListener('ended', this.onEnd);
-        this.player.addEventListener('sourcechange', this.onEnd);
-        this.player.addEventListener('loadedmetadata', this.onLoadMetadata);
         this.player.addEventListener('sourcechange', this.onSourceChange);
         this.player.addEventListener('volumechange', this.onVolumeChange);
+        this.player.addEventListener('loadedmetadata', this.onLoadMetadata);
         this.player.addEventListener('durationchange', this.onDurationChange);
 
         this.player.textTracks.addEventListener('addtrack', this.onAddTrack);
@@ -53,13 +52,31 @@ export class NielsenConnector {
     private removeEventListeners(): void {
         this.player.removeEventListener('play', this.onPlay);
         this.player.removeEventListener('ended', this.onEnd);
-        this.player.removeEventListener('sourcechange', this.onEnd);
-        this.player.removeEventListener('loadedmetadata', this.onLoadMetadata);
+        this.player.removeEventListener('sourcechange', this.onSourceChange);
         this.player.removeEventListener('volumechange', this.onVolumeChange);
+        this.player.removeEventListener('loadedmetadata', this.onLoadMetadata);
+        this.player.removeEventListener('durationchange', this.onDurationChange);
 
         this.player.textTracks.removeEventListener('addtrack', this.onAddTrack);
 
+        if (this.player.ads) {
+            this.player.ads.removeEventListener('adbegin', this.onAdBegin);
+        }
+
         window.removeEventListener('beforeunload', this.onEnd);
+    }
+
+    private onPlay = () => {
+        this.maybeSendPlayEvent();
+    }
+
+    private onEnd = () => {
+        this.endSession();
+    }
+
+    private onSourceChange = () => {
+        this.duration = NaN;
+        this.endSession();
     }
 
     private onVolumeChange = (event: VolumeChangeEvent) => {
@@ -103,31 +120,6 @@ export class NielsenConnector {
         }
     }
 
-    private onSourceChange = () => {
-        this.duration = NaN;
-        this.endSession();
-    }
-
-    private onEnd = () => {
-        this.endSession();
-    }
-
-    private onPlay = () => {
-        this.maybeSendPlayEvent();
-    }
-
-    private maybeSendPlayEvent(): void {
-        if (!this.sessionInProgress && !Number.isNaN(this.duration)) {          // TODO confirm we should only call it once!
-            this.sessionInProgress = true;
-            const metadataObject = {
-                "channelName": "channelName",
-                "length": this.duration
-            }
-            this.nSdkInstance.ggPM('play', metadataObject);
-        }
-    }
-
-
     private onAdBegin = () => {
         const currentAd = this.player.ads!.currentAds.filter((ad: Ad) => ad.type === 'linear');
         if (currentAd.length !== 1) {
@@ -140,6 +132,17 @@ export class NielsenConnector {
             assetid: currentAd[ 0 ].id!
         };
         this.nSdkInstance.ggPM('loadMetadata', adMetadata);
+    }
+
+    private maybeSendPlayEvent(): void {
+        if (!this.sessionInProgress && !Number.isNaN(this.duration)) {          // TODO confirm we should only call it once!
+            this.sessionInProgress = true;
+            const metadataObject = {
+                "channelName": "channelName",
+                "length": this.duration
+            }
+            this.nSdkInstance.ggPM('play', metadataObject);
+        }
     }
 
     private endSession(): void {
