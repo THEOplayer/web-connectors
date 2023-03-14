@@ -15,7 +15,7 @@ export class NielsenConnector {
 
     private player: ChromelessPlayer;
 
-    private nSdkInstance: any; // TODO fix type?
+    private nSdkInstance: any;
 
     private sessionInProgress: boolean = false;
 
@@ -37,6 +37,7 @@ export class NielsenConnector {
         this.player.addEventListener('ended', this.onEnd);
         this.player.addEventListener('sourcechange', this.onEnd);
         this.player.addEventListener('loadedmetadata', this.onLoadMetadata);
+        this.player.addEventListener('sourcechange', this.onSourceChange);
         this.player.addEventListener('volumechange', this.onVolumeChange);
         this.player.addEventListener('durationchange', this.onDurationChange);
 
@@ -82,7 +83,7 @@ export class NielsenConnector {
     private onAddTrack = (event: AddTrackEvent) => {
         if (event.track.kind === 'metadata') {
             const track = ( event.track as TextTrack );
-            if (track.type === 'id3' || track.type === 'emsg') {
+            if (track.type === 'id3') { // || track.type === 'emsg') {
                 if (track.mode === 'disabled') {
                     track.mode = 'hidden';
                 }
@@ -98,19 +99,17 @@ export class NielsenConnector {
                 this.nSdkInstance.ggPM('sendID3', cue.content.ownerIdentifier);
             }
         } else {
-            // DASH emsg
-            // TODO test once we get DASH stream, verify if below is valid (with changes as I got it from old integration)
-            // if (cue.schemeIDURI && cue.schemeIDURI.indexOf(NIELSEN_ID) > -1) {
-            //     this.nielsenApi.sendId3Payload(cue.content);
-            // }
+            // TODO emsg is not supported for now
         }
     }
 
+    private onSourceChange = () => {
+        this.duration = NaN;
+        this.endSession();
+    }
+
     private onEnd = () => {
-        if (this.sessionInProgress) {
-            this.sessionInProgress = false;
-            this.nSdkInstance.ggPM('end', this.getPlayHeadPosition());
-        }
+        this.endSession();
     }
 
     private onPlay = () => {
@@ -128,19 +127,26 @@ export class NielsenConnector {
         }
     }
 
-    private onAdBegin = (event: Event) => {
+
+    private onAdBegin = () => {
         const currentAd = this.player.ads!.currentAds.filter((ad: Ad) => ad.type === 'linear');
         if (currentAd.length !== 1) {
-            console.error('WAIT I THOUGHT WE WOULD HAVE A LINEAR AD, lets hope it is only nonlinear!', currentAd, this.player.ads!.currentAds);
+            // TODO how to handle multiple ads playing at same time? How to filter?
         }
 
         const type = getAdType(this.player.ads!.currentAdBreak!);
         const adMetadata: AdMetadata = {
             type,
-            // TODO check if id is always filled
             assetid: currentAd[ 0 ].id!
-        }
+        };
         this.nSdkInstance.ggPM('loadMetadata', adMetadata);
+    }
+
+    private endSession(): void {
+        if (this.sessionInProgress) {
+            this.sessionInProgress = false;
+            this.nSdkInstance.ggPM('end', this.getPlayHeadPosition());
+        }
     }
 
     private getPlayHeadPosition(): string {
