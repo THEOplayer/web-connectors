@@ -10,6 +10,8 @@
     <body>
         <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
         <script type="text/javascript">
+            import {NielsenConnector} from "../../dist/THEOplayerNielsenConnector";
+
             const element = document.querySelector("#THEOplayer");
             const player = new THEOplayer.Player(element, {
                 ui: {
@@ -22,12 +24,12 @@
             // Add your connector setup logic here
             //
             const appId = 'P77E3B909-D4B5-4E5C-9B5F-77B0E8FE27F5';
-            const instanceName = 'instance name';
+            const channelName = 'test_channel';
             const options = {
                 // containerId: 'THEOplayer',
                 nol_sdkDebug: 'debug'
             }
-            const nielsenConnector = new THEOplayerNielsenConnector.NielsenConnector(player, appId, instanceName, options);
+            const nielsenConnector = new NielsenConnector(player, appId, channelName, options);
 
             // Set a source that works with your connector
             player.source = {
