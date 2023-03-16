@@ -24,12 +24,12 @@
             // Add your connector setup logic here
             //
             const appId = 'P77E3B909-D4B5-4E5C-9B5F-77B0E8FE27F5';
-            const channelName = 'test_channel';
+            const instanceName = 'instanceName';
             const options = {
                 // containerId: 'THEOplayer',
                 nol_sdkDebug: 'debug'
             }
-            const nielsenConnector = new NielsenConnector(player, appId, channelName, options);
+            const nielsenConnector = new NielsenConnector(player, appId, instanceName, options);
 
             // Set a source that works with your connector
             player.source = {
