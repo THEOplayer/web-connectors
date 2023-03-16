@@ -4,12 +4,10 @@ import { YospaceConnector } from '@theoplayer/yospace-connector-web';
 import { ConvivaConfiguration, ConvivaHandler } from './ConvivaHandler';
 
 export class ConvivaConnector {
-    private player: ChromelessPlayer;
 
     private convivaHandler: ConvivaHandler;
 
     constructor(player: ChromelessPlayer, convivaMetadata: ConvivaMetadata, convivaConfig: ConvivaConfiguration) {
-        this.player = player;
         this.convivaHandler = new ConvivaHandler(player, convivaMetadata, convivaConfig);
     }
 
