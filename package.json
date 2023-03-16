@@ -1,9 +1,9 @@
 {
   "name": "@theoplayer/nielsen-connector-web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A connector implementing Nielsen with THEOplayer.",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/THEOplayerNielsenConnector.js",
+  "types": "dist/THEOplayerNielsenConnector.d.ts",
   "scripts": {
     "clean": "rimraf lib dist",
     "bundle": "rollup -c ./rollup.config.js",
