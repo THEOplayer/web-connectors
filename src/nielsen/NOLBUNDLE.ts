@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { NielsenOptions } from "./Types";
 
-export function loadNielsenLibrary(appId: string, instanceName: string, options: NielsenOptions) {
+export function loadNielsenLibrary(appId: string, instanceName: string, options?: NielsenOptions) {
     // https://engineeringportal.nielsen.com/docs/DTVR_Browser_SDK
     // Add Static Queue Snippet to initialize a Nielsen SDK Instance.
     // @ts-ignore

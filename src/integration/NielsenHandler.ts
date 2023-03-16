@@ -13,7 +13,7 @@ export class NielsenHandler {
 
     private duration: number = NaN;
 
-    constructor(player: ChromelessPlayer, appId: string, instanceName: string, options: NielsenOptions) {
+    constructor(player: ChromelessPlayer, appId: string, instanceName: string, options?: NielsenOptions) {
         this.player = player;
         this.nSdkInstance = loadNielsenLibrary(appId, instanceName, options);
 
