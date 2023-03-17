@@ -2,7 +2,7 @@
   "name": "@theoplayer/nielsen-connector-web",
   "version": "1.0.2",
   "description": "A connector implementing Nielsen with THEOplayer.",
-  "main": "dist/THEOplayerNielsenConnector.js",
+  "main": "dist/THEOplayerNielsenConnector.umd.js",
   "types": "dist/THEOplayerNielsenConnector.d.ts",
   "scripts": {
     "clean": "rimraf lib dist",
