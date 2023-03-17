@@ -9,16 +9,13 @@ export class NielsenHandler {
 
     private nSdkInstance: any;
 
-    private readonly channelName: string;
-
     private sessionInProgress: boolean = false;
 
     private duration: number = NaN;
 
-    constructor(player: ChromelessPlayer, appId: string, channelName: string, options: NielsenOptions) {
+    constructor(player: ChromelessPlayer, appId: string, instanceName: string, options: NielsenOptions) {
         this.player = player;
-        this.channelName = channelName;
-        this.nSdkInstance = loadNielsenLibrary(appId, channelName, options);
+        this.nSdkInstance = loadNielsenLibrary(appId, instanceName, options);
 
         this.addEventListeners();
     }
@@ -133,7 +130,7 @@ export class NielsenHandler {
         if (!this.sessionInProgress && !Number.isNaN(this.duration)) {          // TODO confirm we should only call it once!
             this.sessionInProgress = true;
             const metadataObject = {
-                "channelName": this.channelName,
+                "channelName": this.player.src,
                 "length": this.duration
             }
             this.nSdkInstance.ggPM('play', metadataObject);

@@ -1,8 +1,14 @@
 export type AdType = 'preroll' | 'midroll' | 'postroll' | 'ad';
 
 export type NielsenOptions = {
+
+    // HTML DOM element id of the player container
     containerId?: string,
+
+    // Enables Debug Mode which allows output to be viewed in console.
     nol_sdkDebug?: string,
+
+    // Set the ability to optout on initialization of the SDK
     optout?: boolean
 }
 
