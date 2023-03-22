@@ -86,7 +86,7 @@ export class NielsenHandler {
             type: 'content',
             adModel: '1' // Always '1' for DTVR
         }
-        this.nSdkInstance.ggPM('loadmetadata', data);
+        this.nSdkInstance.ggPM('loadMetadata', data);
     }
 
     private onAddTrack = (event: AddTrackEvent) => {
