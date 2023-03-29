@@ -70,7 +70,8 @@ export function collectContentMetadata(
     // @ts-ignore
     return {
         ...configuredContentMetadata,
-        [Constants.DURATION]: player.duration
+        [Constants.DURATION]: player.duration,
+        "THEOplayer.connectorVersion": '1.1.0'
     };
 }
 
