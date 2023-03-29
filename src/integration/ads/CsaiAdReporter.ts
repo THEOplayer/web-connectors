@@ -135,6 +135,9 @@ export class CsaiAdReporter {
     }
 
     destroy(): void {
+        if (this.currentAdBreak) {
+            this.onAdBreakEnd();
+        }
         this.removeEventListeners();
     }
 }
