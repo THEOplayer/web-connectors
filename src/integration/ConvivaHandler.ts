@@ -117,6 +117,17 @@ export class ConvivaHandler {
         this.releaseSession();
     }
 
+    stopAndStartNewSession(metadata: ConvivaMetadata): void {
+        this.maybeReportPlaybackEnded();
+        this.maybeReportPlaybackRequested();
+        this.setContentInfo(metadata);
+        if (this.player.paused) {
+            this.onPause();
+        } else {
+            this.onPlaying();
+        }
+    }
+
     private addEventListeners(): void {
         this.player.addEventListener('play', this.onPlay);
         this.player.addEventListener('playing', this.onPlaying);
@@ -319,17 +330,17 @@ export class ConvivaHandler {
     };
 
     private releaseSession(): void {
-        this.convivaAdAnalytics?.release();
-        this.convivaVideoAnalytics?.release();
-        this.convivaAdAnalytics = undefined;
-        this.convivaVideoAnalytics = undefined;
-
         this.adReporter?.destroy();
         this.verizonAdReporter?.destroy();
         this.yospaceAdReporter?.destroy();
         this.adReporter = undefined;
         this.verizonAdReporter = undefined;
         this.yospaceAdReporter = undefined;
+
+        this.convivaAdAnalytics?.release();
+        this.convivaVideoAnalytics?.release();
+        this.convivaAdAnalytics = undefined;
+        this.convivaVideoAnalytics = undefined;
 
         this.customMetadata = {};
     }
