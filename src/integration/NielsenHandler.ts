@@ -150,5 +150,6 @@ export class NielsenHandler {
 
     destroy() {
         this.removeEventListeners();
+        this.endSession();
     }
 }
