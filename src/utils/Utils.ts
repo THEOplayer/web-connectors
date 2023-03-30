@@ -71,7 +71,7 @@ export function collectContentMetadata(
     return {
         ...configuredContentMetadata,
         [Constants.DURATION]: player.duration,
-        "THEOplayer.connectorVersion": '1.1.0'
+        'THEOplayer.connectorVersion': '1.1.0'
     };
 }
 
