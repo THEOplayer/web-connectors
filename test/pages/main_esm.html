@@ -23,10 +23,6 @@
 
     // Set up the ConvivaConnector.
     const convivaMetadata = {
-        ['Conviva.assetName']: 'Main page',
-        ['Conviva.streamUrl']: srcUrl,
-        ['Conviva.streamType']: 'VOD',
-        ['Conviva.applicationName']: 'THEOplayer',
         ['Conviva.viewerId']: 'your_viewer_id'
     };
 
@@ -37,6 +33,17 @@
     };
 
     const convivaIntegration = new ConvivaConnector(player, convivaMetadata, convivaConfig);
+
+    const onSourceChange = () => {
+        const metadata = {
+            ['Conviva.assetName']: `Main page ${(new Date()).toLocaleString()}`,
+            ['customTag1']: "customValue1",
+            ['customTag2']: "customValue2",
+        }
+        convivaIntegration.setContentInfo(metadata);
+    }
+
+    player.addEventListener('sourcechange', onSourceChange);
 
     player.source = {
         sources: [{src: srcUrl}]
