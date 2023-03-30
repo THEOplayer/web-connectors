@@ -36,7 +36,7 @@ export class ConvivaConnector {
     }
 
     /**
-     * Sets an error to the conviva session and closes the session.
+     * Reports an error to the Conviva session and closes the session.
      * @param errorMessage string explaining what the error is.
      */
     reportPlaybackFailed(errorMessage: string): void {
