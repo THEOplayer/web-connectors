@@ -97,7 +97,6 @@ export class CsaiAdReporter {
     };
 
     private addEventListeners(): void {
-        this.player.addEventListener('play', this.onPlaying);
         this.player.addEventListener('playing', this.onPlaying);
         this.player.addEventListener('pause', this.onPause);
         if (this.player.ads === undefined) {
@@ -114,7 +113,6 @@ export class CsaiAdReporter {
     }
 
     private removeEventListeners(): void {
-        this.player.removeEventListener('play', this.onPlaying);
         this.player.removeEventListener('playing', this.onPlaying);
         this.player.removeEventListener('pause', this.onPause);
         if (this.player.ads === undefined) {
