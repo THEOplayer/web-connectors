@@ -269,7 +269,11 @@ export class ConvivaHandler {
     };
 
     private readonly onError = () => {
-        this.convivaVideoAnalytics?.reportPlaybackFailed(this.player.errorObject?.message ?? 'Fatal error occurred');
+        const metadata: ConvivaMetadata = {};
+        if (Number.isNaN(this.player.duration)) {
+            metadata[Constants.DURATION] = -1;
+        }
+        this.convivaVideoAnalytics?.reportPlaybackFailed(this.player.errorObject?.message ?? 'Fatal error occurred', metadata);
         this.releaseSession();
     };
 

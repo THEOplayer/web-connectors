@@ -70,8 +70,8 @@ export function collectContentMetadata(
     // @ts-ignore
     return {
         ...configuredContentMetadata,
-        [Constants.DURATION]: player.duration,
         'THEOplayer.connectorVersion': '1.1.0'
+        [Constants.DURATION]: Number.isNaN(player.duration) ? null : player.duration,
     };
 }
 
