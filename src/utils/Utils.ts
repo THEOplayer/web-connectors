@@ -67,11 +67,16 @@ export function collectContentMetadata(
     player: ChromelessPlayer,
     configuredContentMetadata: ConvivaMetadata
 ): ConvivaMetadata {
+    const contentInfo: ConvivaMetadata = {};
+    const duration = player.duration;
+    if (!Number.isNaN(duration) && duration !== Infinity) {
+        contentInfo[Constants.DURATION] = duration;
+    }
     // @ts-ignore
     return {
         ...configuredContentMetadata,
-        'THEOplayer.connectorVersion': '1.1.0'
-        [Constants.DURATION]: Number.isNaN(player.duration) ? null : player.duration,
+        ...contentInfo,
+        'THEOplayer.connectorVersion': '1.1.2'
     };
 }
 
