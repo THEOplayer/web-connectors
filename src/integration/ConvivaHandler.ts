@@ -273,7 +273,10 @@ export class ConvivaHandler {
         if (Number.isNaN(this.player.duration)) {
             metadata[Constants.DURATION] = -1;
         }
-        this.convivaVideoAnalytics?.reportPlaybackFailed(this.player.errorObject?.message ?? 'Fatal error occurred', metadata);
+        this.convivaVideoAnalytics?.reportPlaybackFailed(
+            this.player.errorObject?.message ?? 'Fatal error occurred',
+            metadata
+        );
         this.releaseSession();
     };
 
