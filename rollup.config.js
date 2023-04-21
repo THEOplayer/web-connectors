@@ -31,6 +31,7 @@ const options = [{
             intend: false
         }
     ],
+    external: ['theoplayer'],
     plugins: [
         nodeResolve({
             extensions: [".ts", ".js"]
@@ -56,6 +57,7 @@ const options = [{
             footer: `export as namespace THEOplayerNielsenConnector;`
         }
     ],
+    external: ['theoplayer'],
     plugins: [
         dts({
             tsconfig: "tsconfig.json",
