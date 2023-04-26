@@ -201,7 +201,7 @@ export class ConvivaHandler {
     };
 
     private maybeReportPlaybackRequested() {
-        if (!this.playbackRequested) {
+        if (!this.playbackRequested && this.player.source !== undefined) {
             this.playbackRequested = true;
             if (!this.convivaVideoAnalytics) {
                 this.initializeSession();
