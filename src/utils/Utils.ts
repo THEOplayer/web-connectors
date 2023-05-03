@@ -75,8 +75,7 @@ export function collectContentMetadata(
     // @ts-ignore
     return {
         ...configuredContentMetadata,
-        ...contentInfo,
-        'THEOplayer.connectorVersion': '1.1.2'
+        ...contentInfo
     };
 }
 
