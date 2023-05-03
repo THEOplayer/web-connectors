@@ -5,13 +5,14 @@ definitions:
     npm: $HOME/.npm
 
 stepdefinitions:
-  - tests: &tests
+  - tests: &test-and-build
       name: Run tests and quality gate
       script:
         - npm ci --prefer-offline --no-audit
         - npm run test
         - npm run prettier
         - npm run lint
+        - npm run build
   - publish-npm: &publish-npm
       name: Build and publish npm package
       caches:
@@ -23,27 +24,12 @@ stepdefinitions:
           variables:
             EXTRA_ARGS: "--access public"
             NPM_TOKEN: $NPM_TOKEN
-  - publish-s3: &publish-s3
-      name: Build and publish bundle to s3
-      caches:
-        - npm
-      script:
-        - npm ci --prefer-offline --no-audit
-        - npm run build
-        - pipe: atlassian/aws-s3-deploy:0.4.5
-          variables:
-            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-            AWS_DEFAULT_REGION: "eu-west-1"
-            S3_BUCKET: "theoplayer-cdn/connectors"
-            LOCAL_PATH: "dist/bundle"
 
 pipelines:
-  default:
-    - step: *tests
+  pull-requests:
+    "**":
+      - step: *test-and-build
   tags:
     v*:
-      - step: *tests
-      - parallel:
-          - step: *publish-npm
-          - step: *publish-s3
+      - step: *test-and-build
+      - step: *publish-npm
