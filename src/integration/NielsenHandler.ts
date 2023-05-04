@@ -114,10 +114,6 @@ export class NielsenHandler {
 
     private onAdBegin = () => {
         const currentAd = this.player.ads!.currentAds.filter((ad: Ad) => ad.type === 'linear');
-        if (currentAd.length !== 1) {
-            // TODO how to handle multiple ads playing at same time? How to filter?
-        }
-
         const type = getAdType(this.player.ads!.currentAdBreak!);
         const adMetadata: AdMetadata = {
             type,
@@ -127,7 +123,7 @@ export class NielsenHandler {
     }
 
     private maybeSendPlayEvent(): void {
-        if (!this.sessionInProgress && !Number.isNaN(this.duration)) {          // TODO confirm we should only call it once!
+        if (!this.sessionInProgress && !Number.isNaN(this.duration)) {
             this.sessionInProgress = true;
             const metadataObject = {
                 "channelName": this.player.src,
