@@ -3,8 +3,7 @@ import { NielsenOptions } from "../nielsen/Types";
 import { NielsenHandler } from "./NielsenHandler";
 
 export class NielsenConnector {
-
-    private nielsenHandler: NielsenHandler
+    private nielsenHandler: NielsenHandler;
 
     /**
      * Create NielsenConnector
@@ -18,7 +17,7 @@ export class NielsenConnector {
         this.nielsenHandler = new NielsenHandler(player, appId, instanceName, options);
     }
 
-    updateMetadata(metadata: { [ key: string ]: string }): void {
+    updateMetadata(metadata: { [key: string]: string }): void {
         this.nielsenHandler.updateMetadata(metadata);
     }
 
