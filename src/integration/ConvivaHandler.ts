@@ -23,20 +23,24 @@ export class ConvivaHandler {
     private readonly player: ChromelessPlayer;
     private readonly convivaMetadata: ConvivaMetadata;
     private readonly convivaConfig: ConvivaConfiguration;
+    private customMetadata: ConvivaMetadata = {};
 
-    private readonly convivaVideoAnalytics: VideoAnalytics;
-    private readonly convivaAdAnalytics: AdAnalytics;
+    private convivaVideoAnalytics: VideoAnalytics | undefined;
+    private convivaAdAnalytics: AdAnalytics | undefined;
 
-    private readonly adReporter: CsaiAdReporter | undefined;
+    private adReporter: CsaiAdReporter | undefined;
     private yospaceAdReporter: YospaceAdReporter | undefined;
-    private readonly verizonAdReporter: VerizonAdReporter | undefined;
+    private verizonAdReporter: VerizonAdReporter | undefined;
 
     private currentSource: SourceDescription | undefined;
     private playbackRequested: boolean = false;
 
+    private yospaceConnector: YospaceConnector | undefined;
+
     constructor(player: ChromelessPlayer, convivaMetaData: ConvivaMetadata, config: ConvivaConfiguration) {
         this.player = player;
         this.convivaMetadata = convivaMetaData;
+        this.customMetadata = convivaMetaData;
         this.convivaConfig = config;
         this.currentSource = player.source;
 
@@ -46,44 +50,82 @@ export class ConvivaHandler {
             CONVIVA_CALLBACK_FUNCTIONS,
             calculateConvivaOptions(this.convivaConfig)
         );
-        // This object will be used throughout the entire application lifecycle to report video related events.
-        this.convivaVideoAnalytics = Analytics.buildVideoAnalytics();
-        this.convivaVideoAnalytics.setPlayerInfo(collectPlayerInfo());
-        this.convivaVideoAnalytics.setCallback(this.convivaCallback);
-
-        // This object will be used throughout the entire application lifecycle to report ad related events.
-        this.convivaAdAnalytics = Analytics.buildAdAnalytics(this.convivaVideoAnalytics);
-
-        if (player.ads !== undefined) {
-            this.adReporter = new CsaiAdReporter(
-                this.player,
-                this.convivaVideoAnalytics,
-                this.convivaAdAnalytics,
-                this.convivaMetadata
-            );
-        }
-
-        if (player.verizonMedia !== undefined) {
-            this.verizonAdReporter = new VerizonAdReporter(
-                this.player,
-                this.convivaVideoAnalytics,
-                this.convivaAdAnalytics,
-                this.convivaMetadata
-            );
-        }
 
         this.addEventListeners();
     }
 
-    connect(connector: YospaceConnector) {
+    private initializeSession(): void {
+        this.convivaVideoAnalytics = Analytics.buildVideoAnalytics();
+        this.convivaVideoAnalytics.setPlayerInfo(collectPlayerInfo());
+        this.convivaVideoAnalytics.setCallback(this.convivaCallback);
+
+        this.convivaAdAnalytics = Analytics.buildAdAnalytics(this.convivaVideoAnalytics);
+
+        if (this.player.ads !== undefined) {
+            this.adReporter = new CsaiAdReporter(this.player, this.convivaVideoAnalytics, this.convivaAdAnalytics);
+        }
+
+        if (this.player.verizonMedia !== undefined) {
+            this.verizonAdReporter = new VerizonAdReporter(
+                this.player,
+                this.convivaVideoAnalytics,
+                this.convivaAdAnalytics
+            );
+        }
+
+        if (this.yospaceConnector !== undefined) {
+            this.yospaceAdReporter = new YospaceAdReporter(
+                this.player,
+                this.convivaVideoAnalytics!,
+                this.convivaAdAnalytics!,
+                this.yospaceConnector
+            );
+        }
+    }
+
+    connect(connector: YospaceConnector): void {
+        if (!this.convivaVideoAnalytics) {
+            this.initializeSession();
+        }
         this.yospaceAdReporter?.destroy();
         this.yospaceAdReporter = new YospaceAdReporter(
             this.player,
-            this.convivaVideoAnalytics,
-            this.convivaAdAnalytics,
-            this.convivaMetadata,
+            this.convivaVideoAnalytics!,
+            this.convivaAdAnalytics!,
             connector
         );
+        this.yospaceConnector = connector;
+    }
+
+    setContentInfo(metadata: ConvivaMetadata): void {
+        if (!this.convivaVideoAnalytics) {
+            this.initializeSession();
+        }
+        this.customMetadata = { ...this.customMetadata, ...metadata };
+        this.convivaVideoAnalytics!.setContentInfo(metadata);
+    }
+
+    setAdInfo(metadata: ConvivaMetadata): void {
+        if (!this.convivaVideoAnalytics) {
+            this.initializeSession();
+        }
+        this.convivaAdAnalytics!.setAdInfo(metadata);
+    }
+
+    reportPlaybackFailed(errorMessage: string): void {
+        this.convivaVideoAnalytics?.reportPlaybackFailed(errorMessage);
+        this.releaseSession();
+    }
+
+    stopAndStartNewSession(metadata: ConvivaMetadata): void {
+        this.maybeReportPlaybackEnded();
+        this.maybeReportPlaybackRequested();
+        this.setContentInfo(metadata);
+        if (this.player.paused) {
+            this.onPause();
+        } else {
+            this.onPlaying();
+        }
     }
 
     private addEventListeners(): void {
@@ -102,6 +144,9 @@ export class ConvivaHandler {
         this.player.addEventListener('destroy', this.onDestroy);
 
         this.player.network.addEventListener('offline', this.onNetworkOffline);
+
+        document.addEventListener('visibilitychange', this.onVisibilityChange);
+        window.addEventListener('beforeunload', this.onBeforeUnload);
     }
 
     private removeEventListeners(): void {
@@ -120,16 +165,19 @@ export class ConvivaHandler {
         this.player.removeEventListener('destroy', this.onDestroy);
 
         this.player.network.removeEventListener('offline', this.onNetworkOffline);
+
+        document.removeEventListener('visibilitychange', this.onVisibilityChange);
+        window.removeEventListener('beforeunload', this.onBeforeUnload);
     }
 
     private convivaCallback = () => {
         const currentTime = this.player.currentTime * 1000;
-        this.convivaVideoAnalytics.reportPlaybackMetric(Constants.Playback.PLAY_HEAD_TIME, currentTime);
-        this.convivaVideoAnalytics.reportPlaybackMetric(
+        this.convivaVideoAnalytics!.reportPlaybackMetric(Constants.Playback.PLAY_HEAD_TIME, currentTime);
+        this.convivaVideoAnalytics!.reportPlaybackMetric(
             Constants.Playback.BUFFER_LENGTH,
             calculateBufferLength(this.player)
         );
-        this.convivaVideoAnalytics.reportPlaybackMetric(
+        this.convivaVideoAnalytics!.reportPlaybackMetric(
             Constants.Playback.RESOLUTION,
             this.player.videoWidth,
             this.player.videoHeight
@@ -137,10 +185,13 @@ export class ConvivaHandler {
         const activeVideoTrack = this.player.videoTracks[0];
         const activeQuality = activeVideoTrack?.activeQuality;
         if (activeQuality) {
-            this.convivaVideoAnalytics.reportPlaybackMetric(Constants.Playback.BITRATE, activeQuality.bandwidth / 1000);
             const frameRate = (activeQuality as VideoQuality).frameRate;
+            this.convivaVideoAnalytics!.reportPlaybackMetric(
+                Constants.Playback.BITRATE,
+                activeQuality.bandwidth / 1000
+            );
             if (frameRate) {
-                this.convivaVideoAnalytics.reportPlaybackMetric(Constants.Playback.RENDERED_FRAMERATE, frameRate);
+                this.convivaVideoAnalytics!.reportPlaybackMetric(Constants.Playback.RENDERED_FRAMERATE, frameRate);
             }
         }
     };
@@ -150,82 +201,123 @@ export class ConvivaHandler {
     };
 
     private maybeReportPlaybackRequested() {
-        if (!this.playbackRequested) {
+        if (!this.playbackRequested && this.player.source !== undefined) {
             this.playbackRequested = true;
-            this.convivaVideoAnalytics.reportPlaybackRequested(
+            if (!this.convivaVideoAnalytics) {
+                this.initializeSession();
+            }
+            this.convivaVideoAnalytics!.reportPlaybackRequested(
                 collectContentMetadata(this.player, this.convivaMetadata)
             );
+            this.reportMetadata();
         }
     }
 
     private maybeReportPlaybackEnded() {
         if (this.playbackRequested) {
-            this.convivaVideoAnalytics.reportPlaybackEnded();
+            this.convivaVideoAnalytics?.reportPlaybackEnded();
+            this.releaseSession();
             this.playbackRequested = false;
         }
     }
 
+    private reportMetadata() {
+        const src = this.player.src ?? '';
+        const streamType = this.player.duration === Infinity ? Constants.StreamType.LIVE : Constants.StreamType.VOD;
+        const assetName = this.customMetadata[Constants.ASSET_NAME] ?? this.currentSource?.metadata?.title ?? 'NA';
+        const playerName = this.customMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
+        const metadata = {
+            [Constants.STREAM_URL]: src,
+            [Constants.IS_LIVE]: streamType,
+            [Constants.ASSET_NAME]: assetName,
+            [Constants.PLAYER_NAME]: playerName
+        };
+        this.setContentInfo(metadata);
+    }
+
     private readonly onPlaying = () => {
-        this.convivaVideoAnalytics.reportPlaybackMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
+        this.convivaVideoAnalytics?.reportPlaybackMetric(
+            Constants.Playback.PLAYER_STATE,
+            Constants.PlayerState.PLAYING
+        );
     };
 
     private readonly onPause = () => {
-        this.convivaVideoAnalytics.reportPlaybackMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PAUSED);
+        this.convivaVideoAnalytics?.reportPlaybackMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PAUSED);
     };
 
     private readonly onEmptied = () => {
-        this.convivaVideoAnalytics.reportPlaybackMetric(
+        this.convivaVideoAnalytics?.reportPlaybackMetric(
             Constants.Playback.PLAYER_STATE,
             Constants.PlayerState.BUFFERING
         );
     };
 
     private readonly onWaiting = () => {
-        this.convivaVideoAnalytics.reportPlaybackMetric(
+        this.convivaVideoAnalytics?.reportPlaybackMetric(
             Constants.Playback.PLAYER_STATE,
             Constants.PlayerState.BUFFERING
         );
     };
 
     private readonly onSeeking = () => {
-        this.convivaVideoAnalytics.reportPlaybackMetric(Constants.Playback.SEEK_STARTED);
+        this.convivaVideoAnalytics?.reportPlaybackMetric(Constants.Playback.SEEK_STARTED);
     };
 
     private readonly onSeeked = () => {
-        this.convivaVideoAnalytics.reportPlaybackMetric(Constants.Playback.SEEK_ENDED);
+        this.convivaVideoAnalytics?.reportPlaybackMetric(Constants.Playback.SEEK_ENDED);
     };
 
     private readonly onError = () => {
-        this.convivaVideoAnalytics.reportPlaybackFailed('Fatal error occured');
+        const metadata: ConvivaMetadata = {};
+        if (Number.isNaN(this.player.duration)) {
+            metadata[Constants.DURATION] = -1;
+        }
+        this.convivaVideoAnalytics?.reportPlaybackFailed(
+            this.player.errorObject?.message ?? 'Fatal error occurred',
+            metadata
+        );
+        this.releaseSession();
     };
 
     private readonly onSegmentNotFound = () => {
-        this.convivaVideoAnalytics.reportPlaybackError(
+        this.convivaVideoAnalytics?.reportPlaybackError(
             'A Video Playback Failure has occurred: Segment not found',
             Constants.ErrorSeverity.FATAL
         );
     };
 
     private readonly onNetworkOffline = () => {
-        this.convivaVideoAnalytics.reportPlaybackError(
+        this.convivaVideoAnalytics?.reportPlaybackError(
             'A Video Playback Failure has occurred: Waiting for the manifest to come back online',
             Constants.ErrorSeverity.FATAL
         );
     };
 
-    private readonly onSourceChange = () => {
-        if (this.player.source === this.currentSource) {
-            return;
+    // eslint-disable-next-line class-methods-use-this
+    private readonly onVisibilityChange = () => {
+        if (document.visibilityState === 'visible') {
+            Analytics.reportAppForegrounded();
+        } else {
+            Analytics.reportAppBackgrounded();
         }
+    };
+
+    private readonly onBeforeUnload = () => {
         this.maybeReportPlaybackEnded();
-        this.reset(true);
+    };
+
+    private readonly onSourceChange = () => {
+        this.maybeReportPlaybackEnded();
         this.currentSource = this.player.source;
     };
 
     private readonly onEnded = () => {
-        this.convivaVideoAnalytics.reportPlaybackMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.STOPPED);
+        this.convivaVideoAnalytics?.reportPlaybackMetric(
+            Constants.Playback.PLAYER_STATE,
+            Constants.PlayerState.STOPPED
+        );
         this.maybeReportPlaybackEnded();
-        this.reset(false);
     };
 
     private readonly onDurationChange = () => {
@@ -237,26 +329,32 @@ export class ConvivaHandler {
             contentInfo[Constants.IS_LIVE] = Constants.StreamType.VOD;
             contentInfo[Constants.DURATION] = duration;
         }
-        this.convivaVideoAnalytics.setContentInfo(contentInfo);
+        this.convivaVideoAnalytics?.setContentInfo(contentInfo);
     };
 
     private readonly onDestroy = () => {
         this.destroy();
     };
 
-    private reset(resetSource: boolean = true): void {
-        if (resetSource) {
-            this.currentSource = undefined;
-        }
-        this.playbackRequested = false;
+    private releaseSession(): void {
+        this.adReporter?.destroy();
+        this.verizonAdReporter?.destroy();
+        this.yospaceAdReporter?.destroy();
+        this.adReporter = undefined;
+        this.verizonAdReporter = undefined;
+        this.yospaceAdReporter = undefined;
+
+        this.convivaAdAnalytics?.release();
+        this.convivaVideoAnalytics?.release();
+        this.convivaAdAnalytics = undefined;
+        this.convivaVideoAnalytics = undefined;
+
+        this.customMetadata = {};
     }
 
     destroy(): void {
         this.maybeReportPlaybackEnded();
         this.removeEventListeners();
-        this.adReporter?.destroy();
-        this.convivaAdAnalytics.release();
-        this.convivaVideoAnalytics.release();
         Analytics.release();
     }
 }

@@ -1,32 +1,32 @@
 import {
     Constants,
+    ConvivaAdBreakInfo,
     ConvivaDeviceMetadata,
     ConvivaMetadata,
     ConvivaOptions,
     ConvivaPlayerInfo
 } from '@convivainc/conviva-js-coresdk';
 import { AdVert } from '@theoplayer/yospace-connector-web';
-import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd, VerizonMediaAd, VerizonMediaAdBreak } from 'theoplayer';
+import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd, VerizonMediaAd, VerizonMediaAdBreak, version } from 'theoplayer';
 import { ConvivaConfiguration } from '../integration/ConvivaHandler';
 
 export function collectDeviceMetadata(): ConvivaDeviceMetadata {
+    // Most device metadata is auto-collected by Conviva.
     return {
         [Constants.DeviceMetadata.CATEGORY]: Constants.DeviceCategory.WEB
     };
 }
 
 type AdBreakPosition = 'preroll' | 'midroll' | 'postroll';
-let adBreakCounter = 1;
 
-export function calculateVerizonAdBreakInfo(adBreak: VerizonMediaAdBreak): object | undefined {
-    // TODO improve types
+export function calculateVerizonAdBreakInfo(adBreak: VerizonMediaAdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
     return {
         [Constants.POD_DURATION]: adBreak.duration!,
-        [Constants.POD_INDEX]: adBreakCounter++
+        [Constants.POD_INDEX]: adBreakIndex
     };
 }
 
-export function calculateCurrentAdBreakInfo(adBreak: AdBreak): object | undefined {
+export function calculateCurrentAdBreakInfo(adBreak: AdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
     const currentAdBreakTimeOffset = adBreak.timeOffset;
     let currentAdBreakPosition: AdBreakPosition;
     if (currentAdBreakTimeOffset === 0) {
@@ -36,12 +36,11 @@ export function calculateCurrentAdBreakInfo(adBreak: AdBreak): object | undefine
     } else {
         currentAdBreakPosition = 'midroll';
     }
-    const currentAdBreakIndex = adBreakCounter++;
-    // TODO improve types
+
     return {
         [Constants.POD_POSITION]: currentAdBreakPosition,
         [Constants.POD_DURATION]: adBreak.maxDuration!,
-        [Constants.POD_INDEX]: currentAdBreakIndex
+        [Constants.POD_INDEX]: adBreakIndex
     };
 }
 
@@ -59,9 +58,8 @@ export function calculateConvivaOptions(config: ConvivaConfiguration): ConvivaOp
 
 export function collectPlayerInfo(): ConvivaPlayerInfo {
     return {
-        [Constants.FRAMEWORK_NAME]: 'THEOplayer HTML5',
-        // Not applicable for HTML5
-        [Constants.FRAMEWORK_VERSION]: 'NaForHTML5'
+        [Constants.FRAMEWORK_NAME]: 'THEOplayer',
+        [Constants.FRAMEWORK_VERSION]: version
     };
 }
 
@@ -69,12 +67,15 @@ export function collectContentMetadata(
     player: ChromelessPlayer,
     configuredContentMetadata: ConvivaMetadata
 ): ConvivaMetadata {
+    const contentInfo: ConvivaMetadata = {};
+    const duration = player.duration;
+    if (!Number.isNaN(duration) && duration !== Infinity) {
+        contentInfo[Constants.DURATION] = duration;
+    }
     // @ts-ignore
     return {
         ...configuredContentMetadata,
-        [Constants.STREAM_URL]: player.src,
-        [Constants.PLAYER_NAME]: 'THEOplayer',
-        [Constants.DURATION]: player.duration
+        ...contentInfo
     };
 }
 
@@ -83,7 +84,6 @@ export function collectYospaceAdMetadata(player: ChromelessPlayer, ad: AdVert): 
         [Constants.ASSET_NAME]: ad.getProperty('AdTitle')?.getValue(),
         [Constants.STREAM_URL]: player.src!,
         [Constants.DURATION]: (ad.getDuration() / 1000) as any,
-        [Constants.IS_LIVE]: Constants.StreamType.VOD,
         'c3.ad.technology': Constants.AdType.SERVER_SIDE,
         'c3.ad.id': ad.getIdentifier(),
         'c3.ad.system': ad.getProperty('AdSystem')?.getValue(),
@@ -97,12 +97,9 @@ export function collectYospaceAdMetadata(player: ChromelessPlayer, ad: AdVert): 
     };
 }
 
-export function collectVerizonAdMetadata(ad: VerizonMediaAd, metadata: ConvivaMetadata): ConvivaMetadata {
+export function collectVerizonAdMetadata(ad: VerizonMediaAd): ConvivaMetadata {
     const adMetadata: ConvivaMetadata = {
-        [Constants.PLAYER_NAME]: 'THEOplayer',
-        [Constants.DURATION]: ad.duration as any,
-        [Constants.IS_LIVE]: Constants.StreamType.VOD,
-        [Constants.VIEWER_ID]: metadata[Constants.VIEWER_ID]!
+        [Constants.DURATION]: ad.duration as any
     };
     const assetName = ad.creative;
     if (assetName) {
@@ -112,12 +109,9 @@ export function collectVerizonAdMetadata(ad: VerizonMediaAd, metadata: ConvivaMe
     return adMetadata;
 }
 
-export function collectAdMetadata(ad: Ad, metadata: ConvivaMetadata): ConvivaMetadata {
+export function collectAdMetadata(ad: Ad): ConvivaMetadata {
     const adMetadata: ConvivaMetadata = {
-        [Constants.PLAYER_NAME]: 'THEOplayer',
-        [Constants.DURATION]: ad.duration as any,
-        [Constants.IS_LIVE]: Constants.StreamType.VOD,
-        [Constants.VIEWER_ID]: metadata[Constants.VIEWER_ID]!
+        [Constants.DURATION]: ad.duration as any
     };
     const streamUrl = (ad as GoogleImaAd).mediaUrl! || ad.resourceURI;
     if (streamUrl) {

@@ -1,25 +1,21 @@
 import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd } from 'theoplayer';
-import { AdAnalytics, Constants, ConvivaMetadata, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
-import { calculateCurrentAdBreakInfo, collectAdMetadata } from '../../utils/Utils';
+import { AdAnalytics, Constants, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { calculateCurrentAdBreakInfo, collectAdMetadata, collectPlayerInfo } from '../../utils/Utils';
 
 export class CsaiAdReporter {
     private readonly player: ChromelessPlayer;
     private readonly convivaVideoAnalytics: VideoAnalytics;
     private readonly convivaAdAnalytics: AdAnalytics;
-    private readonly metadata: ConvivaMetadata;
 
     private currentAdBreak: AdBreak | undefined;
+    private adBreakCounter: number = 1;
 
-    constructor(
-        player: ChromelessPlayer,
-        videoAnalytics: VideoAnalytics,
-        adAnalytics: AdAnalytics,
-        metadata: ConvivaMetadata
-    ) {
+    constructor(player: ChromelessPlayer, videoAnalytics: VideoAnalytics, adAnalytics: AdAnalytics) {
         this.player = player;
         this.convivaVideoAnalytics = videoAnalytics;
         this.convivaAdAnalytics = adAnalytics;
-        this.metadata = metadata;
+        this.convivaAdAnalytics.setCallback(this.convivaAdCallback);
+        this.convivaAdAnalytics.setAdPlayerInfo(collectPlayerInfo());
         this.addEventListeners();
     }
 
@@ -28,8 +24,9 @@ export class CsaiAdReporter {
         this.convivaVideoAnalytics.reportAdBreakStarted(
             Constants.AdType.CLIENT_SIDE,
             Constants.AdPlayer.CONTENT,
-            calculateCurrentAdBreakInfo(this.currentAdBreak)
+            calculateCurrentAdBreakInfo(this.currentAdBreak, this.adBreakCounter)
         );
+        this.adBreakCounter++;
     };
 
     private readonly onAdBreakEnd = () => {
@@ -42,7 +39,7 @@ export class CsaiAdReporter {
         if (currentAd.type !== 'linear') {
             return;
         }
-        const adMetadata = collectAdMetadata(currentAd, this.metadata);
+        const adMetadata = collectAdMetadata(currentAd);
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
         this.convivaAdAnalytics.reportAdStarted(adMetadata);
@@ -94,8 +91,12 @@ export class CsaiAdReporter {
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PAUSED);
     };
 
+    private convivaAdCallback = () => {
+        const currentTime = this.player.currentTime * 1000;
+        this.convivaAdAnalytics!.reportAdMetric(Constants.Playback.PLAY_HEAD_TIME, currentTime);
+    };
+
     private addEventListeners(): void {
-        this.player.addEventListener('play', this.onPlaying);
         this.player.addEventListener('playing', this.onPlaying);
         this.player.addEventListener('pause', this.onPause);
         if (this.player.ads === undefined) {
@@ -112,7 +113,6 @@ export class CsaiAdReporter {
     }
 
     private removeEventListeners(): void {
-        this.player.removeEventListener('play', this.onPlaying);
         this.player.removeEventListener('playing', this.onPlaying);
         this.player.removeEventListener('pause', this.onPause);
         if (this.player.ads === undefined) {
@@ -128,7 +128,14 @@ export class CsaiAdReporter {
         this.player.ads.removeEventListener('aderror', this.onAdError);
     }
 
+    reset(): void {
+        this.adBreakCounter = 0;
+    }
+
     destroy(): void {
+        if (this.currentAdBreak) {
+            this.onAdBreakEnd();
+        }
         this.removeEventListeners();
     }
 }

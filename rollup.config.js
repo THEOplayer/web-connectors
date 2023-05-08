@@ -35,8 +35,9 @@ const options = [
                 format: 'esm',
                 indent: false,
                 banner
-            }
+            },
         ],
+        external: ['theoplayer'],
         plugins: [
             nodeResolve({
                 extensions: ['.ts', '.js']
@@ -63,6 +64,7 @@ const options = [
                 footer: `export as namespace ${globalName};`
             }
         ],
+        external: ['theoplayer'],
         plugins: [
             dts({
                 tsconfig: 'tsconfig.json'

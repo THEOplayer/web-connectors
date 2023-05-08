@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css"/>
     <script src="/node_modules/theoplayer/THEOplayer.js"></script>
     <script src="/dist/conviva-connector.umd.js"></script>
+    <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3_debug.js"></script>
 </head>
 <body>
 <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
@@ -23,10 +24,6 @@
 
     // Set up the ConvivaConnector.
     const convivaMetadata = {
-        ['Conviva.assetName']: 'Main page',
-        ['Conviva.streamUrl']: srcUrl,
-        ['Conviva.streamType']: 'VOD',
-        ['Conviva.applicationName']: 'THEOplayer',
         ['Conviva.viewerId']: 'your_viewer_id'
     };
 
@@ -41,6 +38,17 @@
         convivaMetadata,
         convivaConfig
     );
+
+    const onSourceChange = () => {
+        const metadata = {
+            ['Conviva.assetName']: `Main page ${(new Date()).toLocaleString()}`,
+            ['customTag1']: "customValue1",
+            ['customTag2']: "customValue2",
+        }
+        convivaIntegration.setContentInfo(metadata);
+    }
+
+    player.addEventListener('sourcechange', onSourceChange);
 
     player.source = {
         sources: [{src: srcUrl}]
