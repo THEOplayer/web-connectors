@@ -1,6 +1,6 @@
 {
   "name": "@theoplayer/conviva-connector-web",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A connector implementing Conviva for web.",
   "main": "dist/conviva-connector.umd.js",
   "repository": "https://github.com/THEOplayer/conviva-connector-web",
