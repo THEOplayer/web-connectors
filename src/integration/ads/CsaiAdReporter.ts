@@ -40,6 +40,8 @@ export class CsaiAdReporter {
             return;
         }
         const adMetadata = collectAdMetadata(currentAd);
+        // @ts-ignore
+        adMetadata['c3.csid'] = this.convivaVideoAnalytics.getSessionId();
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
         this.convivaAdAnalytics.reportAdStarted(adMetadata);
