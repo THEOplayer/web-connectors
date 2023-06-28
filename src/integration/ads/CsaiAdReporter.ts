@@ -1,21 +1,23 @@
 import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd } from 'theoplayer';
-import { AdAnalytics, Constants, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { AdAnalytics, Constants, ConvivaMetadata, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
 import { calculateCurrentAdBreakInfo, collectAdMetadata, collectPlayerInfo } from '../../utils/Utils';
 
 export class CsaiAdReporter {
     private readonly player: ChromelessPlayer;
     private readonly convivaVideoAnalytics: VideoAnalytics;
     private readonly convivaAdAnalytics: AdAnalytics;
+    private readonly contentInfo: () => ConvivaMetadata;
 
     private currentAdBreak: AdBreak | undefined;
     private adBreakCounter: number = 1;
 
-    constructor(player: ChromelessPlayer, videoAnalytics: VideoAnalytics, adAnalytics: AdAnalytics) {
+    constructor(player: ChromelessPlayer, videoAnalytics: VideoAnalytics, adAnalytics: AdAnalytics, contentInfo: () => ConvivaMetadata) {
         this.player = player;
         this.convivaVideoAnalytics = videoAnalytics;
         this.convivaAdAnalytics = adAnalytics;
         this.convivaAdAnalytics.setCallback(this.convivaAdCallback);
         this.convivaAdAnalytics.setAdPlayerInfo(collectPlayerInfo());
+        this.contentInfo = contentInfo;
         this.addEventListeners();
     }
 
@@ -40,8 +42,15 @@ export class CsaiAdReporter {
             return;
         }
         const adMetadata = collectAdMetadata(currentAd);
-        // @ts-ignore
+
+        // Every session ad or content has its session ID. In order to “attach” an ad to its respective content session,
+        // there are two tags that are critical:
+        // - `c3.csid`: the content’s sessionID;
+        // - `contentAssetName`: the content's assetName.
+        // @ts-ignore: getSessionId() is not present in type declarations.
         adMetadata['c3.csid'] = this.convivaVideoAnalytics.getSessionId();
+        adMetadata.contentAssetName = this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
+
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
         this.convivaAdAnalytics.reportAdStarted(adMetadata);
