@@ -11,7 +11,12 @@ export class CsaiAdReporter {
     private currentAdBreak: AdBreak | undefined;
     private adBreakCounter: number = 1;
 
-    constructor(player: ChromelessPlayer, videoAnalytics: VideoAnalytics, adAnalytics: AdAnalytics, contentInfo: () => ConvivaMetadata) {
+    constructor(
+        player: ChromelessPlayer,
+        videoAnalytics: VideoAnalytics,
+        adAnalytics: AdAnalytics,
+        contentInfo: () => ConvivaMetadata
+    ) {
         this.player = player;
         this.convivaVideoAnalytics = videoAnalytics;
         this.convivaAdAnalytics = adAnalytics;
@@ -49,7 +54,8 @@ export class CsaiAdReporter {
         // - `contentAssetName`: the content's assetName.
         // @ts-ignore: getSessionId() is not present in type declarations.
         adMetadata['c3.csid'] = this.convivaVideoAnalytics.getSessionId();
-        adMetadata.contentAssetName = this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
+        adMetadata.contentAssetName =
+            this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
 
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
