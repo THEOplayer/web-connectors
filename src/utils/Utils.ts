@@ -26,19 +26,20 @@ export function calculateVerizonAdBreakInfo(adBreak: VerizonMediaAdBreak, adBrea
     };
 }
 
-export function calculateCurrentAdBreakInfo(adBreak: AdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
+export function calculateCurrentAdBreakPosition(adBreak: AdBreak): string {
     const currentAdBreakTimeOffset = adBreak.timeOffset;
-    let currentAdBreakPosition: AdBreakPosition;
     if (currentAdBreakTimeOffset === 0) {
-        currentAdBreakPosition = 'preroll';
-    } else if (currentAdBreakTimeOffset < 0) {
-        currentAdBreakPosition = 'postroll';
-    } else {
-        currentAdBreakPosition = 'midroll';
+        return Constants.AdPosition.PREROLL;
     }
+    if (currentAdBreakTimeOffset < 0) {
+        return Constants.AdPosition.POSTROLL;
+    }
+    return Constants.AdPosition.MIDROLL;
+}
 
+export function calculateCurrentAdBreakInfo(adBreak: AdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
     return {
-        [Constants.POD_POSITION]: currentAdBreakPosition,
+        [Constants.POD_POSITION]: calculateCurrentAdBreakPosition(adBreak),
         [Constants.POD_DURATION]: adBreak.maxDuration!,
         [Constants.POD_INDEX]: adBreakIndex
     };
