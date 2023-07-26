@@ -53,7 +53,7 @@ export class CsaiAdReporter {
         // - `c3.csid`: the content’s sessionID;
         // - `contentAssetName`: the content's assetName.
         // @ts-ignore: getSessionId() is not present in type declarations.
-        adMetadata['c3.csid'] = this.convivaVideoAnalytics.getSessionId();
+        adMetadata['c3.csid'] = `${this.convivaVideoAnalytics.getSessionId()}`;
         adMetadata.contentAssetName =
             this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
 
