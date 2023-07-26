@@ -114,7 +114,7 @@ export function collectAdMetadata(ad: Ad): ConvivaMetadata {
     const adMetadata: ConvivaMetadata = {
         [Constants.DURATION]: ad.duration as any
     };
-    const streamUrl = (ad as GoogleImaAd).mediaUrl! || ad.resourceURI;
+    const streamUrl = (ad as GoogleImaAd).mediaUrl || ad.resourceURI;
     if (streamUrl) {
         adMetadata[Constants.STREAM_URL] = streamUrl;
     }
@@ -122,6 +122,53 @@ export function collectAdMetadata(ad: Ad): ConvivaMetadata {
     if (assetName) {
         adMetadata[Constants.ASSET_NAME] = assetName;
     }
+    // [Required] This Ad ID is from the Ad Server that actually has the ad creative.
+    // For wrapper ads, this is the last Ad ID at the end of the wrapper chain.
+    adMetadata["c3.ad.id"] = ad.id || 'NA';
+
+    // [Required] The creative name (may be the same as the ad name) as a string.
+    // Creative name is available from the ad server. Set to "NA" if not available.
+    adMetadata["c3.ad.creativeName"] = assetName || 'NA';
+
+    // [Required] The creative id of the ad. This creative id is from the Ad Server that actually has the ad creative.
+    // For wrapper ads, this is the last creative id at the end of the wrapper chain. Set to "NA" if not available.
+    adMetadata["c3.ad.creativeId"] = ad.creativeId || 'NA';
+
+    // [Required] The ad technology as CLIENT_SIDE/SERVER_SIDE
+    adMetadata["c3.ad.technology"] = Constants.AdType.CLIENT_SIDE;
+
+    // [Required] The ad position as a string "Pre-roll", "Mid-roll" or "Post-roll"
+    adMetadata["c3.ad.position"] = calculateCurrentAdBreakPosition(ad.adBreak);
+
+    // [Preferred] A string that identifies the Ad System (i.e. the Ad Server). This Ad System represents
+    // the Ad Server that actually has the ad creative. For wrapper ads, this is the last Ad System at the end of
+    // the wrapper chain. Set to "NA" if not available
+    adMetadata["c3.ad.system"] = ad.adSystem || 'NA';
+
+    // [Preferred] A boolean value that indicates whether this ad is a Slate or not.
+    // Set to "true" for Slate and "false" for a regular ad. By default, set to "false"
+    adMetadata["c3.ad.isSlate"] = "false";
+
+    // [Preferred] Only valid for wrapper VAST responses.
+    // This tag must capture the "first" Ad Id in the wrapper chain when a Linear creative is available or there is
+    // an error at the end of the wrapper chain. Set to "NA" if not available. If there is no wrapper VAST response
+    // then the Ad Id and First Ad Id should be the same.
+    adMetadata["c3.ad.firstAdId"] = (ad as GoogleImaAd).wrapperAdIds[0] || ad.id || 'NA';
+
+    // [Preferred] Only valid for wrapper VAST responses.
+    // This tag must capture the "first" Creative Id in the wrapper chain when a Linear creative is available or
+    // there is an error at the end of the wrapper chain. Set to "NA" if not available. If there is no wrapper
+    // VAST response then the Ad Creative Id and First Ad Creative Id should be the same.
+    adMetadata["c3.ad.firstCreativeId"] = (ad as GoogleImaAd).wrapperCreativeIds[0] || ad.creativeId || 'NA';
+
+    // [Preferred] Only valid for wrapper VAST responses. This tag must capture the "first" Ad System in the wrapper
+    // chain when a Linear creative is available or there is an error at the end of the wrapper chain. Set to "NA" if
+    // not available. If there is no wrapper VAST response then the Ad System and First Ad System should be the same.
+    // Examples: "GDFP", "NA".
+    adMetadata["c3.ad.firstAdSystem"] = (ad as GoogleImaAd).wrapperAdSystems[0] || ad.adSystem || 'NA';
+
+    // The name of the Ad Stitcher. If not using an Ad Stitcher, set to "NA"
+    adMetadata["c3.ad.adStitcher"] = 'NA';
 
     return adMetadata;
 }
