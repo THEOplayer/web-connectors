@@ -137,7 +137,6 @@ export class ConvivaHandler {
         this.player.addEventListener('play', this.onPlay);
         this.player.addEventListener('playing', this.onPlaying);
         this.player.addEventListener('pause', this.onPause);
-        this.player.addEventListener('emptied', this.onEmptied);
         this.player.addEventListener('waiting', this.onWaiting);
         this.player.addEventListener('seeking', this.onSeeking);
         this.player.addEventListener('seeked', this.onSeeked);
@@ -158,7 +157,6 @@ export class ConvivaHandler {
         this.player.removeEventListener('play', this.onPlay);
         this.player.removeEventListener('playing', this.onPlaying);
         this.player.removeEventListener('pause', this.onPause);
-        this.player.removeEventListener('emptied', this.onEmptied);
         this.player.removeEventListener('waiting', this.onWaiting);
         this.player.removeEventListener('seeking', this.onSeeking);
         this.player.removeEventListener('seeked', this.onSeeked);
@@ -249,13 +247,6 @@ export class ConvivaHandler {
 
     private readonly onPause = () => {
         this.convivaVideoAnalytics?.reportPlaybackMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PAUSED);
-    };
-
-    private readonly onEmptied = () => {
-        this.convivaVideoAnalytics?.reportPlaybackMetric(
-            Constants.Playback.PLAYER_STATE,
-            Constants.PlayerState.BUFFERING
-        );
     };
 
     private readonly onWaiting = () => {
