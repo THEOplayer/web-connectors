@@ -167,70 +167,69 @@ export class CMCDCollector {
                         [CMCDReservedKey.STARTUP]: true,
                         [CMCDReservedKey.OBJECT_TYPE]: CMCDObjectType.INIT_SEGMENT
                     };
-                } else {
-                    const bufferSize = calculateBufferSize(this._player.currentTime, this._player.buffered);
-                    // TODO could be better if we have segment info...
-                    const track = (request.mediaType === 'audio' && this._player.audioTracks[0])
-                        || (request.mediaType === 'video' && this._player.videoTracks[0])
-                        || undefined;
-
-                    const statusKeys = this.collectStatusKeys(track);
-                    const payload: CMCDPayload = {
-                        ...sessionKeys,
-                        ...statusKeys,
-                        ...requestKeys,
-                        [CMCDReservedKey.OBJECT_TYPE]: getObjectType(request.mediaType) // TODO could be better if we have segment info...
-                    };
-
-                    if (track?.activeQuality) {
-                        // Encoded bitrate in kbps
-                        if (track.activeQuality.bandwidth) {
-                            payload[CMCDReservedKey.ENCODED_BITRATE] = Math.round(track.activeQuality.bandwidth / 1000);
-                        }
-
-                        const playableQualities: Quality[][] = track.qualities
-                            .slice()
-                            .sort(perceptualQualityCompareFunction)
-                            .filter(isPlayableFilter.bind(null, request.mediaType))
-                            .reduce(redundantQualityGrouper, []);
-                        payload[CMCDReservedKey.SVA_PLAYABLE_MANIFEST_INDEX] = playableQualities.length;
-                        payload[CMCDReservedKey.SVA_CURRENT_MANIFEST_INDEX] = findQualityGroupIndex(playableQualities, track.activeQuality) + 1;
-
-                        payload[CMCDReservedKey.SVA_TRACK_IDENTIFIER] = track.id ?? track.uid;
-                    }
-
-                    // Top bitrate in kbps
-                    if (track?.qualities) {
-                        const topQuality = track.qualities[track.qualities.length - 1];
-                        payload[CMCDReservedKey.TOP_BITRATE] = Math.round(topQuality.bandwidth / 1000);
-                    }
-
-
-                    // Measured throughput rounded to the closest 100kbps in kbps
-                    // NOTE only the LL-HLS pipeline realy uses the estimator properly today, so fall back to metrics API for others
-                    const measuredBandwidth = this._player.network.estimator.bandwidth || this._player.metrics.currentBandwidthEstimate;
-                    const measuredBandwidthInKbps = measuredBandwidth / 1000;
-                    payload[CMCDReservedKey.MEASURED_THROUGHPUT] = ((measuredBandwidthInKbps / 100) + 1) * 100;
-
-                    // Deadline rounded to the closest 100ms in ms.
-                    payload[CMCDReservedKey.DEADLINE] = Math.round((bufferSize / this._player.playbackRate) * 10) * 100;
-
-                    // Buffer length rounded to the closest 100ms in ms.
-                    payload[CMCDReservedKey.BUFFER_LENGTH] = Math.round(bufferSize * 10) * 100;
-
-                    // Startup flag if buffer is empty due to startup, seeking or starvation.
-                    if (bufferSize < BUFFER_STARVATION_MARGIN) {
-                        payload[CMCDReservedKey.STARTUP] = true;
-                        if (this._player.played.length === 0) {
-                            delete payload[CMCDReservedKey.BUFFER_STARVATION];
-                        }
-                    }
-
-                    // TODO object duration
-                    // TODO next request... and next range
-
-                    return payload;
                 }
+
+                const bufferSize = calculateBufferSize(this._player.currentTime, this._player.buffered);
+                // TODO could be better if we have segment info...
+                const track = (request.mediaType === 'audio' && this._player.audioTracks[0])
+                    || (request.mediaType === 'video' && this._player.videoTracks[0])
+                    || undefined;
+
+                const statusKeys = this.collectStatusKeys(track);
+                const payload: CMCDPayload = {
+                    ...sessionKeys,
+                    ...statusKeys,
+                    ...requestKeys,
+                    [CMCDReservedKey.OBJECT_TYPE]: getObjectType(request.mediaType) // TODO could be better if we have segment info...
+                };
+
+                if (track?.activeQuality) {
+                    // Encoded bitrate in kbps
+                    if (track.activeQuality.bandwidth) {
+                        payload[CMCDReservedKey.ENCODED_BITRATE] = Math.round(track.activeQuality.bandwidth / 1000);
+                    }
+
+                    const playableQualities: Quality[][] = track.qualities
+                        .slice()
+                        .sort(perceptualQualityCompareFunction)
+                        .filter(isPlayableFilter.bind(null, request.mediaType))
+                        .reduce(redundantQualityGrouper, []);
+                    payload[CMCDReservedKey.SVA_PLAYABLE_MANIFEST_INDEX] = playableQualities.length;
+                    payload[CMCDReservedKey.SVA_CURRENT_MANIFEST_INDEX] = findQualityGroupIndex(playableQualities, track.activeQuality) + 1;
+
+                    payload[CMCDReservedKey.SVA_TRACK_IDENTIFIER] = track.id ?? track.uid;
+                }
+
+                // Top bitrate in kbps
+                if (track?.qualities) {
+                    const topQuality = track.qualities[track.qualities.length - 1];
+                    payload[CMCDReservedKey.TOP_BITRATE] = Math.round(topQuality.bandwidth / 1000);
+                }
+
+
+                // Measured throughput rounded to the closest 100kbps in kbps
+                // NOTE only the LL-HLS pipeline realy uses the estimator properly today, so fall back to metrics API for others
+                const measuredBandwidth = this._player.network.estimator.bandwidth || this._player.metrics.currentBandwidthEstimate;
+                const measuredBandwidthInKbps = measuredBandwidth / 1000;
+                payload[CMCDReservedKey.MEASURED_THROUGHPUT] = ((measuredBandwidthInKbps / 100) + 1) * 100;
+
+                // Deadline rounded to the closest 100ms in ms.
+                payload[CMCDReservedKey.DEADLINE] = Math.round((bufferSize / this._player.playbackRate) * 10) * 100;
+
+                // Buffer length rounded to the closest 100ms in ms.
+                payload[CMCDReservedKey.BUFFER_LENGTH] = Math.round(bufferSize * 10) * 100;
+
+                // Startup flag if buffer is empty due to startup, seeking or starvation.
+                if (bufferSize < BUFFER_STARVATION_MARGIN) {
+                    payload[CMCDReservedKey.STARTUP] = true;
+                    if (this._player.played.length === 0) {
+                        delete payload[CMCDReservedKey.BUFFER_STARVATION];
+                    }
+                }
+
+                // TODO object duration
+                // TODO next request... and next range
+                return payload;
             default:
                 return {};
         }

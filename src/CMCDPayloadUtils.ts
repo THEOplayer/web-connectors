@@ -30,31 +30,10 @@ export function transformToQueryParameters(payload: CMCDPayload): string {
 }
 
 /**
- * Returns a new {@link CMCDPayload} which contains all of the keys from the provided payload but only if these keys
- * should be sent with the provided header.
- * @param payload The payload.
- * @param header The header for which payload entries must be retained.
- * @returns A payload containing only the key/value pairs for the provided header.
- */
-export function extractKeysFor(payload: CMCDPayload, header: CMCDHeaderName): CMCDPayload {
-    const filteredPayload: CMCDPayload = {};
-    for (const key in payload) {
-        if (Object.prototype.hasOwnProperty.call(payload, key)) {
-            const headerForKey = mapKeyToHeaderMapping(key);
-            if (headerForKey === header) {
-                filteredPayload[key] = payload[key];
-            }
-        }
-    }
-    return filteredPayload;
-}
-
-/**
  * Provides a map of all reserved keys to the header name.
  * @param key The key for which you want to know the header name.
  * @returns The header name in which the key should be sent.
  */
-// eslint-disable-next-line complexity
 function mapKeyToHeaderMapping(key: string): CMCDHeaderName {
     switch (key) {
         case CMCDReservedKey.ENCODED_BITRATE:
@@ -85,4 +64,24 @@ function mapKeyToHeaderMapping(key: string): CMCDHeaderName {
         default:
             return CMCDHeaderName.CMCD_SESSION;
     }
+}
+
+/**
+ * Returns a new {@link CMCDPayload} which contains all of the keys from the provided payload but only if these keys
+ * should be sent with the provided header.
+ * @param payload The payload.
+ * @param header The header for which payload entries must be retained.
+ * @returns A payload containing only the key/value pairs for the provided header.
+ */
+export function extractKeysFor(payload: CMCDPayload, header: CMCDHeaderName): CMCDPayload {
+    const filteredPayload: CMCDPayload = {};
+    for (const key in payload) {
+        if (Object.prototype.hasOwnProperty.call(payload, key)) {
+            const headerForKey = mapKeyToHeaderMapping(key);
+            if (headerForKey === header) {
+                filteredPayload[key] = payload[key];
+            }
+        }
+    }
+    return filteredPayload;
 }

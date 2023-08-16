@@ -12,13 +12,15 @@ function isDASHSourceString(source: string): boolean {
 function guessStreamingFormatFromURI(uri: string | undefined): CMCDStreamingFormat {
     if (!uri) {
         return CMCDStreamingFormat.OTHER;
-    } else if (isDASHSourceString(uri)) {
-        return CMCDStreamingFormat.MPEG_DASH;
-    } else if (isM3U8SourceString(uri)) {
-        return CMCDStreamingFormat.HLS;
-    } else {
-        return CMCDStreamingFormat.OTHER;
     }
+    if (isDASHSourceString(uri)) {
+        return CMCDStreamingFormat.MPEG_DASH;
+    }
+    if (isM3U8SourceString(uri)) {
+        return CMCDStreamingFormat.HLS;
+    }
+    return CMCDStreamingFormat.OTHER;
+
 }
 
 /**

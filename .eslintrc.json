@@ -23,7 +23,20 @@
       }
     ],
     "import/prefer-default-export": 0,
-    "import/no-unresolved": 1
+    "import/no-unresolved": 1,
+    "no-shadow": "off",
+    "no-use-before-define": 0,
+    "max-classes-per-file": ["error", 5],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["warn", {"argsIgnorePattern": "^_"}],
+    "@typescript-eslint/no-shadow": 1,
+    "lines-between-class-members": 0,
+    "no-underscore-dangle": 0,
+    "class-methods-use-this": 0,
+    "prefer-destructuring": 0,
+    "no-restricted-syntax": 0,
+    "no-case-declarations": 0,
+    "no-restricted-globals": 0
   },
   "settings": {
     "import/resolver": {
