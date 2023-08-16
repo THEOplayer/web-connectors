@@ -1,5 +1,15 @@
-// Re-export everything here that should be available from the connector bundle.
+import {CMCDObjectType, CMCDPayload, CMCDReservedKey, CMCDStreamingFormat, CMCDStreamType} from './CMCDPayload';
+import {TransmissionMode} from './Configuration';
+import {CMCDConnector, CMCDPayloadProcessor, createCMCDConnector} from './CMCDConnector';
 
-// You can use this dummy value to test that your bundle works, by referencing `bundleName.DUMMY_CONSTANT` on a page
-// where the bundle is loaded.
-export const DUMMY_CONSTANT = "It works!";
+export {
+    CMCDConnector,
+    createCMCDConnector,
+    CMCDPayloadProcessor,
+    TransmissionMode,
+    CMCDPayload,
+    CMCDReservedKey,
+    CMCDStreamingFormat,
+    CMCDObjectType,
+    CMCDStreamType,
+};
