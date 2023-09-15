@@ -7,7 +7,8 @@ import {
     calculateConvivaOptions,
     collectContentMetadata,
     collectDeviceMetadata,
-    collectPlayerInfo, flattenAndStringifyObject
+    collectPlayerInfo,
+    flattenAndStringifyObject
 } from '../utils/Utils';
 import { CsaiAdReporter } from './ads/CsaiAdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
@@ -106,7 +107,7 @@ export class ConvivaHandler {
         if (!this.convivaVideoAnalytics) {
             this.initializeSession();
         }
-        this.customMetadata = {...this.customMetadata, ...metadata};
+        this.customMetadata = { ...this.customMetadata, ...metadata };
         this.convivaVideoAnalytics!.setContentInfo(metadata);
     }
 
@@ -283,10 +284,7 @@ export class ConvivaHandler {
             }
         }
 
-        this.convivaVideoAnalytics?.reportPlaybackFailed(
-            error?.message ?? 'Fatal error occurred',
-            metadata
-        );
+        this.convivaVideoAnalytics?.reportPlaybackFailed(error?.message ?? 'Fatal error occurred', metadata);
 
         this.releaseSession();
     };
