@@ -188,3 +188,19 @@ export function calculateBufferLength(player: ChromelessPlayer): number {
     }
     return bufferLength * 1000;
 }
+
+export function flattenAndStringifyObject(obj: any): { [key: string]: string } {
+    const result: Record<string, string> = {};
+    Object.keys(obj).forEach((key) => {
+        try {
+            if (typeof obj[key] === 'object' && obj[key] !== null) {
+                result[key] = JSON.stringify(obj[key]);
+            } else {
+                result[key] = obj[key].toString();
+            }
+        } catch (ignore) {
+            // Failed to stringify value.
+        }
+    });
+    return result;
+}
