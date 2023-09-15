@@ -7,7 +7,8 @@ import {
     calculateConvivaOptions,
     collectContentMetadata,
     collectDeviceMetadata,
-    collectPlayerInfo
+    collectPlayerInfo,
+    flattenAndStringifyObject
 } from '../utils/Utils';
 import { CsaiAdReporter } from './ads/CsaiAdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
@@ -269,10 +270,22 @@ export class ConvivaHandler {
         if (Number.isNaN(this.player.duration)) {
             metadata[Constants.DURATION] = -1;
         }
-        this.convivaVideoAnalytics?.reportPlaybackFailed(
-            this.player.errorObject?.message ?? 'Fatal error occurred',
-            metadata
-        );
+        const error = this.player.errorObject;
+
+        // Optionally report error details, which should be a flat {[key: string]: string} object.
+        if (error?.cause) {
+            try {
+                const errorDetails = flattenAndStringifyObject(error?.cause);
+                if (Object.keys(errorDetails).length > 0) {
+                    this.convivaVideoAnalytics?.reportPlaybackEvent('ErrorDetailsEvent', errorDetails);
+                }
+            } catch (ignore) {
+                // Failed to stringify body
+            }
+        }
+
+        this.convivaVideoAnalytics?.reportPlaybackFailed(error?.message ?? 'Fatal error occurred', metadata);
+
         this.releaseSession();
     };
 
