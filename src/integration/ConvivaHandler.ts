@@ -275,10 +275,10 @@ export class ConvivaHandler {
         // Optionally report error details, which should be a flat {[key: string]: string} object.
         if (error?.cause) {
             try {
-                this.convivaVideoAnalytics?.reportPlaybackEvent(
-                    'ErrorCauseEvent',
-                    flattenAndStringifyObject(error?.cause)
-                );
+                const errorDetails = flattenAndStringifyObject(error?.cause);
+                if (Object.keys(errorDetails).length > 0) {
+                    this.convivaVideoAnalytics?.reportPlaybackEvent('ErrorDetailsEvent', errorDetails);
+                }
             } catch (ignore) {
                 // Failed to stringify body
             }
