@@ -1,8 +1,8 @@
-import {ChromelessPlayer, InterceptableRequest, Request} from 'theoplayer';
-import {CMCDCollector} from './CMCDCollector';
-import {CMCDPayload} from './CMCDPayload';
-import {Configuration, TransmissionMode} from './Configuration';
-import {uuid} from './RandomUtils';
+import { ChromelessPlayer, InterceptableRequest, Request } from 'theoplayer';
+import { CMCDCollector } from './CMCDCollector';
+import { CMCDPayload } from './CMCDPayload';
+import { Configuration, TransmissionMode } from './Configuration';
+import { uuid } from './RandomUtils';
 import {
     createTransmissionModeStrategyFor,
     TransmissionModeStrategy
@@ -30,7 +30,6 @@ export type CMCDPayloadProcessor = (payload: CMCDPayload, request: Request) => C
  * - Next range request (nrr)
  */
 export class CMCDConnector {
-
     private _transmissionModeStrategy: TransmissionModeStrategy | undefined;
     private _collector: CMCDCollector | undefined;
     private readonly _player: ChromelessPlayer;
@@ -67,14 +66,14 @@ export class CMCDConnector {
             payload = this._processor(payload, request);
         }
         this._transmissionModeStrategy.transmitPayload(request, payload); // TODO add callback/processor
-    }
+    };
 
     /**
      * Handler to observe player destruction and automatically destroy the connector and all created objects.
      */
     private onDestroy_ = () => {
         this.destroy();
-    }
+    };
 
     /**
      * Resets the configuration of the connector. The connector will halt all transmissions and new transmissions will be

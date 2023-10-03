@@ -1,4 +1,4 @@
-import {CMCDHeaderName, CMCDPayload, CMCDReservedKey} from './CMCDPayload';
+import { CMCDHeaderName, CMCDPayload, CMCDReservedKey } from './CMCDPayload';
 
 /**
  * Transforms the provided payload into a query parameter string. Strings will be escaped and placed between quotes, numbers
@@ -21,7 +21,11 @@ export function transformToQueryParameters(payload: CMCDPayload): string {
             } else if (typeof value === 'number') {
                 serialisedEntries.push(`${key}=${value}`);
             } else {
-                serialisedEntries.push(`${key}=${JSON.stringify(encodeURIComponent(payload[key].replace(/\\/g, '\\\\').replace(/"/g, '\\"')))}`);
+                serialisedEntries.push(
+                    `${key}=${JSON.stringify(
+                        encodeURIComponent(payload[key].replace(/\\/g, '\\\\').replace(/"/g, '\\"'))
+                    )}`
+                );
             }
         }
     }

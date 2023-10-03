@@ -212,7 +212,7 @@ export enum CMCDReservedKey {
      *
      * Note: This is NOT a part of the CMCD specification as is, but is an additional parameter in light with the work done in the SVA.
      */
-    SVA_TRACK_IDENTIFIER = 'org.svalabs-tid',
+    SVA_TRACK_IDENTIFIER = 'org.svalabs-tid'
 }
 
 /**

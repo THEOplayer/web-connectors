@@ -1,14 +1,13 @@
-import {InterceptableRequest} from 'theoplayer';
-import {CMCDPayload} from '../CMCDPayload';
-import {transformToQueryParameters} from '../CMCDPayloadUtils';
-import {TransmissionModeStrategy} from './TransmissionModeStrategy';
+import { InterceptableRequest } from 'theoplayer';
+import { CMCDPayload } from '../CMCDPayload';
+import { transformToQueryParameters } from '../CMCDPayloadUtils';
+import { TransmissionModeStrategy } from './TransmissionModeStrategy';
 
 /**
  * The transmission mode strategy to transmit CMCD data as query arguments as specified in section 2.2 of CTA-5004.
  * This strategy will append a `CMCD` parameter containing the url encoded concatenation of all key value pairs.
  */
 export class QueryArgumentTransmissionModeStrategy implements TransmissionModeStrategy {
-
     /**
      * The method responsible to transmit the CMCD payload for the provided request.
      * This strategy piggybacks on the provided request and will add a `CMCD` parameter to the query string by redirecting

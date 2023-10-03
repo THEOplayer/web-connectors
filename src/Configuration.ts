@@ -27,7 +27,6 @@ export enum TransmissionMode {
  * The configuration object for the Common Media Client Data (CTA-5004) connector.
  */
 export interface Configuration {
-
     /**
      * The data transmission mode as defined in section 2 of the specification.
      * When no transmission mode is selected, {@link TransmissionMode.QUERY_ARGUMENT} will be used in order to avoid CORS preflight requests in browsers.
@@ -62,6 +61,6 @@ export interface Configuration {
      * revisions to the specification. Clients SHOULD use a reverse-DNS syntax when defining their own prefix.
      */
     customKeys?: {
-        [key: string]: string | number | boolean
-    }
+        [key: string]: string | number | boolean;
+    };
 }

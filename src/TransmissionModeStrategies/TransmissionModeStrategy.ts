@@ -1,9 +1,9 @@
-import {InterceptableRequest} from 'theoplayer';
-import {CMCDPayload} from '../CMCDPayload';
-import {Configuration, TransmissionMode} from '../Configuration';
-import {HTTPHeaderTransmissionModeStrategy} from './HTTPHeaderTransmissionModeStrategy';
-import {JSONObjectTransmissionModeStrategy} from './JSONObjectTransmissionModeStrategy';
-import {QueryArgumentTransmissionModeStrategy} from './QueryArgumentTransmissionModeStrategy';
+import { InterceptableRequest } from 'theoplayer';
+import { CMCDPayload } from '../CMCDPayload';
+import { Configuration, TransmissionMode } from '../Configuration';
+import { HTTPHeaderTransmissionModeStrategy } from './HTTPHeaderTransmissionModeStrategy';
+import { JSONObjectTransmissionModeStrategy } from './JSONObjectTransmissionModeStrategy';
+import { QueryArgumentTransmissionModeStrategy } from './QueryArgumentTransmissionModeStrategy';
 
 /**
  * The main interface for all transmission modes.
@@ -29,7 +29,9 @@ export function createTransmissionModeStrategyFor(configuration: Configuration):
             return new HTTPHeaderTransmissionModeStrategy();
         case TransmissionMode.JSON_OBJECT:
             if (!configuration.jsonObjectTargetURI) {
-                throw new Error('When using the `TransmissionMode.JSON_OBJECT` transmission mode, a `jsonObjectTargetURI` must be provided.');
+                throw new Error(
+                    'When using the `TransmissionMode.JSON_OBJECT` transmission mode, a `jsonObjectTargetURI` must be provided.'
+                );
             }
             return new JSONObjectTransmissionModeStrategy(configuration.jsonObjectTargetURI);
         case TransmissionMode.QUERY_ARGUMENT:

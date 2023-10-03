@@ -1,6 +1,6 @@
-import {CMCDObjectType, CMCDPayload, CMCDReservedKey, CMCDStreamingFormat, CMCDStreamType} from './CMCDPayload';
-import {TransmissionMode} from './Configuration';
-import {CMCDConnector, CMCDPayloadProcessor, createCMCDConnector} from './CMCDConnector';
+import { CMCDObjectType, CMCDPayload, CMCDReservedKey, CMCDStreamingFormat, CMCDStreamType } from './CMCDPayload';
+import { TransmissionMode } from './Configuration';
+import { CMCDConnector, CMCDPayloadProcessor, createCMCDConnector } from './CMCDConnector';
 
 export {
     CMCDConnector,
@@ -11,5 +11,5 @@ export {
     CMCDReservedKey,
     CMCDStreamingFormat,
     CMCDObjectType,
-    CMCDStreamType,
+    CMCDStreamType
 };

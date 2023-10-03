@@ -1,7 +1,7 @@
-import {InterceptableRequest} from 'theoplayer';
-import {CMCDHeaderName, CMCDPayload} from '../CMCDPayload';
-import {extractKeysFor, transformToQueryParameters} from '../CMCDPayloadUtils';
-import {TransmissionModeStrategy} from './TransmissionModeStrategy';
+import { InterceptableRequest } from 'theoplayer';
+import { CMCDHeaderName, CMCDPayload } from '../CMCDPayload';
+import { extractKeysFor, transformToQueryParameters } from '../CMCDPayloadUtils';
+import { TransmissionModeStrategy } from './TransmissionModeStrategy';
 
 /**
  * The transmission mode strategy to transmit CMCD data as HTTP Headers as specified in section 2.1 of CTA-5004.
@@ -13,7 +13,6 @@ import {TransmissionModeStrategy} from './TransmissionModeStrategy';
  * Note the addition of these headers will trigger CORS pre-flight requests in most web based environments.
  */
 export class HTTPHeaderTransmissionModeStrategy implements TransmissionModeStrategy {
-
     /**
      * The method responsible to transmit the CMCD payload for the provided request.
      * This strategy piggybacks on the provided request and will add the relevant CMCD headers by redirecting the original request.
