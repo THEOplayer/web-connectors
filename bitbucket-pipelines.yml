@@ -41,6 +41,9 @@ stepdefinitions:
 pipelines:
   default:
     - step: *tests
+  pull-requests:
+    '**' :
+      - step: *tests
   tags:
     v*:
       - step: *tests
