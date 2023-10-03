@@ -270,7 +270,7 @@ function getObjectType(mediaType: MediaType): CMCDObjectType {
 
 /**
  * Calculates the maximum throughput which should be provided. This throughput is calculated as the maximum between the current
- * dataconsumption rate and the rate needed to achieve the target buffer size in a timely fashion. The resulting value is multiplied
+ * data consumption rate and the rate needed to achieve the target buffer size in a timely fashion. The resulting value is multiplied
  * with {@link REQUESTED_MAXIMUM_THROUGHPUT_SAFETY_FACTOR} in order to ensure a high enough bandwidth is marked.
  * The resulting value is returned rounded up to the next 100kbps in kbps.
  * @param currentTime The current time which is used to calculate the current buffer size.
