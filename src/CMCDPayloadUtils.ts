@@ -67,7 +67,7 @@ function mapKeyToHeaderMapping(key: string): CMCDHeaderName {
 }
 
 /**
- * Returns a new {@link CMCDPayload} which contains all of the keys from the provided payload but only if these keys
+ * Returns a new {@link CMCDPayload} which contains all the keys from the provided payload but only if these keys
  * should be sent with the provided header.
  * @param payload The payload.
  * @param header The header for which payload entries must be retained.
