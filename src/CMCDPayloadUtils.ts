@@ -1,4 +1,4 @@
-import {CMCDHeaderName, CMCDPayload, CMCDReservedKey} from './CMCDPayload';
+import { CMCDHeaderName, CMCDPayload, CMCDReservedKey } from './CMCDPayload';
 
 /**
  * Transforms the provided payload into a query parameter string. Strings will be escaped and placed between quotes, numbers
@@ -21,7 +21,11 @@ export function transformToQueryParameters(payload: CMCDPayload): string {
             } else if (typeof value === 'number') {
                 serialisedEntries.push(`${key}=${value}`);
             } else {
-                serialisedEntries.push(`${key}=${JSON.stringify(encodeURIComponent(payload[key].replace(/\\/g, '\\\\').replace(/"/g, '\\"')))}`);
+                serialisedEntries.push(
+                    `${key}=${JSON.stringify(
+                        encodeURIComponent(payload[key].replace(/\\/g, '\\\\').replace(/"/g, '\\"'))
+                    )}`
+                );
             }
         }
     }
@@ -67,7 +71,7 @@ function mapKeyToHeaderMapping(key: string): CMCDHeaderName {
 }
 
 /**
- * Returns a new {@link CMCDPayload} which contains all of the keys from the provided payload but only if these keys
+ * Returns a new {@link CMCDPayload} which contains all the keys from the provided payload but only if these keys
  * should be sent with the provided header.
  * @param payload The payload.
  * @param header The header for which payload entries must be retained.

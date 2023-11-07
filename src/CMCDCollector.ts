@@ -1,8 +1,8 @@
-import {ChromelessPlayer, CurrentSourceChangeEvent, MediaTrack, MediaType, Quality, Request} from 'theoplayer';
-import {CMCDObjectType, CMCDPayload, CMCDReservedKey, CMCDStreamingFormat, CMCDStreamType} from './CMCDPayload';
-import {Configuration} from './Configuration';
-import {calculateBufferSize, getStreamingFormatFromTypedSource} from './PlayerUtils';
-import {uuid} from './RandomUtils';
+import { ChromelessPlayer, CurrentSourceChangeEvent, MediaTrack, MediaType, Quality, Request } from 'theoplayer';
+import { CMCDObjectType, CMCDPayload, CMCDReservedKey, CMCDStreamingFormat, CMCDStreamType } from './CMCDPayload';
+import { Configuration } from './Configuration';
+import { calculateBufferSize, getStreamingFormatFromTypedSource } from './PlayerUtils';
+import { uuid } from './RandomUtils';
 
 const REQUESTED_MAXIMUM_THROUGHPUT_SAFETY_FACTOR = 5;
 const BUFFER_STARVATION_MARGIN = 0.2;
@@ -39,7 +39,7 @@ export class CMCDCollector {
         if (calculateBufferSize(this._player.currentTime, this._player.buffered) < BUFFER_STARVATION_MARGIN) {
             this._bufferStarved = true;
         }
-    }
+    };
 
     /**
      * Handler for player `durationchange` events in order to identify the stream type.
@@ -51,7 +51,7 @@ export class CMCDCollector {
         } else {
             this._streamType = undefined;
         }
-    }
+    };
 
     /**
      * Handler for player `currentsourcechange` events in order to identify the streaming format.
@@ -64,7 +64,7 @@ export class CMCDCollector {
         } else {
             this._streamingFormat = getStreamingFormatFromTypedSource(currentSource);
         }
-    }
+    };
 
     /**
      * Collection method for all reserved keys of the SESSION-type and the configured custom keys.
@@ -128,7 +128,8 @@ export class CMCDCollector {
                 this._player.buffered,
                 targetBuffer,
                 this._player.playbackRate,
-                activeBandwidth);
+                activeBandwidth
+            );
         }
 
         return payload;
@@ -141,9 +142,11 @@ export class CMCDCollector {
      */
     collect(request: Request): CMCDPayload {
         const sessionKeys = this.collectSessionKeys();
-        const requestKeys = this._config.sendRequestID ? {
-            [CMCDReservedKey.SVA_REQUEST_ID]: uuid()
-        } : {};
+        const requestKeys = this._config.sendRequestID
+            ? {
+                  [CMCDReservedKey.SVA_REQUEST_ID]: uuid()
+              }
+            : {};
         switch (request.type) {
             case 'manifest': {
                 return {
@@ -171,9 +174,10 @@ export class CMCDCollector {
 
                 const bufferSize = calculateBufferSize(this._player.currentTime, this._player.buffered);
                 // TODO could be better if we have segment info...
-                const track = (request.mediaType === 'audio' && this._player.audioTracks[0])
-                    || (request.mediaType === 'video' && this._player.videoTracks[0])
-                    || undefined;
+                const track =
+                    (request.mediaType === 'audio' && this._player.audioTracks[0]) ||
+                    (request.mediaType === 'video' && this._player.videoTracks[0]) ||
+                    undefined;
 
                 const statusKeys = this.collectStatusKeys(track);
                 const payload: CMCDPayload = {
@@ -195,7 +199,8 @@ export class CMCDCollector {
                         .filter(isPlayableFilter.bind(null, request.mediaType))
                         .reduce(redundantQualityGrouper, []);
                     payload[CMCDReservedKey.SVA_PLAYABLE_MANIFEST_INDEX] = playableQualities.length;
-                    payload[CMCDReservedKey.SVA_CURRENT_MANIFEST_INDEX] = findQualityGroupIndex(playableQualities, track.activeQuality) + 1;
+                    payload[CMCDReservedKey.SVA_CURRENT_MANIFEST_INDEX] =
+                        findQualityGroupIndex(playableQualities, track.activeQuality) + 1;
 
                     payload[CMCDReservedKey.SVA_TRACK_IDENTIFIER] = track.id ?? track.uid;
                 }
@@ -206,12 +211,12 @@ export class CMCDCollector {
                     payload[CMCDReservedKey.TOP_BITRATE] = Math.round(topQuality.bandwidth / 1000);
                 }
 
-
                 // Measured throughput rounded to the closest 100kbps in kbps
                 // NOTE only the LL-HLS pipeline realy uses the estimator properly today, so fall back to metrics API for others
-                const measuredBandwidth = this._player.network.estimator.bandwidth || this._player.metrics.currentBandwidthEstimate;
+                const measuredBandwidth =
+                    this._player.network.estimator.bandwidth || this._player.metrics.currentBandwidthEstimate;
                 const measuredBandwidthInKbps = measuredBandwidth / 1000;
-                payload[CMCDReservedKey.MEASURED_THROUGHPUT] = ((measuredBandwidthInKbps / 100) + 1) * 100;
+                payload[CMCDReservedKey.MEASURED_THROUGHPUT] = (measuredBandwidthInKbps / 100 + 1) * 100;
 
                 // Deadline rounded to the closest 100ms in ms.
                 payload[CMCDReservedKey.DEADLINE] = Math.round((bufferSize / this._player.playbackRate) * 10) * 100;
@@ -265,7 +270,7 @@ function getObjectType(mediaType: MediaType): CMCDObjectType {
 
 /**
  * Calculates the maximum throughput which should be provided. This throughput is calculated as the maximum between the current
- * dataconsumption rate and the rate needed to achieve the target buffer size in a timely fashion. The resulting value is multiplied
+ * data consumption rate and the rate needed to achieve the target buffer size in a timely fashion. The resulting value is multiplied
  * with {@link REQUESTED_MAXIMUM_THROUGHPUT_SAFETY_FACTOR} in order to ensure a high enough bandwidth is marked.
  * The resulting value is returned rounded up to the next 100kbps in kbps.
  * @param currentTime The current time which is used to calculate the current buffer size.
@@ -287,7 +292,7 @@ function calculateRequestedMaximumThroughput(
     const minimumBandwidth = Math.max(dataConsumptionRate, dataRequiredToReachTargetBuffer);
     const requestedMaximumThroughput = minimumBandwidth * REQUESTED_MAXIMUM_THROUGHPUT_SAFETY_FACTOR;
     const requestedMaximumThroughputInKbps = requestedMaximumThroughput / 1000;
-    return ((requestedMaximumThroughputInKbps / 100) + 1) * 100;
+    return (requestedMaximumThroughputInKbps / 100 + 1) * 100;
 }
 
 /**

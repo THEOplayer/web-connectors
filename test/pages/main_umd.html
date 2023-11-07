@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://cdn.theoplayer.com/dash/theoplayer/ui.css" />
+        <script src="https://cdn.theoplayer.com/dash/theoplayer/THEOplayer.js"></script>
+        <script src="/dist/cmcd-connector.umd.js"></script>
+    </head>
+
+    <body style="margin: 0; padding: 0">
+        <div id="video" style="width: 100%; margin: 0; padding: 0">
+            <div class="video-js theoplayer-skin vjs-16-9"></div>
+        </div>
+
+        <script type="text/javascript">
+            const player = new THEOplayer.Player(document.getElementById('video').children[0], {
+                libraryLocation: 'https://cdn.theoplayer.com/dash/theoplayer/'
+            });
+
+            const connector = THEOplayerCMCDConnector.createCMCDConnector(player);
+            player.source = {
+                sources: [
+                    {
+                        src: 'https://contentserver.prudentgiraffe.com/videos/hls/big_buck_bunny/big_buck_bunny.m3u8'
+                    }
+                ]
+            };
+        </script>
+    </body>
+</html>

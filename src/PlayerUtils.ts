@@ -1,5 +1,5 @@
-import {TypedSource} from 'theoplayer';
-import {CMCDStreamingFormat} from './CMCDPayload';
+import { TypedSource } from 'theoplayer';
+import { CMCDStreamingFormat } from './CMCDPayload';
 
 function isM3U8SourceString(source: string): boolean {
     return source.indexOf('m3u8') !== -1;
@@ -20,7 +20,6 @@ function guessStreamingFormatFromURI(uri: string | undefined): CMCDStreamingForm
         return CMCDStreamingFormat.HLS;
     }
     return CMCDStreamingFormat.OTHER;
-
 }
 
 /**

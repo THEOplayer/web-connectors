@@ -1,6 +1,6 @@
-import {InterceptableRequest} from 'theoplayer';
-import {CMCDPayload} from '../CMCDPayload';
-import {TransmissionModeStrategy} from './TransmissionModeStrategy';
+import { InterceptableRequest } from 'theoplayer';
+import { CMCDPayload } from '../CMCDPayload';
+import { TransmissionModeStrategy } from './TransmissionModeStrategy';
 
 /**
  * The transmission mode strategy to transmit CMCD data as a JSON object to an alternative endpoint as specified in section 2.3 of CTA-5004.

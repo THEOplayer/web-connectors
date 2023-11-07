@@ -4,20 +4,25 @@ import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
 import {version} from './package.json';
 
+const fileName = "cmcd-connector";
+const globalName = "THEOplayerCMCDConnector"
 const banner = `
 /**
- * cmcd-connector-web v${version}
+ * THEOplayer CMCD Connector v${version}
  */`.trim();
 
+/**
+ * @type {import("rollup").RollupOptions[]}
+ */
 const options = [{
     input: {
-        THEOplayerCMCDConnector: "src/index.ts"
+        [fileName]: "src/index.ts"
     },
     output: [
         {
             dir: "dist",
             entryFileNames: "[name].umd.js",
-            name: "THEOplayerCMCDConnector",
+            name: globalName,
             format: "umd",
             banner,
             intend: false,
@@ -46,14 +51,14 @@ const options = [{
     ]
 }, {
     input: {
-        THEOplayerCMCDConnector: "src/index.ts"
+        [fileName] : "src/index.ts"
     },
     output: [
         {
             dir: "dist",
             format: "esm",
             banner,
-            footer: `export as namespace THEOplayerCMCDConnector;`
+            footer: `export as namespace ${globalName};`
         }
     ],
     plugins: [
