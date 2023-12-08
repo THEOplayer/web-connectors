@@ -1,6 +1,6 @@
 import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd } from 'theoplayer';
 import { AdAnalytics, Constants, ConvivaMetadata, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
-import { calculateCurrentAdBreakInfo, collectAdMetadata, collectPlayerInfo } from '../../utils/Utils';
+import { calculateAdType, calculateCurrentAdBreakInfo, collectAdMetadata, collectPlayerInfo } from '../../utils/Utils';
 
 export class CsaiAdReporter {
     private readonly player: ChromelessPlayer;
@@ -29,7 +29,7 @@ export class CsaiAdReporter {
     private readonly onAdBreakBegin = (event: any) => {
         this.currentAdBreak = event.ad as AdBreak;
         this.convivaVideoAnalytics.reportAdBreakStarted(
-            Constants.AdType.CLIENT_SIDE,
+            calculateAdType(this.player),
             Constants.AdPlayer.CONTENT,
             calculateCurrentAdBreakInfo(this.currentAdBreak, this.adBreakCounter)
         );
@@ -57,6 +57,9 @@ export class CsaiAdReporter {
         adMetadata.contentAssetName =
             this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
 
+        // [Required] The ad technology as CLIENT_SIDE/SERVER_SIDE
+        adMetadata['c3.ad.technology'] = calculateAdType(this.player);
+
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
         this.convivaAdAnalytics.reportAdStarted(adMetadata);
@@ -66,6 +69,11 @@ export class CsaiAdReporter {
             this.player.videoHeight
         );
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.BITRATE, (currentAd as GoogleImaAd).bitrate || 0);
+
+        // Report playing state in case of SSAI.
+        if (calculateAdType(this.player) === Constants.AdType.SERVER_SIDE) {
+            this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
+        }
     };
 
     private readonly onAdEnd = (event: any) => {

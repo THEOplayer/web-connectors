@@ -62,14 +62,12 @@ export class ConvivaHandler {
 
         this.convivaAdAnalytics = Analytics.buildAdAnalytics(this.convivaVideoAnalytics);
 
-        if (this.player.ads !== undefined) {
-            this.adReporter = new CsaiAdReporter(
-                this.player,
-                this.convivaVideoAnalytics,
-                this.convivaAdAnalytics,
-                () => this.customMetadata
-            );
-        }
+        this.adReporter = new CsaiAdReporter(
+            this.player,
+            this.convivaVideoAnalytics,
+            this.convivaAdAnalytics,
+            () => this.customMetadata
+        );
 
         if (this.player.verizonMedia !== undefined) {
             this.verizonAdReporter = new VerizonAdReporter(
