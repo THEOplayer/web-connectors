@@ -121,6 +121,10 @@ export class ConvivaHandler {
         this.releaseSession();
     }
 
+    reportPlaybackEvent(eventType: string, eventDetail?: object): void {
+        this.convivaVideoAnalytics?.reportPlaybackEvent(eventType, eventDetail);
+    }
+
     stopAndStartNewSession(metadata: ConvivaMetadata): void {
         this.maybeReportPlaybackEnded();
         this.maybeReportPlaybackRequested();
