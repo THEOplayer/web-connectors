@@ -1,4 +1,9 @@
 import { AdBreak, AdVert } from "./AdBreak";
+import {TrackingError} from "./TrackingError";
+
+export enum SessionErrorCode {
+    TIMEOUT
+}
 
 export interface AnalyticEventObserver {
     onAnalyticUpdate: () => void;
@@ -7,7 +12,7 @@ export interface AnalyticEventObserver {
     onAdvertBreakEnd: () => void;
     onAdvertStart: (advert: AdVert) => void;
     onAdvertEnd: () => void;
-    onSessionError: (error: any) => void;
+    onSessionError: (error: SessionErrorCode) => void;
     onTrackingEvent: (type: string) => void;
     onTrackingError: (error: TrackingError) => void;
 }

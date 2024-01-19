@@ -1,5 +1,5 @@
 import { ChromelessPlayer } from "theoplayer";
-import { AnalyticEventObserver } from "../yospace/AnalyticEventObserver";
+import { AnalyticEventObserver , SessionErrorCode} from "../yospace/AnalyticEventObserver";
 import { AdBreak, AdVert, ResourceType } from "../yospace/AdBreak";
 import { YospaceUiHandler } from "./YospaceUIHandler";
 import { YoSpaceLinearAd, YoSpaceNonLinearAd } from "./YospaceAd";
@@ -89,7 +89,7 @@ export class YospaceAdHandler {
                 this.uiHandler.removeAllAds();
                 this.analyticEventObservers.forEach((observer) => observer.onAdvertEnd());
             },
-            onSessionError: (error: any) => {
+            onSessionError: (_error: SessionErrorCode) => {
                 this.analyticEventObservers.forEach((observer) => observer.onSessionError(_error));
             },
             onAnalyticUpdate: () => {
