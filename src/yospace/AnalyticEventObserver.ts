@@ -7,7 +7,7 @@ export interface AnalyticEventObserver {
     onAdvertBreakEnd: () => void;
     onAdvertStart: (advert: AdVert) => void;
     onAdvertEnd: () => void;
-    onSessionTimeout: () => void;
+    onSessionError: (error: any) => void;
     onTrackingEvent: (type: string) => void;
     onTrackingError: (error: any) => void;
 }

@@ -88,8 +88,8 @@ export class YospaceAdHandler {
                 this.uiHandler.removeAllAds();
                 this.analyticEventObservers.forEach((observer) => observer.onAdvertEnd());
             },
-            onSessionTimeout: () => {
-                this.analyticEventObservers.forEach((observer) => observer.onSessionTimeout());
+            onSessionError: (error: any) => {
+                this.analyticEventObservers.forEach((observer) => observer.onSessionError(_error));
             },
             onAnalyticUpdate: () => {
                 this.analyticEventObservers.forEach((observer) => observer.onAnalyticUpdate());
