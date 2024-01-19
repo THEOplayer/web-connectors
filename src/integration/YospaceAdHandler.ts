@@ -94,8 +94,11 @@ export class YospaceAdHandler {
             onAnalyticUpdate: () => {
                 this.analyticEventObservers.forEach((observer) => observer.onAnalyticUpdate());
             },
-            onTrackingEvent: (type: string) => {
-                this.analyticEventObservers.forEach((observer) => observer.onTrackingEvent(type));
+            onTrackingEvent: (_type: string) => {
+                // No operation.
+            },
+            onTrackingError: (error: any) => {
+                // No operation.
             }
         };
         this.yospaceManager.sessionManager?.addAnalyticObserver(callbackObject);
