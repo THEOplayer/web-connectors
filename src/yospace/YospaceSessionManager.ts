@@ -9,15 +9,15 @@ export enum ResultCode {
     UNKNOWN_FORMAT = -20
 }
 
-export enum SessionResult {
-    NOT_INITIALISED,
+export enum SessionState {
+    NONE,
     INITIALISED,
     FAILED,
     NO_ANALYTICS,
-    TIMEOUT
+    SHUT_DOWN
 }
 
-export type YospaceSessionCallback = (state: SessionResult, result: ResultCode) => void;
+export type YospaceSessionCallback = (state: SessionState, result: ResultCode) => void;
 export type YospaceSessionManagerCreator = {
     create(url: string, properties: object, successCallback: YospaceSessionCallback): void;
 };
@@ -27,7 +27,7 @@ export interface YospaceSessionManager {
 
     getResultCode(): number;
 
-    getSessionResult(): SessionResult;
+    getSessionState(): SessionState;
 
     onPlayerEvent(event: PlayerEvent, playhead: number): void;
 
