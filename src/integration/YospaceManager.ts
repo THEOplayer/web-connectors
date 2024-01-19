@@ -135,7 +135,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
                 this.handleSessionInitialised(session);
                 break;
             case SessionState.FAILED:
-            case SessionState.SHUT_DOWN :
+            case SessionState.SHUT_DOWN:
             default:
                 this.handleSessionInitialisationErrors(session.getResultCode());
         }

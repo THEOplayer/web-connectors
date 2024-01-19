@@ -1,12 +1,12 @@
 import { ChromelessPlayer } from "theoplayer";
-import { AnalyticEventObserver , SessionErrorCode} from "../yospace/AnalyticEventObserver";
+import { AnalyticEventObserver, SessionErrorCode } from "../yospace/AnalyticEventObserver";
 import { AdBreak, AdVert, ResourceType } from "../yospace/AdBreak";
 import { YospaceUiHandler } from "./YospaceUIHandler";
 import { YoSpaceLinearAd, YoSpaceNonLinearAd } from "./YospaceAd";
 import { YospaceManager } from "./YospaceManager";
 import { arrayRemove } from "../utils/DefaultEventDispatcher";
-import {TrackingError} from "../yospace/TrackingError";
-import {YospaceSessionManager} from "../yospace/YospaceSessionManager";
+import { TrackingError } from "../yospace/TrackingError";
+import { YospaceSessionManager } from "../yospace/YospaceSessionManager";
 
 export class YospaceAdHandler {
     private yospaceManager: YospaceManager;
@@ -90,7 +90,7 @@ export class YospaceAdHandler {
                 this.uiHandler.removeAllAds();
                 this.analyticEventObservers.forEach((observer) => observer.onAdvertEnd(session));
             },
-            onSessionError: (error: SessionErrorCode, session:YospaceSessionManager) => {
+            onSessionError: (error: SessionErrorCode, session: YospaceSessionManager) => {
                 this.analyticEventObservers.forEach((observer) => observer.onSessionError(error, session));
             },
             onAnalyticUpdate: (session: YospaceSessionManager) => {
@@ -100,7 +100,7 @@ export class YospaceAdHandler {
                 this.analyticEventObservers.forEach((observer) => observer.onTrackingEvent(type, session));
             },
             onTrackingError: (error: TrackingError, session: YospaceSessionManager) => {
-                this.analyticEventObservers.forEach((observer) => observer.onTrackingError(error, session))
+                this.analyticEventObservers.forEach((observer) => observer.onTrackingError(error, session));
             }
         };
         this.yospaceManager.sessionManager?.addAnalyticObserver(callbackObject);

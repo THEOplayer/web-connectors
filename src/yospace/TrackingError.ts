@@ -1,5 +1,5 @@
 export interface TrackingError {
-    getAdBreakIdentifier() : string;
+    getAdBreakIdentifier(): string;
     getMediaIdentifier(): string;
     getUrl(): string;
     getErrorCode(): number;

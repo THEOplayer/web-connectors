@@ -1,13 +1,13 @@
 import { AdBreak, AdVert } from "./AdBreak";
-import {TrackingError} from "./TrackingError";
-import {YospaceSessionManager} from "./YospaceSessionManager";
+import { TrackingError } from "./TrackingError";
+import { YospaceSessionManager } from "./YospaceSessionManager";
 
 export enum SessionErrorCode {
     TIMEOUT
 }
 
 export interface AnalyticEventObserver {
-    onAnalyticUpdate: (session:YospaceSessionManager) => void;
+    onAnalyticUpdate: (session: YospaceSessionManager) => void;
     onAdvertBreakEarlyReturn: (adBreak: AdBreak, session: YospaceSessionManager) => void;
     onAdvertBreakStart: (adBreak: AdBreak, session: YospaceSessionManager) => void;
     onAdvertBreakEnd: (session: YospaceSessionManager) => void;
