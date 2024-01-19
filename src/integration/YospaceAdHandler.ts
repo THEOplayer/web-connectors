@@ -90,17 +90,17 @@ export class YospaceAdHandler {
                 this.uiHandler.removeAllAds();
                 this.analyticEventObservers.forEach((observer) => observer.onAdvertEnd(session));
             },
-            onSessionError: (_error: SessionErrorCode, session:YospaceSessionManager) => {
-                this.analyticEventObservers.forEach((observer) => observer.onSessionError(_error, session));
+            onSessionError: (error: SessionErrorCode, session:YospaceSessionManager) => {
+                this.analyticEventObservers.forEach((observer) => observer.onSessionError(error, session));
             },
             onAnalyticUpdate: (session: YospaceSessionManager) => {
                 this.analyticEventObservers.forEach((observer) => observer.onAnalyticUpdate(session));
             },
-            onTrackingEvent: (_type: string, session: YospaceSessionManager) => {
-                this.analyticEventObservers.forEach((observer) => observer.onTrackingEvent(_type, session));
+            onTrackingEvent: (type: string, session: YospaceSessionManager) => {
+                this.analyticEventObservers.forEach((observer) => observer.onTrackingEvent(type, session));
             },
-            onTrackingError: (_error: TrackingError, session: YospaceSessionManager) => {
-                this.analyticEventObservers.forEach((observer) => observer.onTrackingError(_error, session))
+            onTrackingError: (error: TrackingError, session: YospaceSessionManager) => {
+                this.analyticEventObservers.forEach((observer) => observer.onTrackingError(error, session))
             }
         };
         this.yospaceManager.sessionManager?.addAnalyticObserver(callbackObject);
