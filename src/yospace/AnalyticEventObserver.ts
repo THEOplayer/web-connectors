@@ -9,5 +9,5 @@ export interface AnalyticEventObserver {
     onAdvertEnd: () => void;
     onSessionError: (error: any) => void;
     onTrackingEvent: (type: string) => void;
-    onTrackingError: (error: any) => void;
+    onTrackingError: (error: TrackingError) => void;
 }

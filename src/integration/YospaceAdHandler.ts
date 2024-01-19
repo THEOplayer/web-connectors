@@ -5,6 +5,7 @@ import { YospaceUiHandler } from "./YospaceUIHandler";
 import { YoSpaceLinearAd, YoSpaceNonLinearAd } from "./YospaceAd";
 import { YospaceManager } from "./YospaceManager";
 import { arrayRemove } from "../utils/DefaultEventDispatcher";
+import {TrackingError} from "../yospace/TrackingError";
 
 export class YospaceAdHandler {
     private yospaceManager: YospaceManager;
@@ -97,7 +98,7 @@ export class YospaceAdHandler {
             onTrackingEvent: (_type: string) => {
                 // No operation.
             },
-            onTrackingError: (error: any) => {
+            onTrackingError: (_error: TrackingError) => {
                 // No operation.
             }
         };
