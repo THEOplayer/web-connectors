@@ -2,7 +2,9 @@ import commonjs from "@rollup/plugin-commonjs";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
-import {version} from "./package.json";
+import fs from "fs";
+
+const {version} = JSON.parse(fs.readFileSync("./package.json", "utf8"));
 
 const fileName = "yospace-connector";
 const globalName = "THEOplayerYospaceConnector";
@@ -26,7 +28,7 @@ const options = [{
             format: "umd",
             indent: false,
             banner,
-            globals: { THEOplayer: "THEOplayer" }
+            globals: {THEOplayer: "THEOplayer"}
         },
         {
             dir: "dist",
