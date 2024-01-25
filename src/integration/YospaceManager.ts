@@ -3,7 +3,7 @@ import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from "../utils/Yospace
 import { PromiseController } from "../utils/PromiseController";
 import { PlayerEvent } from "../yospace/PlayerEvent";
 import { toSources } from "../utils/SourceUtils";
-import { ResultCode, SessionResult, YospaceSessionManager } from "../yospace/YospaceSessionManager";
+import { ResultCode, SessionState, YospaceSessionManager } from "../yospace/YospaceSessionManager";
 import { YospaceWindow } from "../yospace/YospaceWindow";
 import { YospaceAdHandler } from "./YospaceAdHandler";
 import { YospaceUiHandler } from "./YospaceUIHandler";
@@ -129,14 +129,13 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
 
     private onInitComplete = (e: any) => {
         const session: YospaceSessionManager = e.getPayload();
-        switch (session.getSessionResult()) {
-            case SessionResult.INITIALISED:
-            case SessionResult.NO_ANALYTICS:
+        switch (session.getSessionState()) {
+            case SessionState.INITIALISED:
+            case SessionState.NO_ANALYTICS:
                 this.handleSessionInitialised(session);
                 break;
-            case SessionResult.NOT_INITIALISED:
-            case SessionResult.FAILED:
-            case SessionResult.TIMEOUT:
+            case SessionState.FAILED:
+            case SessionState.SHUT_DOWN:
             default:
                 this.handleSessionInitialisationErrors(session.getResultCode());
         }

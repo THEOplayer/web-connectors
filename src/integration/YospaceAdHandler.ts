@@ -1,10 +1,12 @@
 import { ChromelessPlayer } from "theoplayer";
-import { AnalyticEventObserver } from "../yospace/AnalyticEventObserver";
+import { AnalyticEventObserver, SessionErrorCode } from "../yospace/AnalyticEventObserver";
 import { AdBreak, AdVert, ResourceType } from "../yospace/AdBreak";
 import { YospaceUiHandler } from "./YospaceUIHandler";
 import { YoSpaceLinearAd, YoSpaceNonLinearAd } from "./YospaceAd";
 import { YospaceManager } from "./YospaceManager";
 import { arrayRemove } from "../utils/DefaultEventDispatcher";
+import { TrackingError } from "../yospace/TrackingError";
+import { YospaceSessionManager } from "../yospace/YospaceSessionManager";
 
 export class YospaceAdHandler {
     private yospaceManager: YospaceManager;
@@ -59,20 +61,20 @@ export class YospaceAdHandler {
      */
     private initialiseAdSession(): void {
         const callbackObject: AnalyticEventObserver = {
-            onAdvertBreakEarlyReturn: (adBreak: AdBreak) => {
+            onAdvertBreakEarlyReturn: (adBreak: AdBreak, session: YospaceSessionManager) => {
                 this.analyticEventObservers.forEach((observer: AnalyticEventObserver) =>
-                    observer.onAdvertBreakEarlyReturn(adBreak)
+                    observer.onAdvertBreakEarlyReturn(adBreak, session)
                 );
             },
-            onAdvertBreakStart: (adBreak: AdBreak) => {
+            onAdvertBreakStart: (adBreak: AdBreak, session: YospaceSessionManager) => {
                 this.analyticEventObservers.forEach((observer: AnalyticEventObserver) =>
-                    observer.onAdvertBreakStart(adBreak)
+                    observer.onAdvertBreakStart(adBreak, session)
                 );
             },
-            onAdvertBreakEnd: () => {
-                this.analyticEventObservers.forEach((observer) => observer.onAdvertBreakEnd());
+            onAdvertBreakEnd: (session: YospaceSessionManager) => {
+                this.analyticEventObservers.forEach((observer) => observer.onAdvertBreakEnd(session));
             },
-            onAdvertStart: (advert: AdVert) => {
+            onAdvertStart: (advert: AdVert, session: YospaceSessionManager) => {
                 if (this.yospaceManager.startedPlaying) {
                     this.onAdvertStart(advert);
                 } else {
@@ -81,21 +83,24 @@ export class YospaceAdHandler {
                     };
                     this.player.addEventListener("play", this.advertStartListener);
                 }
-                this.analyticEventObservers.forEach((observer) => observer.onAdvertStart(advert));
+                this.analyticEventObservers.forEach((observer) => observer.onAdvertStart(advert, session));
             },
-            onAdvertEnd: () => {
+            onAdvertEnd: (session: YospaceSessionManager) => {
                 // Function gets called at the end of each advert within a break.
                 this.uiHandler.removeAllAds();
-                this.analyticEventObservers.forEach((observer) => observer.onAdvertEnd());
+                this.analyticEventObservers.forEach((observer) => observer.onAdvertEnd(session));
             },
-            onSessionTimeout: () => {
-                this.analyticEventObservers.forEach((observer) => observer.onSessionTimeout());
+            onSessionError: (error: SessionErrorCode, session: YospaceSessionManager) => {
+                this.analyticEventObservers.forEach((observer) => observer.onSessionError(error, session));
             },
-            onAnalyticUpdate: () => {
-                this.analyticEventObservers.forEach((observer) => observer.onAnalyticUpdate());
+            onAnalyticUpdate: (session: YospaceSessionManager) => {
+                this.analyticEventObservers.forEach((observer) => observer.onAnalyticUpdate(session));
             },
-            onTrackingEvent: (type: string) => {
-                this.analyticEventObservers.forEach((observer) => observer.onTrackingEvent(type));
+            onTrackingEvent: (type: string, session: YospaceSessionManager) => {
+                this.analyticEventObservers.forEach((observer) => observer.onTrackingEvent(type, session));
+            },
+            onTrackingError: (error: TrackingError, session: YospaceSessionManager) => {
+                this.analyticEventObservers.forEach((observer) => observer.onTrackingError(error, session));
             }
         };
         this.yospaceManager.sessionManager?.addAnalyticObserver(callbackObject);
