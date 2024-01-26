@@ -9,6 +9,7 @@ stepdefinitions:
       name: Run tests and quality gate
       script:
         - npm ci --prefer-offline --no-audit
+        - npm run build
         - npm run test
         - npm run prettier
         - npm run lint
