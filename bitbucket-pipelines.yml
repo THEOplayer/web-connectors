@@ -1,4 +1,4 @@
-image: node:14-slim
+image: node:20-slim
 
 definitions:
   caches:
@@ -9,6 +9,7 @@ stepdefinitions:
       name: Run tests and quality gate
       script:
         - npm ci --prefer-offline --no-audit
+        - npm run build
         - npm run test
         - npm run prettier
         - npm run lint
