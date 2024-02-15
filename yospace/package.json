@@ -1,0 +1,67 @@
+{
+  "name": "@theoplayer/yospace-connector-web",
+  "version": "2.0.0",
+  "description": "A connector implementing Yospace for web.",
+  "main": "dist/yospace-connector.umd.js",
+  "repository": "https://github.com/THEOplayer/yospace-connector-web",
+  "homepage": "https://theoplayer.com/",
+  "module": "dist/yospace-connector.esm.js",
+  "types": "dist/yospace-connector.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/yospace-connector.d.ts",
+      "import": "./dist/yospace-connector.esm.js",
+      "require": "./dist/yospace-connector.umd.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package": "./package.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "bundle": "rollup -c rollup.config.mjs",
+    "build": "npm run clean && npm run bundle",
+    "serve": "http-server",
+    "lint": "eslint \"src/**/*.ts\" \"test*/**/*.ts\"",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "prettier --check \"(src|test)/**/*\"",
+    "prettier:fix": "prettier --write \"(src|test)/**/*\"",
+    "test": "jest"
+  },
+  "author": "THEO Technologies NV",
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "README.md",
+    "package.json"
+  ],
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.11.6",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "http-server": "^14.1.1",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.4",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.9.6",
+    "rollup-plugin-dts": "^6.1.0",
+    "theoplayer": "^6.8.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "theoplayer": "^5.0.0 || ^6.0.0"
+  }
+}

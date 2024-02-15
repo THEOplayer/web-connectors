@@ -1,0 +1,34 @@
+image: node:20-slim
+
+definitions:
+  caches:
+    npm: $HOME/.npm
+
+stepdefinitions:
+  - tests: &tests
+      name: Run tests and quality gate
+      script:
+        - npm ci --prefer-offline --no-audit
+        - npm run build
+        - npm run test
+        - npm run prettier
+        - npm run lint
+  - publish-npm: &publish-npm
+      name: Build and publish npm package
+      caches:
+        - npm
+      script:
+        - npm ci --prefer-offline --no-audit
+        - npm run build
+        - pipe: atlassian/npm-publish:0.2.0
+          variables:
+            EXTRA_ARGS: "--access public"
+            NPM_TOKEN: $NPM_TOKEN
+
+pipelines:
+  default:
+    - step: *tests
+  tags:
+    v*:
+      - step: *tests
+      - step: *publish-npm
