@@ -3,7 +3,10 @@
   "version": "2.0.0",
   "description": "A connector implementing Yospace for web.",
   "main": "dist/yospace-connector.umd.js",
-  "repository": "https://github.com/THEOplayer/yospace-connector-web",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/THEOplayer/yospace-connector-web.git"
+  },
   "homepage": "https://theoplayer.com/",
   "module": "dist/yospace-connector.esm.js",
   "types": "dist/yospace-connector.d.ts",
@@ -63,5 +66,11 @@
   },
   "peerDependencies": {
     "theoplayer": "^5.0.0 || ^6.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/THEOplayer/yospace-connector-web/issues"
+  },
+  "directories": {
+    "test": "test"
   }
 }
