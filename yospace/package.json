@@ -5,7 +5,8 @@
   "main": "dist/yospace-connector.umd.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/THEOplayer/yospace-connector-web.git"
+    "url": "git+https://github.com/THEOplayer/web-connectors.git",
+    "directory": "yospace"
   },
   "homepage": "https://theoplayer.com/",
   "module": "dist/yospace-connector.esm.js",
