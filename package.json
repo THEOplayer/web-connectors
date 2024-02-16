@@ -9,5 +9,8 @@
   "license": "MIT",
   "workspaces": [
     "yospace"
-  ]
+  ],
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1"
+  }
 }
