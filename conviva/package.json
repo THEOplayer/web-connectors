@@ -36,8 +36,11 @@
     "README.md",
     "package.json"
   ],
+  "dependencies": {
+    "@convivainc/conviva-js-coresdk": "^4.6.1"
+  },
   "devDependencies": {
-    "@theoplayer/yospace-connector-web": "2.0.0"
+    "@theoplayer/yospace-connector-web": "^2.0.0"
   },
   "peerDependencies": {
     "theoplayer": "^5.0.0 || ^6.0.0",
@@ -47,8 +50,5 @@
     "@theoplayer/yospace-connector-web": {
       "optional": true
     }
-  },
-  "dependencies": {
-    "@convivainc/conviva-js-coresdk": "^4.6.1"
   }
 }
