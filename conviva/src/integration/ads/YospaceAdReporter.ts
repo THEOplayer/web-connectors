@@ -1,7 +1,7 @@
 import { ChromelessPlayer, VideoQuality } from 'theoplayer';
 import { AdAnalytics, Constants, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
 import { AdBreak, AdVert, AnalyticEventObserver, YospaceConnector } from '@theoplayer/yospace-connector-web';
-import { collectPlayerInfo, collectYospaceAdMetadata } from '../../utils/Utils';
+import { collectPlayerInfo, collectYospaceAdMetadata } from 'src/utils/Utils';
 
 export class YospaceAdReporter {
     private readonly player: ChromelessPlayer;
@@ -30,7 +30,8 @@ export class YospaceAdReporter {
             onAdvertBreakEnd: this.onYospaceAdBreakEnd,
             onAdvertStart: this.onYospaceAdvertStart,
             onAdvertEnd: this.onYospaceAdvertEnd,
-            onSessionTimeout: () => {},
+            onSessionError: () => {}, //TODO
+            onTrackingError: () => {}, //TODO
             onTrackingEvent: (_: string) => {}
         };
         this.yospaceConnector.addEventListener('sessionavailable', () => {

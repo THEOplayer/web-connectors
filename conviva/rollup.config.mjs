@@ -1,8 +1,11 @@
+import {defineConfig} from "rollup";
 import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
-import { version } from './package.json';
+import fs from "node:fs";
+
+const {version} = JSON.parse(fs.readFileSync("./package.json", "utf8"));
 
 const fileName = 'conviva-connector';
 const globalName = 'THEOplayerConvivaConnector';
@@ -11,10 +14,8 @@ const banner = `
  * THEOplayer Conviva Connector v${version}
  */`.trim();
 
-/**
- * @type {import("rollup").RollupOptions[]}
- */
-const options = [
+
+export default defineConfig([
     {
         input: {
             [fileName]: 'src/index.ts'
@@ -27,7 +28,7 @@ const options = [
                 format: 'umd',
                 indent: false,
                 banner,
-                globals: { THEOplayer: 'THEOplayer' }
+                globals: {theoplayer: 'THEOplayer'}
             },
             {
                 dir: 'dist',
@@ -71,5 +72,4 @@ const options = [
             })
         ]
     }
-];
-export default options;
+]);
