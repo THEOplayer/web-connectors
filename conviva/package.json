@@ -1,0 +1,78 @@
+{
+  "name": "@theoplayer/conviva-connector-web",
+  "version": "1.3.0",
+  "description": "A connector implementing Conviva for web.",
+  "main": "dist/conviva-connector.umd.js",
+  "repository": "https://github.com/THEOplayer/conviva-connector-web",
+  "homepage": "https://theoplayer.com/",
+  "module": "dist/conviva-connector.esm.js",
+  "types": "dist/conviva-connector.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/conviva-connector.d.ts",
+      "import": "./dist/conviva-connector.esm.js",
+      "require": "./dist/conviva-connector.umd.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package": "./package.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "bundle": "rollup -c ./rollup.config.js",
+    "build": "npm run clean && npm run bundle",
+    "serve": "http-server",
+    "lint": "eslint \"src/**/*.ts\" \"test*/**/*.ts\"",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "prettier --check \"(src|test)/**/*\"",
+    "prettier:fix": "prettier --write \"(src|test)/**/*\"",
+    "test": "jest"
+  },
+  "author": "THEO Technologies NV",
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "CHANGELOG.md",
+    "README.md",
+    "package.json"
+  ],
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.3",
+    "@theoplayer/yospace-connector-web": "1.4.0",
+    "@types/jest": "^28.1.4",
+    "@types/node": "^16.11.43",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
+    "eslint": "^8.19.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^3.2.4",
+    "eslint-plugin-import": "^2.26.0",
+    "http-server": "^14.1.1",
+    "jest": "^28.1.2",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.33.2",
+    "rollup-plugin-dts": "^4.2.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "theoplayer": "^6.3.0",
+    "ts-jest": "^28.0.5",
+    "ts-node": "^10.8.2",
+    "tslib": "^2.4.0",
+    "typescript": "^4.0.5"
+  },
+  "peerDependencies": {
+    "theoplayer": "^5.0.0 || ^6.0.0",
+    "@theoplayer/yospace-connector-web": "^1.4.0"
+  },
+  "peerDependenciesMeta": {
+    "@theoplayer/yospace-connector-web": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@convivainc/conviva-js-coresdk": "^4.6.1"
+  }
+}
