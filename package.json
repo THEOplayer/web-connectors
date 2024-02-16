@@ -3,11 +3,17 @@
   "version": "0.0.0",
   "description": "",
   "private": true,
-  "scripts": {},
   "keywords": [],
   "author": "THEO Technologies NV",
   "license": "MIT",
   "workspaces": [
     "yospace"
-  ]
+  ],
+  "scripts": {
+    "changeset:version": "changeset version && node .changeset/post-process.js"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@changesets/types": "^6.0.0"
+  }
 }
