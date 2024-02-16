@@ -24,8 +24,6 @@
     "serve": "http-server",
     "lint": "eslint \"src/**/*.ts\" \"test*/**/*.ts\"",
     "lint:fix": "npm run lint -- --fix",
-    "prettier": "prettier --check \"(src|test)/**/*\"",
-    "prettier:fix": "prettier --write \"(src|test)/**/*\"",
     "test": "jest"
   },
   "author": "THEO Technologies NV",

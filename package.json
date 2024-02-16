@@ -15,8 +15,8 @@
     "build": "npm run build --workspaces",
     "clean": "npm run clean --workspaces",
     "test": "npm run test --workspaces",
-    "prettier": "npm run prettier --workspaces",
-    "prettier:fix": "npm run prettier:fix --workspaces",
+    "prettier": "prettier --check \"*/(src|test)/**/*\"",
+    "prettier:fix": "prettier --write \"*/(src|test)/**/*\"",
     "lint": "npm run lint --workspaces",
     "lint:fix": "npm run lint:fix --workspaces"
   },
