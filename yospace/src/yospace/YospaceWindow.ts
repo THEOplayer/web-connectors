@@ -1,4 +1,4 @@
-import { YospaceAdManagement } from "./YospaceAdManagement";
+import { YospaceAdManagement } from './YospaceAdManagement';
 
 export interface YospaceWindow extends Window {
     YospaceAdManagement: YospaceAdManagement;

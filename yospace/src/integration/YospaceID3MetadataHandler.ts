@@ -1,13 +1,13 @@
-import { ID3Frame, ID3Yospace, TextTrackCue, TextTrackCueChangeEvent } from "theoplayer";
-import { YospaceMetadataHandler, YospaceReport } from "./YospaceMetadataHandler";
+import { ID3Frame, ID3Yospace, TextTrackCue, TextTrackCueChangeEvent } from 'theoplayer';
+import { YospaceMetadataHandler, YospaceReport } from './YospaceMetadataHandler';
 
 function isID3YospaceFrame(frame: ID3Frame): frame is ID3Yospace {
     switch (frame.id) {
-        case "YMID":
-        case "YTYP":
-        case "YSEQ":
-        case "YDUR":
-        case "YCSP":
+        case 'YMID':
+        case 'YTYP':
+        case 'YSEQ':
+        case 'YDUR':
+        case 'YCSP':
             return true;
         default:
             return false;

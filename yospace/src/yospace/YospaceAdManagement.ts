@@ -1,6 +1,6 @@
-import { SessionProperties } from "./SessionProperties";
-import { TimedMetadata } from "./TimedMetadata";
-import { YospaceSessionManagerCreator } from "./YospaceSessionManager";
+import { SessionProperties } from './SessionProperties';
+import { TimedMetadata } from './TimedMetadata';
+import { YospaceSessionManagerCreator } from './YospaceSessionManager';
 
 export interface YospaceAdManagement {
     SessionLive: YospaceSessionManagerCreator;

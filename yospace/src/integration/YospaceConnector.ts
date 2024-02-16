@@ -1,15 +1,15 @@
-import { ChromelessPlayer, SourceDescription } from "theoplayer";
-import { YospaceManager } from "./YospaceManager";
-import { SessionProperties } from "../yospace/SessionProperties";
-import { AnalyticEventObserver } from "../yospace/AnalyticEventObserver";
-import { EventDispatcher, EventListener, StringKeyOf } from "../utils/event/EventDispatcher";
-import { BaseEvent } from "../utils/event/Event";
+import { ChromelessPlayer, SourceDescription } from 'theoplayer';
+import { YospaceManager } from './YospaceManager';
+import { SessionProperties } from '../yospace/SessionProperties';
+import { AnalyticEventObserver } from '../yospace/AnalyticEventObserver';
+import { EventDispatcher, EventListener, StringKeyOf } from '../utils/event/EventDispatcher';
+import { BaseEvent } from '../utils/event/Event';
 
 export interface YospaceEventMap {
     /**
      * Fired when a new Yospace session starts.
      */
-    sessionavailable: BaseEvent<"sessionavailable">;
+    sessionavailable: BaseEvent<'sessionavailable'>;
 }
 
 export class YospaceConnector implements EventDispatcher<YospaceEventMap> {

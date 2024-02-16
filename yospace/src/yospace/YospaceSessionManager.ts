@@ -1,6 +1,6 @@
-import { PlayerEvent } from "./PlayerEvent";
-import { TimedMetadata } from "./TimedMetadata";
-import { AnalyticEventObserver } from "./AnalyticEventObserver";
+import { PlayerEvent } from './PlayerEvent';
+import { TimedMetadata } from './TimedMetadata';
+import { AnalyticEventObserver } from './AnalyticEventObserver';
 
 export enum ResultCode {
     CONNECTION_ERROR = -1,
