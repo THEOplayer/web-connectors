@@ -1,9 +1,5 @@
-import {defineConfig} from "rollup";
-import commonjs from '@rollup/plugin-commonjs';
-import nodeResolve from '@rollup/plugin-node-resolve';
-import typescript from '@rollup/plugin-typescript';
-import dts from 'rollup-plugin-dts';
 import fs from "node:fs";
+import {getSharedBuildConfiguration} from "../tools/build.mjs";
 
 const {version} = JSON.parse(fs.readFileSync("./package.json", "utf8"));
 
@@ -15,61 +11,4 @@ const banner = `
  */`.trim();
 
 
-export default defineConfig([
-    {
-        input: {
-            [fileName]: 'src/index.ts'
-        },
-        output: [
-            {
-                dir: 'dist',
-                entryFileNames: '[name].umd.js',
-                name: globalName,
-                format: 'umd',
-                indent: false,
-                banner,
-                globals: {theoplayer: 'THEOplayer'}
-            },
-            {
-                dir: 'dist',
-                entryFileNames: '[name].esm.js',
-                format: 'esm',
-                indent: false,
-                banner
-            },
-        ],
-        external: ['theoplayer'],
-        plugins: [
-            nodeResolve({
-                extensions: ['.ts', '.js']
-            }),
-            commonjs({
-                include: ['node_modules/**', '../node_modules/**']
-            }),
-            typescript({
-                tsconfig: 'tsconfig.json',
-                module: 'es2015',
-                include: ['src/**/*']
-            })
-        ]
-    },
-    {
-        input: {
-            [fileName]: 'src/index.ts'
-        },
-        output: [
-            {
-                dir: 'dist',
-                format: 'esm',
-                banner,
-                footer: `export as namespace ${globalName};`
-            }
-        ],
-        external: ['theoplayer'],
-        plugins: [
-            dts({
-                tsconfig: 'tsconfig.json'
-            })
-        ]
-    }
-]);
+export default getSharedBuildConfiguration(fileName, globalName, banner);
