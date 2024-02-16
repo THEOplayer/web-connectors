@@ -19,6 +19,7 @@
     "import"
   ],
   "rules": {
+    "class-methods-use-this": 0,
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -31,12 +32,25 @@
     ],
     "import/prefer-default-export": 0,
     "import/no-unresolved": 1,
+    "no-shadow": "off",
+    "no-use-before-define": 0,
+    "max-classes-per-file": [
+      "error",
+      5
+    ],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-shadow": 1,
     "no-useless-return": 0,
     "prefer-destructuring": 0,
     "no-console": 0,
     "no-plusplus": 0,
-    "lines-between-class-members": 0,
-    "no-unused-vars": "off"
+    "lines-between-class-members": 0
   },
   "settings": {
     "import/resolver": {
