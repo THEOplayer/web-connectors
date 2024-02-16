@@ -30,8 +30,8 @@ export class YospaceAdReporter {
             onAdvertBreakEnd: this.onYospaceAdBreakEnd,
             onAdvertStart: this.onYospaceAdvertStart,
             onAdvertEnd: this.onYospaceAdvertEnd,
-            onSessionError: () => {}, //TODO
-            onTrackingError: () => {}, //TODO
+            onSessionError: () => {}, // TODO
+            onTrackingError: () => {}, // TODO
             onTrackingEvent: (_: string) => {}
         };
         this.yospaceConnector.addEventListener('sessionavailable', () => {

@@ -17,8 +17,6 @@ export function collectDeviceMetadata(): ConvivaDeviceMetadata {
     };
 }
 
-type AdBreakPosition = 'preroll' | 'midroll' | 'postroll';
-
 export function calculateVerizonAdBreakInfo(adBreak: VerizonMediaAdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
     return {
         [Constants.POD_DURATION]: adBreak.duration!,
