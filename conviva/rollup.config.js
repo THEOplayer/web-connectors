@@ -43,7 +43,7 @@ const options = [
                 extensions: ['.ts', '.js']
             }),
             commonjs({
-                include: 'node_modules/**'
+                include: ['node_modules/**', '../node_modules/**']
             }),
             typescript({
                 tsconfig: 'tsconfig.json',
