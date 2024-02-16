@@ -11,7 +11,14 @@
     "yospace"
   ],
   "scripts": {
-    "changeset:version": "changeset version && node .changeset/post-process.js"
+    "changeset:version": "changeset version && node .changeset/post-process.js",
+    "build": "npm run build --workspaces",
+    "clean": "npm run clean --workspaces",
+    "test": "npm run test --workspaces",
+    "prettier": "npm run prettier --workspaces",
+    "prettier:fix": "npm run prettier:fix --workspaces",
+    "lint": "npm run lint --workspaces",
+    "lint:fix": "npm run lint:fix --workspaces"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
