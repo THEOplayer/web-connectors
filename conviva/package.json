@@ -22,8 +22,6 @@
     "bundle": "rollup -c rollup.config.mjs",
     "build": "npm run clean && npm run bundle",
     "serve": "http-server",
-    "lint": "eslint \"src/**/*.ts\" \"test*/**/*.ts\"",
-    "lint:fix": "npm run lint -- --fix",
     "test": "jest"
   },
   "author": "THEO Technologies NV",

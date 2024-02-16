@@ -17,8 +17,8 @@
     "test": "npm run test --workspaces",
     "prettier": "prettier --check \"*/(src|test)/**/*\"",
     "prettier:fix": "prettier --write \"*/(src|test)/**/*\"",
-    "lint": "npm run lint --workspaces",
-    "lint:fix": "npm run lint:fix --workspaces"
+    "lint": "eslint \"*/src/**/*.ts\" \"*/test*/**/*.ts\"",
+    "lint:fix": "npm run lint -- --fix"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
