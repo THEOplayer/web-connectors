@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 1.3.0
+
+### ✨ Features
+
+- Updated to be compatible with THEOplayer `6.X`.
+
 ## 1.2.0
 
 ### ✨ Features
