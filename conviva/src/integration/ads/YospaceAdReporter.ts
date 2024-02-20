@@ -30,8 +30,8 @@ export class YospaceAdReporter {
             onAdvertBreakEnd: this.onYospaceAdBreakEnd,
             onAdvertStart: this.onYospaceAdvertStart,
             onAdvertEnd: this.onYospaceAdvertEnd,
-            onSessionError: () => {}, // TODO
-            onTrackingError: () => {}, // TODO
+            onSessionError: () => this.onYospaceError,
+            onTrackingError: () => {},
             onTrackingEvent: (_: string) => {}
         };
         this.yospaceConnector.addEventListener('sessionavailable', () => {
@@ -90,6 +90,10 @@ export class YospaceAdReporter {
 
     private readonly onYospaceAdvertEnd = () => {
         this.convivaAdAnalytics.reportAdEnded();
+    };
+
+    private readonly onYospaceError = () => {
+        this.convivaVideoAnalytics.reportPlaybackError('The Yospace session has timed out.');
     };
 
     private addEventListeners(): void {
