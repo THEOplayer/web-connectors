@@ -7,8 +7,8 @@
   "author": "THEO Technologies NV",
   "license": "MIT",
   "workspaces": [
-    "conviva",
-    "yospace"
+    "yospace",
+    "conviva"
   ],
   "scripts": {
     "changeset:version": "changeset version && node .changeset/post-process.js",
