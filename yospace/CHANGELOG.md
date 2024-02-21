@@ -1,5 +1,11 @@
 # @theoplayer/yospace-connector-web
 
+## 2.1.0
+
+### ✨ Features
+
+- Exposed SessionErrorCode.
+
 ## 2.0.0
 
 ### ✨ Features
