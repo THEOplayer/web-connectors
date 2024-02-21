@@ -22,9 +22,9 @@ const getDependencyReleaseLine = async (changesets, dependenciesUpdated, changel
     if (dependenciesUpdated.length === 0) return "";
 
     const updatedDependenciesList = dependenciesUpdated.map(
-        (dependency) => `  - ${dependency.name}@${dependency.newVersion}`
+        (dependency) => `- ${dependency.name}@${dependency.newVersion}`
     );
-    return [['- Updated dependencies:'], ...updatedDependenciesList].join("\n");
+    return `\n### 📦 Dependency Updates\n\n${updatedDependenciesList.join("\n")}`;
 }
 
 /**
