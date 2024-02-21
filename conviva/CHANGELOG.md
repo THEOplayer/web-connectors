@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 2.0.0
+
+### 📦 Dependency Updates
+
+- @theoplayer/yospace-connector-web@2.1.0
+
 ## 1.3.0
 
 ### ✨ Features
