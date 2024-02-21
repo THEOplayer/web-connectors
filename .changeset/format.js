@@ -19,7 +19,12 @@ const getReleaseLine = async (changeset, type, changelogOpts) => {
  * @type {import('@changesets/types').GetDependencyReleaseLine}
  */
 const getDependencyReleaseLine = async (changesets, dependenciesUpdated, changelogOpts) => {
-    return '';
+    if (dependenciesUpdated.length === 0) return "";
+
+    const updatedDependenciesList = dependenciesUpdated.map(
+        (dependency) => `  - ${dependency.name}@${dependency.newVersion}`
+    );
+    return [['- Updated dependencies:'], ...updatedDependenciesList].join("\n");
 }
 
 /**

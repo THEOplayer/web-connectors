@@ -4,13 +4,20 @@
     "es2021": true,
     "jest": true
   },
-  "extends": ["airbnb-base", "eslint:recommended", "prettier"],
+  "extends": [
+    "airbnb-base",
+    "eslint:recommended",
+    "prettier"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "import"],
+  "plugins": [
+    "@typescript-eslint",
+    "import"
+  ],
   "rules": {
     "class-methods-use-this": 0,
     "import/extensions": [
@@ -27,10 +34,23 @@
     "import/no-unresolved": 1,
     "no-shadow": "off",
     "no-use-before-define": 0,
-    "max-classes-per-file": ["error", 5],
+    "max-classes-per-file": [
+      "error",
+      5
+    ],
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": ["warn", {"argsIgnorePattern": "^_"}],
-    "@typescript-eslint/no-shadow": 1
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-shadow": 1,
+    "no-useless-return": 0,
+    "prefer-destructuring": 0,
+    "no-console": 0,
+    "no-plusplus": 0,
+    "lines-between-class-members": 0
   },
   "settings": {
     "import/resolver": {
@@ -40,5 +60,8 @@
       }
     }
   },
-  "ignorePatterns": ["lib/**/*", "dist/**/*"]
+  "ignorePatterns": [
+    "lib/**/*",
+    "dist/**/*"
+  ]
 }

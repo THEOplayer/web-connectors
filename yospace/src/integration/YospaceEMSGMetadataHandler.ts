@@ -1,7 +1,7 @@
-import { EmsgCue, TextTrackCue, TextTrackCueChangeEvent, YospaceId } from "theoplayer";
-import { YospaceMetadataHandler, YospaceReport } from "./YospaceMetadataHandler";
+import { EmsgCue, TextTrackCue, TextTrackCueChangeEvent, YospaceId } from 'theoplayer';
+import { YospaceMetadataHandler, YospaceReport } from './YospaceMetadataHandler';
 
-export const YOSPACE_EMSG_SCHEME_ID_URI = "urn:yospace:a:id3:2016";
+export const YOSPACE_EMSG_SCHEME_ID_URI = 'urn:yospace:a:id3:2016';
 
 function isValidYospaceSchemeIDURI(schemeIDURI: string): boolean {
     return schemeIDURI === YOSPACE_EMSG_SCHEME_ID_URI;
@@ -9,10 +9,10 @@ function isValidYospaceSchemeIDURI(schemeIDURI: string): boolean {
 
 function parseEmsgYospaceMetadata(data: number[]): YospaceReport {
     const emsgString = String.fromCharCode(...data);
-    const parsedEmsg = emsgString.split(",");
+    const parsedEmsg = emsgString.split(',');
     const result: YospaceReport = {};
     parsedEmsg.forEach((metadataElement) => {
-        const [key, value] = metadataElement.split("=");
+        const [key, value] = metadataElement.split('=');
         result[key as YospaceId] = value;
     });
     return result;

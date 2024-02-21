@@ -1,6 +1,6 @@
-import { AdBreak, AdVert } from "./AdBreak";
-import { TrackingError } from "./TrackingError";
-import { YospaceSessionManager } from "./YospaceSessionManager";
+import { AdBreak, AdVert } from './AdBreak';
+import { TrackingError } from './TrackingError';
+import { YospaceSessionManager } from './YospaceSessionManager';
 
 export enum SessionErrorCode {
     TIMEOUT

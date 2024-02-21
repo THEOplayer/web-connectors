@@ -1,19 +1,19 @@
-import { ChromelessPlayer, SourceDescription, YospaceTypedSource } from "theoplayer";
-import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from "../utils/YospaceUtils";
-import { PromiseController } from "../utils/PromiseController";
-import { PlayerEvent } from "../yospace/PlayerEvent";
-import { toSources } from "../utils/SourceUtils";
-import { ResultCode, SessionState, YospaceSessionManager } from "../yospace/YospaceSessionManager";
-import { YospaceWindow } from "../yospace/YospaceWindow";
-import { YospaceAdHandler } from "./YospaceAdHandler";
-import { YospaceUiHandler } from "./YospaceUIHandler";
-import { YospaceID3MetadataHandler } from "./YospaceID3MetadataHandler";
-import { YospaceEMSGMetadataHandler } from "./YospaceEMSGMetadataHandler";
-import { SessionProperties } from "../yospace/SessionProperties";
-import { AnalyticEventObserver } from "../yospace/AnalyticEventObserver";
-import { DefaultEventDispatcher } from "../utils/DefaultEventDispatcher";
-import { YospaceEventMap } from "./YospaceConnector";
-import { BaseEvent } from "../utils/event/Event";
+import { ChromelessPlayer, SourceDescription, YospaceTypedSource } from 'theoplayer';
+import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
+import { PromiseController } from '../utils/PromiseController';
+import { PlayerEvent } from '../yospace/PlayerEvent';
+import { toSources } from '../utils/SourceUtils';
+import { ResultCode, SessionState, YospaceSessionManager } from '../yospace/YospaceSessionManager';
+import { YospaceWindow } from '../yospace/YospaceWindow';
+import { YospaceAdHandler } from './YospaceAdHandler';
+import { YospaceUiHandler } from './YospaceUIHandler';
+import { YospaceID3MetadataHandler } from './YospaceID3MetadataHandler';
+import { YospaceEMSGMetadataHandler } from './YospaceEMSGMetadataHandler';
+import { SessionProperties } from '../yospace/SessionProperties';
+import { AnalyticEventObserver } from '../yospace/AnalyticEventObserver';
+import { DefaultEventDispatcher } from '../utils/DefaultEventDispatcher';
+import { YospaceEventMap } from './YospaceConnector';
+import { BaseEvent } from '../utils/event/Event';
 
 export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private readonly player: ChromelessPlayer;
@@ -89,11 +89,11 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
             const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
             properties.setUserAgent(navigator.userAgent);
             switch (this.yospaceTypedSource?.ssai.streamType) {
-                case "vod":
+                case 'vod':
                     yospaceWindow.SessionVOD.create(this.yospaceTypedSource.src, properties, this.onInitComplete);
                     break;
-                case "nonlinear":
-                case "livepause":
+                case 'nonlinear':
+                case 'livepause':
                     yospaceWindow.SessionDVRLive.create(this.yospaceTypedSource.src, properties, this.onInitComplete);
                     break;
                 default:
@@ -102,9 +102,9 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
             }
             this.isMuted = this.player.muted;
         } else if (this.yospaceTypedSource && !isYospaceSDKAvailable) {
-            throw new Error("The Yospace Ad Management SDK has not been loaded.");
+            throw new Error('The Yospace Ad Management SDK has not been loaded.');
         } else {
-            throw new Error("The given source is not a Yospace source.");
+            throw new Error('The given source is not a Yospace source.');
         }
     }
 
@@ -152,20 +152,20 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
                 }
             ]
         };
-        this.dispatchEvent(new BaseEvent("sessionavailable"));
+        this.dispatchEvent(new BaseEvent('sessionavailable'));
         this.yospaceSourceDescriptionDefined.resolve();
     }
 
     private handleSessionInitialisationErrors(result: ResultCode) {
         let errorMessage: string;
         if (result === ResultCode.MALFORMED_URL) {
-            errorMessage = "Yospace: The stream URL is not correctly formatted";
+            errorMessage = 'Yospace: The stream URL is not correctly formatted';
         } else if (result === ResultCode.CONNECTION_ERROR) {
-            errorMessage = "Yospace: Connection error";
+            errorMessage = 'Yospace: Connection error';
         } else if (result === ResultCode.CONNECTION_TIMEOUT) {
-            errorMessage = "Yospace: Connection timeout";
+            errorMessage = 'Yospace: Connection timeout';
         } else {
-            errorMessage = "Yospace: Session could not be initialised";
+            errorMessage = 'Yospace: Session could not be initialised';
         }
 
         this.reset();
@@ -173,23 +173,23 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     }
 
     private addEventListenersToNotifyYospace = () => {
-        this.player.addEventListener("volumechange", this.handleVolumeChange);
-        this.player.addEventListener("play", this.handlePlay);
-        this.player.addEventListener("ended", this.handleEnded);
-        this.player.addEventListener("pause", this.handlePause);
-        this.player.addEventListener("seeked", this.handleSeeked);
-        this.player.addEventListener("waiting", this.handleWaiting);
-        this.player.addEventListener("playing", this.handlePlaying);
+        this.player.addEventListener('volumechange', this.handleVolumeChange);
+        this.player.addEventListener('play', this.handlePlay);
+        this.player.addEventListener('ended', this.handleEnded);
+        this.player.addEventListener('pause', this.handlePause);
+        this.player.addEventListener('seeked', this.handleSeeked);
+        this.player.addEventListener('waiting', this.handleWaiting);
+        this.player.addEventListener('playing', this.handlePlaying);
     };
 
     private removeEventListenersToNotifyYospace = () => {
-        this.player.removeEventListener("volumechange", this.handleVolumeChange);
-        this.player.removeEventListener("play", this.handlePlay);
-        this.player.removeEventListener("ended", this.handleEnded);
-        this.player.removeEventListener("pause", this.handlePause);
-        this.player.removeEventListener("seeked", this.handleSeeked);
-        this.player.removeEventListener("waiting", this.handleWaiting);
-        this.player.removeEventListener("playing", this.handlePlaying);
+        this.player.removeEventListener('volumechange', this.handleVolumeChange);
+        this.player.removeEventListener('play', this.handlePlay);
+        this.player.removeEventListener('ended', this.handleEnded);
+        this.player.removeEventListener('pause', this.handlePause);
+        this.player.removeEventListener('seeked', this.handleSeeked);
+        this.player.removeEventListener('waiting', this.handleWaiting);
+        this.player.removeEventListener('playing', this.handlePlaying);
     };
 
     private handleVolumeChange = () => {

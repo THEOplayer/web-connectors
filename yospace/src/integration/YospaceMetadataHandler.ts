@@ -1,6 +1,6 @@
-import { AddTrackEvent, TextTrack, TextTrackCue, TextTrackCueChangeEvent, TextTracksList } from "theoplayer";
-import { YospaceWindow } from "../yospace/YospaceWindow";
-import { YospaceSessionManager } from "../yospace/YospaceSessionManager";
+import { AddTrackEvent, TextTrack, TextTrackCue, TextTrackCueChangeEvent, TextTracksList } from 'theoplayer';
+import { YospaceWindow } from '../yospace/YospaceWindow';
+import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
 
 export interface YospaceMetadata {
     YMID: string;
@@ -21,16 +21,16 @@ export abstract class YospaceMetadataHandler {
     constructor(textTrackList: TextTracksList, session: YospaceSessionManager) {
         this.textTrackList = textTrackList;
         this.sessionManager = session;
-        this.textTrackList.addEventListener("addtrack", this.handleAddTrack);
+        this.textTrackList.addEventListener('addtrack', this.handleAddTrack);
     }
 
     protected handleAddTrack = (event: AddTrackEvent) => {
         const track = event.track as TextTrack;
-        if (track.kind !== "metadata" || !track.cues) {
+        if (track.kind !== 'metadata' || !track.cues) {
             return;
         }
 
-        track.addEventListener("cuechange", this.handleCueChange);
+        track.addEventListener('cuechange', this.handleCueChange);
     };
 
     protected abstract isCorrectCueType(cue: TextTrackCue): boolean;
@@ -57,7 +57,7 @@ export abstract class YospaceMetadataHandler {
     }
 
     reset(): void {
-        this.textTrackList.forEach((track) => track.removeEventListener("cuechange", this.handleCueChange));
-        this.textTrackList.removeEventListener("addtrack", this.handleAddTrack);
+        this.textTrackList.forEach((track) => track.removeEventListener('cuechange', this.handleCueChange));
+        this.textTrackList.removeEventListener('addtrack', this.handleAddTrack);
     }
 }

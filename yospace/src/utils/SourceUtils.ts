@@ -1,11 +1,11 @@
-import { Source, Sources, TypedSource } from "theoplayer";
+import { Source, Sources, TypedSource } from 'theoplayer';
 
 export function isObject(x: unknown): x is object {
-    return typeof x === "object" && x !== null;
+    return typeof x === 'object' && x !== null;
 }
 
 export function isString(parameter: unknown): parameter is string {
-    return typeof parameter === "string";
+    return typeof parameter === 'string';
 }
 
 export function implementsInterface(object: object, interfaceProperties: string[]): boolean {
@@ -34,5 +34,5 @@ export function toSources(sources: Sources): Source[] {
         return sources;
     }
 
-    throw new Error("not a good source");
+    throw new Error('not a good source');
 }

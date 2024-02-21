@@ -1,12 +1,12 @@
-import { ChromelessPlayer } from "theoplayer";
-import { AnalyticEventObserver, SessionErrorCode } from "../yospace/AnalyticEventObserver";
-import { AdBreak, AdVert, ResourceType } from "../yospace/AdBreak";
-import { YospaceUiHandler } from "./YospaceUIHandler";
-import { YoSpaceLinearAd, YoSpaceNonLinearAd } from "./YospaceAd";
-import { YospaceManager } from "./YospaceManager";
-import { arrayRemove } from "../utils/DefaultEventDispatcher";
-import { TrackingError } from "../yospace/TrackingError";
-import { YospaceSessionManager } from "../yospace/YospaceSessionManager";
+import { ChromelessPlayer } from 'theoplayer';
+import { AnalyticEventObserver, SessionErrorCode } from '../yospace/AnalyticEventObserver';
+import { AdBreak, AdVert, ResourceType } from '../yospace/AdBreak';
+import { YospaceUiHandler } from './YospaceUIHandler';
+import { YoSpaceLinearAd, YoSpaceNonLinearAd } from './YospaceAd';
+import { YospaceManager } from './YospaceManager';
+import { arrayRemove } from '../utils/DefaultEventDispatcher';
+import { TrackingError } from '../yospace/TrackingError';
+import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
 
 export class YospaceAdHandler {
     private yospaceManager: YospaceManager;
@@ -36,7 +36,7 @@ export class YospaceAdHandler {
 
     private onAdvertStart(advert: AdVert) {
         if (this.advertStartListener) {
-            this.player.removeEventListener("play", this.advertStartListener);
+            this.player.removeEventListener('play', this.advertStartListener);
             this.advertStartListener = undefined;
         }
 
@@ -81,7 +81,7 @@ export class YospaceAdHandler {
                     this.advertStartListener = () => {
                         this.onAdvertStart(advert);
                     };
-                    this.player.addEventListener("play", this.advertStartListener);
+                    this.player.addEventListener('play', this.advertStartListener);
                 }
                 this.analyticEventObservers.forEach((observer) => observer.onAdvertStart(advert, session));
             },

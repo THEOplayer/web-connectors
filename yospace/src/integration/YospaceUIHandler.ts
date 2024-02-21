@@ -1,21 +1,21 @@
-import { YoSpaceLinearAd, YoSpaceNonLinearAd } from "./YospaceAd";
-import { YospaceSessionManager } from "../yospace/YospaceSessionManager";
+import { YoSpaceLinearAd, YoSpaceNonLinearAd } from './YospaceAd';
+import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
 
 export function stretchToParent(element: HTMLElement): void {
     const { style } = element;
-    style.position = "absolute";
-    style.left = "0";
-    style.right = "0";
-    style.top = "0";
-    style.bottom = "0";
-    style.width = "100%";
-    style.height = "100%";
+    style.position = 'absolute';
+    style.left = '0';
+    style.right = '0';
+    style.top = '0';
+    style.bottom = '0';
+    style.width = '100%';
+    style.height = '100%';
 }
 
 function createClickThrough(clickThroughURL: string, classToAdd?: string): HTMLElement {
-    const clickThroughElement = document.createElement("a");
-    clickThroughElement.setAttribute("href", clickThroughURL);
-    clickThroughElement.setAttribute("target", "_blank");
+    const clickThroughElement = document.createElement('a');
+    clickThroughElement.setAttribute('href', clickThroughURL);
+    clickThroughElement.setAttribute('target', '_blank');
 
     if (classToAdd) {
         clickThroughElement.className = classToAdd;
@@ -23,7 +23,7 @@ function createClickThrough(clickThroughURL: string, classToAdd?: string): HTMLE
 
     // security enhancement
     // read more @ https://mathiasbynens.github.io/rel-noopener/
-    clickThroughElement.setAttribute("rel", "noopener");
+    clickThroughElement.setAttribute('rel', 'noopener');
 
     return clickThroughElement;
 }
@@ -43,15 +43,15 @@ export class YospaceUiHandler {
     }
 
     createNonLinear(adToPlay: YoSpaceNonLinearAd) {
-        const adImage = document.createElement("img");
+        const adImage = document.createElement('img');
         adImage.src = adToPlay.imageUrl;
-        adImage.className = "theoplayer-yospace-non-linear-image";
-        adImage.style.maxWidth = "100%";
+        adImage.className = 'theoplayer-yospace-non-linear-image';
+        adImage.style.maxWidth = '100%';
 
-        const nonLinearClickThrough = createClickThrough(adToPlay.clickThroughUrl, "theoplayer-yospace-advert");
+        const nonLinearClickThrough = createClickThrough(adToPlay.clickThroughUrl, 'theoplayer-yospace-advert');
         nonLinearClickThrough.appendChild(adImage);
-        nonLinearClickThrough.style.zIndex = "10";
-        nonLinearClickThrough.style.position = "absolute";
+        nonLinearClickThrough.style.zIndex = '10';
+        nonLinearClickThrough.style.position = 'absolute';
 
         this.element.appendChild(nonLinearClickThrough);
         this.nonLinears.push(nonLinearClickThrough);
@@ -79,8 +79,8 @@ export class YospaceUiHandler {
     }
 
     createLinearClickThrough(adToPlay: YoSpaceLinearAd): void {
-        const clickThrough = createClickThrough(adToPlay.clickThroughUrl, "theoplayer-yospace-ad-clickthrough");
-        clickThrough.style.zIndex = "10";
+        const clickThrough = createClickThrough(adToPlay.clickThroughUrl, 'theoplayer-yospace-ad-clickthrough');
+        clickThrough.style.zIndex = '10';
         stretchToParent(clickThrough);
 
         this.element.appendChild(clickThrough);

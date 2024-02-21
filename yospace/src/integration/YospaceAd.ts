@@ -1,6 +1,6 @@
 export enum YospaceAdType {
-    LINEAR = "linear",
-    NON_LINEAR = "nonlinear"
+    LINEAR = 'linear',
+    NON_LINEAR = 'nonlinear'
 }
 
 export abstract class YoSpaceAd {
