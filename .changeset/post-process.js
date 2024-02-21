@@ -8,6 +8,8 @@ for (const workspace of require('../package.json').workspaces) {
     changelog = changelog
         .replace(/^### Major Changes/gm, '### 💥 Breaking Changes')
         .replace(/^### Minor Changes/gm, '### ✨ Features')
-        .replace(/^### Patch Changes/gm, '### 🐛 Issues');
+        .replace(/^### Patch Changes/gm, '### 🐛 Issues')
+        // Remove empty sections
+        .replace(/\n### ([^\n]+)\n\n###/g, '\n###');
     fs.writeFileSync(changelogPath, changelog);
 }
