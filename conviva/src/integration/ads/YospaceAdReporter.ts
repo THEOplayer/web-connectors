@@ -1,6 +1,12 @@
 import { ChromelessPlayer, VideoQuality } from 'theoplayer';
 import { AdAnalytics, Constants, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
-import { AdBreak, AdVert, AnalyticEventObserver, YospaceConnector } from '@theoplayer/yospace-connector-web';
+import {
+    AdBreak,
+    AdVert,
+    AnalyticEventObserver,
+    SessionErrorCode,
+    YospaceConnector
+} from '@theoplayer/yospace-connector-web';
 import { collectPlayerInfo, collectYospaceAdMetadata } from '../../utils/Utils';
 
 export class YospaceAdReporter {
@@ -30,7 +36,7 @@ export class YospaceAdReporter {
             onAdvertBreakEnd: this.onYospaceAdBreakEnd,
             onAdvertStart: this.onYospaceAdvertStart,
             onAdvertEnd: this.onYospaceAdvertEnd,
-            onSessionError: () => this.onYospaceError,
+            onSessionError: this.onYospaceSessionError,
             onTrackingError: () => {},
             onTrackingEvent: (_: string) => {}
         };
@@ -92,8 +98,12 @@ export class YospaceAdReporter {
         this.convivaAdAnalytics.reportAdEnded();
     };
 
-    private readonly onYospaceError = () => {
-        this.convivaVideoAnalytics.reportPlaybackError('The Yospace session has timed out.');
+    private readonly onYospaceSessionError = (code: SessionErrorCode) => {
+        if (code === SessionErrorCode.TIMEOUT) {
+            this.convivaVideoAnalytics.reportPlaybackError('The Yospace session has timed out.');
+        } else {
+            this.convivaVideoAnalytics.reportPlaybackError('The Yospace session has errored.');
+        }
     };
 
     private addEventListeners(): void {
