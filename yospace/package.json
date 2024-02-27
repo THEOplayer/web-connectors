@@ -32,7 +32,9 @@
   "license": "MIT",
   "files": [
     "dist/",
+    "CHANGELOG.md",
     "README.md",
+    "LICENSE.md",
     "package.json"
   ],
   "peerDependencies": {
