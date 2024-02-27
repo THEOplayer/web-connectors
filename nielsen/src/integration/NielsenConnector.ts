@@ -1,6 +1,6 @@
-import { ChromelessPlayer } from "theoplayer";
-import { NielsenOptions } from "../nielsen/Types";
-import { NielsenHandler } from "./NielsenHandler";
+import { ChromelessPlayer } from 'theoplayer';
+import { NielsenOptions } from '../nielsen/Types';
+import { NielsenHandler } from './NielsenHandler';
 
 export class NielsenConnector {
     private nielsenHandler: NielsenHandler;

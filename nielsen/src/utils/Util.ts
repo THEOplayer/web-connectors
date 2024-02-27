@@ -1,15 +1,15 @@
-import { AdBreak } from "theoplayer";
-import { AdType } from "../nielsen/Types";
+import { AdBreak } from 'theoplayer';
+import { AdType } from '../nielsen/Types';
 
 export function getAdType(adBreak: AdBreak): AdType {
     const currentAdBreakTimeOffset = adBreak.timeOffset;
-    let currentAdBreakPosition: AdType = "ad";
+    let currentAdBreakPosition: AdType = 'ad';
     if (currentAdBreakTimeOffset === 0) {
-        currentAdBreakPosition = "preroll";
+        currentAdBreakPosition = 'preroll';
     } else if (currentAdBreakTimeOffset < 0) {
-        currentAdBreakPosition = "postroll";
+        currentAdBreakPosition = 'postroll';
     } else if (currentAdBreakTimeOffset > 0) {
-        currentAdBreakPosition = "midroll";
+        currentAdBreakPosition = 'midroll';
     }
     return currentAdBreakPosition;
 }

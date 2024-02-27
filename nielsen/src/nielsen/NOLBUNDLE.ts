@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { NielsenOptions } from "./Types";
+import { NielsenOptions } from './Types';
 
 export function loadNielsenLibrary(appId: string, instanceName: string, options?: NielsenOptions) {
     // https://engineeringportal.nielsen.com/docs/DTVR_Browser_SDK
@@ -11,17 +11,17 @@ export function loadNielsenLibrary(appId: string, instanceName: string, options?
                 // @ts-ignore
                 return (
                     (s = t.document),
-                    (r = s.createElement("script")),
+                    (r = s.createElement('script')),
                     (r.async = 1),
                     (r.src =
-                        ("http:" === t.location.protocol ? "http:" : "https:") +
-                        "//cdn-gl.imrworldwide.com/conf/" +
+                        ('http:' === t.location.protocol ? 'http:' : 'https:') +
+                        '//cdn-gl.imrworldwide.com/conf/' +
                         e +
-                        ".js#name=" +
+                        '.js#name=' +
                         o +
-                        "&ns=" +
+                        '&ns=' +
                         n),
-                    (i = s.getElementsByTagName("script")[0]),
+                    (i = s.getElementsByTagName('script')[0]),
                     i.parentNode.insertBefore(r, i),
                     (t[n][o] = t[n][o] || {
                         g: c || {},
@@ -34,7 +34,7 @@ export function loadNielsenLibrary(appId: string, instanceName: string, options?
                 );
             }
         };
-    })(window, "NOLBUNDLE");
+    })(window, 'NOLBUNDLE');
 
     if (options) {
         return (window as any).NOLBUNDLE.nlsQ(appId, instanceName, options);

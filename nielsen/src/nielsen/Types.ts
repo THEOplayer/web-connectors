@@ -1,4 +1,4 @@
-export type AdType = "preroll" | "midroll" | "postroll" | "ad";
+export type AdType = 'preroll' | 'midroll' | 'postroll' | 'ad';
 
 export type NielsenOptions = {
     // HTML DOM element id of the player container
@@ -15,8 +15,8 @@ export type NielsenOptions = {
  * adModel: 1) - Linear – matches TV ad load * 2) Dynamic – Dynamic Ad Insertion (DAI)
  */
 export type ContentMetadata = {
-    type: "content";
-    adModel: "1" | "2";
+    type: 'content';
+    adModel: '1' | '2';
 } & { [key: string]: string };
 
 export type AdMetadata = {
