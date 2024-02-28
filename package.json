@@ -8,7 +8,8 @@
   "license": "MIT",
   "workspaces": [
     "yospace",
-    "conviva"
+    "conviva",
+    "nielsen"
   ],
   "scripts": {
     "changeset:version": "changeset version && node .changeset/post-process.js",

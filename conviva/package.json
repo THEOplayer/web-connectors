@@ -30,6 +30,7 @@
     "dist/",
     "CHANGELOG.md",
     "README.md",
+    "LICENSE.md",
     "package.json"
   ],
   "dependencies": {
