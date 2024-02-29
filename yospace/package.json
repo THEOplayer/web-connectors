@@ -1,0 +1,49 @@
+{
+  "name": "@theoplayer/yospace-connector-web",
+  "version": "2.1.0",
+  "description": "A connector implementing Yospace for web.",
+  "main": "dist/yospace-connector.umd.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/THEOplayer/web-connectors.git",
+    "directory": "yospace"
+  },
+  "homepage": "https://theoplayer.com/",
+  "module": "dist/yospace-connector.esm.js",
+  "types": "dist/yospace-connector.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/yospace-connector.d.ts",
+      "import": "./dist/yospace-connector.esm.js",
+      "require": "./dist/yospace-connector.umd.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package": "./package.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "bundle": "rollup -c rollup.config.mjs",
+    "build": "npm run clean && npm run bundle",
+    "serve": "http-server",
+    "test": "jest"
+  },
+  "author": "THEO Technologies NV",
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE.md",
+    "package.json"
+  ],
+  "peerDependencies": {
+    "theoplayer": "^5.0.0 || ^6.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/THEOplayer/yospace-connector-web/issues"
+  },
+  "directories": {
+    "test": "test"
+  }
+}
