@@ -9,7 +9,8 @@
   "workspaces": [
     "yospace",
     "conviva",
-    "nielsen"
+    "nielsen",
+    "cmcd"
   ],
   "scripts": {
     "changeset:version": "changeset version && node .changeset/post-process.js",
