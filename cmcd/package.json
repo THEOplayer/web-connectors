@@ -1,0 +1,43 @@
+{
+  "name": "@theoplayer/cmcd-connector-web",
+  "version": "1.0.0",
+  "description": "A connector implementing CMCD support for web.",
+  "main": "dist/cmcd-connector.umd.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/THEOplayer/web-connectors.git",
+    "directory": "cmcd"
+  },
+  "homepage": "https://theoplayer.com/",
+  "module": "dist/cmcd-connector.esm.js",
+  "types": "dist/cmcd-connector.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/cmcd-connector.d.ts",
+      "import": "./dist/cmcd-connector.esm.js",
+      "require": "./dist/cmcd-connector.umd.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package": "./package.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "bundle": "rollup -c rollup.config.mjs",
+    "build": "npm run clean && npm run bundle",
+    "serve": "http-server",
+    "test": "jest"
+  },
+  "author": "THEO Technologies NV",
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE.md",
+    "package.json"
+  ],
+  "peerDependencies": {
+    "theoplayer": "^5.0.0 || ^6.0.0"
+  }
+}
