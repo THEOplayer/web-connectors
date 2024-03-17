@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/THEOplayer/web-connectors/issues"
   },
-  "homepage": "https://github.com/THEOplayer/web-connectors#readme"
+  "homepage": "https://github.com/THEOplayer/web-connectors#readme",
+  "dependencies": {
+    "theoplayer": "^6.12.0"
+  }
 }
