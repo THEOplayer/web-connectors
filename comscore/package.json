@@ -1,0 +1,19 @@
+{
+  "name": "@theoplayer/comscore-connector-web",
+  "version": "1.0.21",
+  "description": "A connector implementing Comscore with THEOplayer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/THEOplayer/web-connectors.git"
+  },
+  "author": "THEO Technologies NV",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/THEOplayer/web-connectors/issues"
+  },
+  "homepage": "https://github.com/THEOplayer/web-connectors#readme"
+}
