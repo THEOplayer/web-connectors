@@ -28,7 +28,7 @@ export class ComscoreTHEOIntegration {
     }
 
     public destroy() {
-        // this.removeListeners();
+        this.removeListeners();
     }
 
     private addListeners(): void {
