@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Connector test page</title>
+        <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css" />
+        <script src="/node_modules/theoplayer/THEOplayer.js"></script>
+        <script src="/dist/THEOplayerComscoreConnector.js"></script>
+    </head>
+    <body>
+        <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+        <script type="text/javascript">
+            const element = document.querySelector("#THEOplayer");
+            const player = new THEOplayer.Player(element, {
+                ui: {
+                    fluid: true
+                },
+                libraryLocation: "/node_modules/theoplayer/"
+            });
+
+            //
+            // Add your connector setup logic here
+            //
+            const comscoreMetadata = {
+                mediaType: "longformOnDemand",
+                uniqueId: 'testuniqueId',
+                length: 634.566,
+                stationTitle: 'THEOTV',
+                programTitle: 'Big Buck Bunny',
+                episodeTitle: 'Intro',
+                genreName: 'Animation',
+                classifyAsAudioStream: false,
+                customLabels: {
+                    testcustomlabel: 'testcustomvalue'
+                }
+            };
+
+            const comscoreConfig = {
+                publisherId: '<your publisher id (aka c2 id)',
+                applicationName: '<your app name>',
+                userConsent: "granted",
+                usagePropertiesAutoUpdateMode: "foregroundOnly",
+                debug: true
+            };
+
+            const comscoreConnector = new THEOplayerComscoreConnector.ComscoreConnector(
+                player,
+                comscoreConfig,
+                comscoreMetadata,
+            );
+
+            // Set a source that works with your connector
+            player.source = {
+                sources: [{ src: "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8" }]
+            };
+        </script>
+    </body>
+</html>
