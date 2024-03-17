@@ -13,12 +13,14 @@ enum ComscoreState {
 
 export class ComscoreTHEOIntegration {
     private player: ChromelessPlayer;
-    private configuration: ComscoreConfiguration
+    private configuration: ComscoreConfiguration;
     private contentMetadata: ComscoreMetadata;
     private state = ComscoreState.INITIALIZED
 
     constructor(player: ChromelessPlayer, configuration: ComscoreConfiguration, metadata: ComscoreMetadata) {
-
+        this.player = player
+        this.configuration = configuration
+        this.contentMetadata = metadata
     }
 
     public update(metadata: ComscoreMetadata) {
