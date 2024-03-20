@@ -48,8 +48,6 @@ declare namespace ns_ {
         notifySeekStart(): void
         setDvrWindowLength(length: number): void;
         setImplementationId(id: string): void;
-        setMediaPlayerName(name: string): void;
-        setMediaPlayerVersion(version: string): void;
         setMetadata(metadata: any): void;
         setProjectId(id: string): void;
         startFromDvrWindowOffset(offset: number): void;
@@ -244,6 +242,9 @@ declare namespace ns_ {
           constructor({ }: any)
         }
       }
+      function setMediaPlayerName(name: string): void;
+      
+      function setMediaPlayerVersion(version: string): void;
   
       function notifyHiddenEvent(): void;
   
