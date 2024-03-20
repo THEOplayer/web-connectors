@@ -22,6 +22,8 @@ export class ComscoreTHEOIntegration {
 
     // Playback state managed by the integration
     private state: ComscoreState = ComscoreState.INITIALIZED
+    private buffering: boolean = false
+    private ended: boolean = false
 
     // Comscore library handles
     private analytics = ns_.analytics;
@@ -162,9 +164,20 @@ export class ComscoreTHEOIntegration {
     private onAdBegin(event: AdEvent<"adbegin">) {
         console.log(`[COMSCORE] ${event.type} event`)
         const { ad } = event
+        const { adIdProcessor } = this.configuration
+
         this.currentAdBreakOffset = ad.adBreak.timeOffset
-        this.currentAdId = ad.id
+        this.currentAdId = adIdProcessor ? adIdProcessor(ad) : ad.id
         this.currentAdDuration = ad.duration
+        if (!this.currentAdDuration && DEBUG_LOGS_ENABLED) {
+            console.log("[COMSCORE] AD_BEGIN event with an ad duration of 0 found. Please check the ad configuration")
+        }
+        if (!this.currentAdId && DEBUG_LOGS_ENABLED) {
+            console.log("[COMSCORE] AD_BEGIN event with an empty ad id found. Please check the ad configuration")
+        }
+        this.setAdMetadata(this.currentAdDuration ?? 0, this.currentAdBreakOffset, this.currentAdId ?? "")
+
+         
     }
 
     private onAdBreakEnd(event: AdBreakEvent<"adbreakend">) {

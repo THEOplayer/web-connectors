@@ -1,3 +1,5 @@
+import { Ad } from "theoplayer";
+
 export enum ComscoreUserConsent {
     denied = "0",
     granted = "1",
@@ -21,6 +23,7 @@ export interface ComscoreConfiguration {
      * Defaults to foregroundOnly if none is specified. If your app has some background experience, use foregroundAndBackground.
      */
     usagePropertiesAutoUpdateMode?: ComscoreUsagePropertiesAutoUpdateMode;
+    adIdProcessor?: (ad: Ad) => string;
     debug?: boolean;
 }
 
