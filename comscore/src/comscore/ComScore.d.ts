@@ -104,6 +104,7 @@ declare namespace ns_ {
         namespace ContentMetadata {
 
           export enum ContentDeliveryAdvertisementCapability {
+            NONE,
             DYNAMIC_LOAD,
             DYNAMIC_REPLACEMENT,
             LINEAR_1DAY,
@@ -192,8 +193,8 @@ declare namespace ns_ {
             setDictionaryClassificationC6(value: string): void;
             setDistributionModel(value: StreamingAnalytics.ContentMetadata.ContentDistributionModel): void;
             setEpisodeId(id: string): void;
-            setEpisodeNumber(episodeNumber: number): void;
-            setEpisodeSeasonNumber(seasonNumber: number): void;
+            setEpisodeNumber(episodeNumber: string): void;
+            setEpisodeSeasonNumber(seasonNumber: string): void;
             setEpisodeTitle(title: string): void;
             setFeedType(value: StreamingAnalytics.ContentMetadata.ContentFeedType): void;
             setGenreId(id: string): void;
