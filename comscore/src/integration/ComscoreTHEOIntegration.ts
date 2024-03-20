@@ -19,12 +19,20 @@ export class ComscoreTHEOIntegration {
     private configuration: ComscoreConfiguration;
     private metadata: ComscoreMetadata;
 
+    // Playback state managed by the integration
     private state: ComscoreState = ComscoreState.INITIALIZED
 
+    // Comscore library handles
     private analytics = ns_.analytics;
     private streamingAnalytics = new this.analytics.StreamingAnalytics();
 
-    private contentMetadata: ns_.analytics.StreamingAnalytics.ContentMetadata;
+    // Copy of main content's ContentMetadata
+    private contentMetadata: ns_.analytics.StreamingAnalytics.ContentMetadata | null;
+
+    // Advertisement related fields for use outside of ad event handlers
+    private currentAdId: string | undefined = undefined
+    private currentAdDuration: number | undefined = undefined
+    private currentAdBreakOffset: number | undefined = undefined
 
     constructor(player: ChromelessPlayer, configuration: ComscoreConfiguration, metadata: ComscoreMetadata) {
         this.player = player
