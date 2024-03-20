@@ -110,13 +110,11 @@ export class ComscoreTHEOIntegration {
         } else {
             adMetadata.setMediaType(this.analytics.StreamingAnalytics.AdvertisementMetadata.AdvertisementType.ON_DEMAND_MID_ROLL)
         }
+        adMetadata.setUniqueId(adId)
         adMetadata.setLength(adDuration)
 
         if (!this.contentMetadata) buildContentMetadata(this.metadata)
         adMetadata.setRelatedContentMetadata(this.contentMetadata)
-
-        // adMetadata.addCustomLabels()
-
         if (DEBUG_LOGS_ENABLED) {
             console.log(`[COMSCORE] setMetadata (advertisement)`, adMetadata.getMetadataLabels())
         }
