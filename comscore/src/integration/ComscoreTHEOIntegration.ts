@@ -46,7 +46,7 @@ export class ComscoreTHEOIntegration {
 
     public update(metadata: ComscoreMetadata) {
         this.metadata = metadata;
-        // this.contentMetadata = null
+        this.contentMetadata = null
     }
 
     public destroy() {
@@ -163,10 +163,17 @@ export class ComscoreTHEOIntegration {
 
     private onAdBegin(event: AdEvent<"adbegin">) {
         console.log(`[COMSCORE] ${event.type} event`)
+        const { ad } = event
+        this.currentAdBreakOffset = ad.adBreak.timeOffset
+        this.currentAdId = ad.id
+        this.currentAdDuration = ad.duration
     }
 
     private onAdBreakEnd(event: AdBreakEvent<"adbreakend">) {
         console.log(`[COMSCORE] ${event.type} event`)
+        this.currentAdBreakOffset = undefined
+        this.currentAdId = undefined
+        this.currentAdDuration  = undefined
     }
 
     private onTimeUpdate(event: TimeUpdateEvent) {
