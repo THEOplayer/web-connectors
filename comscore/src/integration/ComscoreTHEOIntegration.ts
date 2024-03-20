@@ -83,6 +83,9 @@ export class ComscoreTHEOIntegration {
     private setContentMetadata(): void {
         let contentMetadata = buildContentMetadata(this.metadata)
         this.contentMetadata = contentMetadata
+        if (DEBUG_LOGS_ENABLED) {
+            console.log(`[COMSCORE] setMetadata (content)`, contentMetadata.getMetadataLabels())
+        }
         this.streamingAnalytics.setMetadata(contentMetadata)
 
     }
@@ -104,6 +107,11 @@ export class ComscoreTHEOIntegration {
         adMetadata.setRelatedContentMetadata(this.contentMetadata)
 
         // adMetadata.addCustomLabels()
+
+        if (DEBUG_LOGS_ENABLED) {
+            console.log(`[COMSCORE] setMetadata (advertisement)`, adMetadata.getMetadataLabels())
+        }
+        this.streamingAnalytics.setMetadata(adMetadata)
 
 
     }

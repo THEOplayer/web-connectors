@@ -95,6 +95,9 @@ declare namespace ns_ {
             setTitle(title: string): void;
             setUniqueId(id: string): void;
             setVideoDimensions(width: number, height: number): void;
+
+            getMetadataLabels(): any;
+
     
             constructor();
           }
@@ -213,6 +216,8 @@ declare namespace ns_ {
             setTotalSegments(total: number): void;
             setUniqueId(id: string): void;
             setVideoDimensions(width: number, height: number): void;
+
+            getMetadataLabels(): any;
   
             constructor();
 
@@ -243,7 +248,7 @@ declare namespace ns_ {
         }
       }
       function setMediaPlayerName(name: string): void;
-      
+
       function setMediaPlayerVersion(version: string): void;
   
       function notifyHiddenEvent(): void;
