@@ -15,6 +15,7 @@ enum ComscoreState {
 }
 
 export class ComscoreTHEOIntegration {
+    // References for constructor arguments
     private player: ChromelessPlayer;
     private configuration: ComscoreConfiguration;
     private metadata: ComscoreMetadata;
