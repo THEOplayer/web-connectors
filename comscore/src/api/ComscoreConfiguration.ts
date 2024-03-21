@@ -3,7 +3,7 @@ import { Ad } from "theoplayer";
 export enum ComscoreUserConsent {
     denied = "0",
     granted = "1",
-    unknown = "-1"
+    unknown = ""
 }
 
 export enum ComscoreUsagePropertiesAutoUpdateMode {
@@ -23,6 +23,7 @@ export interface ComscoreConfiguration {
      * Defaults to foregroundOnly if none is specified. If your app has some background experience, use foregroundAndBackground.
      */
     usagePropertiesAutoUpdateMode?: ComscoreUsagePropertiesAutoUpdateMode;
+    skeleton?: ns_.analytics.PlatformAPIs;
     adIdProcessor?: (ad: Ad) => string;
     debug?: boolean;
 }

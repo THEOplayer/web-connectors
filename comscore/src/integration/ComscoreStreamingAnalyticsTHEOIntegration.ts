@@ -14,7 +14,7 @@ enum ComscoreState {
     STOPPED = "STOPPED"
 }
 
-export class ComscoreTHEOIntegration {
+export class ComscoreStreamingAnalyticsTHEOIntegration {
     // References for constructor arguments
     private player: ChromelessPlayer;
     private configuration: ComscoreConfiguration;
