@@ -43,8 +43,8 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
         this.configuration = configuration
         this.metadata = metadata
 
-        this.analytics.setMediaPlayerName("THEOplayer")
-        this.analytics.setMediaPlayerVersion(version)
+        this.streamingAnalytics.setMediaPlayerName("THEOplayer")
+        this.streamingAnalytics.setMediaPlayerVersion(version)
 
         this.addListeners()
     }
