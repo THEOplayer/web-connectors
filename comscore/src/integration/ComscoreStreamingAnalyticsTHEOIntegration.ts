@@ -351,7 +351,6 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
     private onAdBreakEnd = (event: AdBreakEvent<"adbreakend">) => {
         if (this.configuration.debug && LOG_THEOPLAYER_EVENTS) console.log(`[COMSCORE - THEOplayer EVENTS] ${event.type} event`)
         this.inAd = false
-        this.transitionToVideo()
     }
 
     private onRateChange = (event: RateChangeEvent) => {
