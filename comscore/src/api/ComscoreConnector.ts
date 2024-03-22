@@ -37,7 +37,7 @@ export class ComscoreConnector {
         let publisherConfiguration = new this.analytics.configuration.PublisherConfiguration({
             publisherId: comscoreConfig.publisherId,
             persistentLabels: {
-                USER_CONSENT_LABEL: comscoreConfig.userConsent || ""
+                [USER_CONSENT_LABEL]: comscoreConfig.userConsent || ""
             }
         })
         this.analytics.configuration.addClient(publisherConfiguration)
