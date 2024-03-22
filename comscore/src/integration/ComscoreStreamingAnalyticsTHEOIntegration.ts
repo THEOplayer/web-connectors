@@ -166,15 +166,20 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
     private transitionToAdvertisement(): void {
         if (this.configuration.debug && LOG_STATE_CHANGES) console.log(`[COMSCORE - STATE] Trying to transition to ADVERTISEMENT while in ${this.state}`);
         switch(this.state) {
-            case ComscoreState.ADVERTISEMENT_PAUSED:
             case ComscoreState.INITIALIZED:
                 if (this.configuration.debug && LOG_STATE_CHANGES) console.log(`[COMSCORE - STATE] State change ${this.state} -> ADVERTISEMENT`);
                 this.state = ComscoreState.ADVERTISEMENT
+                this.setAdMetadata(this.lastAdDuration ?? 0, this.lastAdBreakOffset ?? 0, this.lastAdId ?? "")
                 break;
             case ComscoreState.VIDEO:
             case ComscoreState.VIDEO_PAUSED:
             case ComscoreState.STOPPED:
                 this.transitionToStopped();
+                if (this.configuration.debug && LOG_STATE_CHANGES) console.log(`[COMSCORE - STATE] State change ${this.state} -> ADVERTISEMENT`);
+                this.state = ComscoreState.ADVERTISEMENT
+                this.setAdMetadata(this.lastAdDuration ?? 0, this.lastAdBreakOffset ?? 0, this.lastAdId ?? "")
+                break;
+            case ComscoreState.ADVERTISEMENT_PAUSED:
                 if (this.configuration.debug && LOG_STATE_CHANGES) console.log(`[COMSCORE - STATE] State change ${this.state} -> ADVERTISEMENT`);
                 this.state = ComscoreState.ADVERTISEMENT
                 break;
@@ -340,10 +345,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
         }
         if (!this.lastAdId && this.configuration.debug) {
             console.log("[COMSCORE] AD_BEGIN event with an empty ad id found. Please check the ad configuration")
-        }
-        this.setAdMetadata(this.lastAdDuration ?? 0, this.lastAdBreakOffset, this.lastAdId ?? "")
-
-         
+        }         
     }
 
     private onAdBreakEnd = (event: AdBreakEvent<"adbreakend">) => {
