@@ -36,6 +36,8 @@ declare namespace ns_ {
       }
 
       class StreamingAnalytics {
+        setMediaPlayerName(name: string): void;
+        setMediaPlayerVersion(version: string): void;
         createPlaybackSession(): void
         getPlaybackSessionId(): void
         loopPlaybackSession(): void
@@ -247,9 +249,6 @@ declare namespace ns_ {
           constructor({ }: any)
         }
       }
-      function setMediaPlayerName(name: string): void;
-
-      function setMediaPlayerVersion(version: string): void;
   
       function notifyHiddenEvent(): void;
   
