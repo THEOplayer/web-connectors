@@ -255,12 +255,21 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] notifyBufferStop`)
         }
 
+        const { currentTime } = event
+
         if (this.inAd) {
             this.transitionToAdvertisement()
-        } else if (this.lastAdBreakOffset && this.lastAdBreakOffset < 0) {
-            if (this.configuration.debug) console.log(`[COMSCORE] Ignore playing event after post-roll`)
+        } else if (this.lastAdBreakOffset && this.lastAdBreakOffset < 0 && this.player.duration - currentTime < 1) {
+            if (this.configuration.debug) console.log(`[COMSCORE] Ignore playing event after post-roll (currentTime ${currentTime})`)    
+        } else if (currentTime < 1) {
+            this.ended = false
+            if (this.configuration.debug) console.log(`[COMSCORE] playing event after the stream ended`)
+            this.streamingAnalytics.createPlaybackSession()
+            if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] createPlaybackSession`);
+            this.transitionToVideo()
         } else {
             this.transitionToVideo()
+
         }
         this.streamingAnalytics.notifyPlay()
         if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] notifyPlay`)
