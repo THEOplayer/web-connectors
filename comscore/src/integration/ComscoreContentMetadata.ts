@@ -1,7 +1,7 @@
 import { ComscoreDeliveryAdvertisementCapability, ComscoreDeliveryComposition, ComscoreDeliveryMode, ComscoreDeliverySubscriptionType, ComscoreDistributionModel, ComscoreFeedType, ComscoreMediaFormat, ComscoreMediaType, ComscoreMetadata } from "../api/ComscoreMetadata";
 
 export const buildContentMetadata = (metadata: ComscoreMetadata): ns_.analytics.StreamingAnalytics.ContentMetadata => {
-    let contentMetadata = new ns_.analytics.StreamingAnalytics.ContentMetadata()
+    const contentMetadata = new ns_.analytics.StreamingAnalytics.ContentMetadata()
     const {
         mediaType,
         uniqueId,
