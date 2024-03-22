@@ -34,7 +34,7 @@ export class ComscoreConnector {
         }
 
         // Configure publisher
-        let publisherConfiguration = new this.analytics.configuration.PublisherConfiguration({
+        const publisherConfiguration = new this.analytics.configuration.PublisherConfiguration({
             publisherId: comscoreConfig.publisherId,
             persistentLabels: {
                 [USER_CONSENT_LABEL]: comscoreConfig.userConsent || ""
