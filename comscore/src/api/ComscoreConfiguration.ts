@@ -23,7 +23,7 @@ export interface ComscoreConfiguration {
      * Defaults to foregroundOnly if none is specified. If your app has some background experience, use foregroundAndBackground.
      */
     usagePropertiesAutoUpdateMode?: ComscoreUsagePropertiesAutoUpdateMode;
-    skeleton?: ns_.analytics.PlatformAPIs;
+    skeleton?: any;
     adIdProcessor?: (ad: Ad) => string;
     debug?: boolean;
 }
