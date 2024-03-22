@@ -79,7 +79,7 @@ export const buildContentMetadata = (metadata: ComscoreMetadata): ns_.analytics.
     if(episodeNumber) {
         contentMetadata.setEpisodeNumber(episodeNumber)
     }
-    genreName
+    contentMetadata.setGenreName(genreName)
     if(genreId) {
         contentMetadata.setGenreId(genreId)
     }
@@ -116,7 +116,7 @@ export const buildContentMetadata = (metadata: ComscoreMetadata): ns_.analytics.
     if(feedType) {
         contentMetadata.setFeedType(mapFeedType(feedType))
     }
-    classifyAsAudioStream
+    contentMetadata.classifyAsAudioStream(classifyAsAudioStream)
     if(deliveryMode) {
         contentMetadata.setDeliveryMode(mapDeliveryMode(deliveryMode))
     }
