@@ -26,8 +26,8 @@ export enum ComscoreDeliveryMode {
 }
 
 export enum ComscoreDeliverySubscriptionType {
-    traditionalMvpd = "traditionalMvpd",  //LIVE
-    virtualMvpd = "virtualMvpd",          //LIVE
+    traditionalMvpd = "traditionalMvpd",  // LIVE
+    virtualMvpd = "virtualMvpd",          // LIVE
     subscription = "subscription",
     transactional = "transactional",
     advertising = "advertising",
@@ -90,7 +90,7 @@ export type ComscoreDimension = {
     height: number;
 }
 
-export type ComscoreMetadata = {
+export interface ComscoreMetadata {
     /**
      * Classification type, mandatory, setMediaType( value ) - (ns_st_li)
      */
