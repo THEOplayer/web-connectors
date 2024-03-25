@@ -148,25 +148,24 @@
     {
         "label": "VOD - Google DAI",
         "source": {
-            "type": "application/x-mpegurl",
-            "ssai": {
-                "integration": "google-dai",
-                "availabilityType": "vod",
-                "apiKey": null,
-                "contentSourceID": "2528370",
-                "videoID": "tears-of-steel",
-                "omidAccessModeRules": {
-                    "1": "full",
-                    "2": "full",
-                    "3": "full",
-                    "9": "full"
+            "sources": [
+                {
+                    "type": "application/x-mpegurl",
+                    "ssai": {
+                        "integration": "google-dai",
+                        "availabilityType": "vod",
+                        "contentSourceID": "2528370",
+                        "videoID": "tears-of-steel",
+                        "assetKey": "",
+                        "apiKey": ""
+                    }
                 }
-            }
+            ]
         },
         "metadata": {
             "mediaType": "longformOnDemand",
             "uniqueId": "testuniqueId",
-            "length": 734000,
+            "length": 634566,
             "stationTitle": "DAI",
             "programTitle": "Google Ad Manager Samples",
             "episodeTitle": "Tears of Steel",
