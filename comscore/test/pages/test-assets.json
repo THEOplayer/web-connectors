@@ -1,0 +1,179 @@
+[
+    {
+        "label": "VOD (HLS)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
+                    "type": "application/x-mpegurl"
+                }
+            ]
+        },
+        "metadata": {
+            "mediaType": "longformOnDemand",
+            "uniqueId": "testuniqueId",
+            "length": 634566,
+            "stationTitle": "THEOTV",
+            "programTitle": "Big Buck Bunny",
+            "episodeTitle": "Intro",
+            "genreName": "Animation",
+            "classifyAsAudioStream": false,
+            "customLabels": {
+                "testcustomlabel": "testcustomvalue"
+            }
+        }
+    },
+    {
+        "label": "VOD (HLS) - VMAP (IMA)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
+                    "type": "application/x-mpegurl"
+                }
+            ],
+            "ads": [
+                {
+                    "integration": "google-ima",
+                    "sources": "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpremidpost&ciu_szs=300x250&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&cmsid=496&vid=short_onecue&correlator="
+                }
+            ]
+        },
+        "metadata": {
+            "mediaType": "longformOnDemand",
+            "uniqueId": "testuniqueId",
+            "length": 634566,
+            "stationTitle": "THEOTV",
+            "programTitle": "Big Buck Bunny",
+            "episodeTitle": "Intro",
+            "genreName": "Animation",
+            "classifyAsAudioStream": false,
+            "customLabels": {
+                "testcustomlabel": "testcustomvalue"
+            }
+        }
+    },
+    {
+        "label": "VOD (HLS) - VMAP (THEOAds)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
+                    "type": "application/x-mpegurl"
+                }
+            ],
+            "ads": [
+                {
+                    "integration": "theo",
+                    "sources": "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpremidpost&ciu_szs=300x250&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&cmsid=496&vid=short_onecue&correlator="
+                }
+            ]
+        },
+        "metadata": {
+            "mediaType": "longformOnDemand",
+            "uniqueId": "testuniqueId",
+            "length": 634566,
+            "stationTitle": "THEOTV",
+            "programTitle": "Big Buck Bunny",
+            "episodeTitle": "Intro",
+            "genreName": "Animation",
+            "classifyAsAudioStream": false,
+            "customLabels": {
+                "testcustomlabel": "testcustomvalue"
+            }
+        }
+    },
+    {
+        "label": "LIVE (DASH) - VAST pre-roll (IMA)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://livesim2.dashif.org/livesim2/testpic_2s/Manifest.mpd",
+                    "useCredentials": false
+                }
+            ],
+            "ads": [
+                {
+                    "integration": "google-ima",
+                    "timeOffset": "start",
+                    "sources": "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_preroll_skippable&sz=640x480&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator="
+                }
+            ]
+        },
+        "metadata":             {
+            "mediaType": "live",
+            "uniqueId": "testuniqueId",
+            "length": 0,
+            "stationTitle": "DASHIF",
+            "programTitle": "Livesim",
+            "episodeTitle": "Test",
+            "genreName": "Animation",
+            "classifyAsAudioStream": false,
+            "customLabels": {
+                "testcustomlabel": "testcustomvalue"
+            }
+        }
+    },
+    {
+        "label": "LIVE (DASH) - VAST pre-roll (THEOAds)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://livesim2.dashif.org/livesim2/testpic_2s/Manifest.mpd",
+                    "useCredentials": false
+                }
+            ],
+            "ads": [
+                {
+                    "integration": "theo",
+                    "timeOffset": "start",
+                    "sources": "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_preroll_skippable&sz=640x480&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator="
+                }
+            ]
+        },
+        "metadata":             {
+            "mediaType": "live",
+            "uniqueId": "testuniqueId",
+            "length": 0,
+            "stationTitle": "DASHIF",
+            "programTitle": "Livesim",
+            "episodeTitle": "Test",
+            "genreName": "Animation",
+            "classifyAsAudioStream": false,
+            "customLabels": {
+                "testcustomlabel": "testcustomvalue"
+            }
+        }
+    },
+    {
+        "label": "VOD - Google DAI",
+        "source": {
+            "sources": [
+                {
+                    "type": "application/x-mpegurl",
+                    "ssai": {
+                        "integration": "google-dai",
+                        "availabilityType": "vod",
+                        "contentSourceID": "2528370",
+                        "videoID": "tears-of-steel",
+                        "assetKey": "",
+                        "apiKey": ""
+                    }
+                }
+            ]
+        },
+        "metadata": {
+            "mediaType": "longformOnDemand",
+            "uniqueId": "testuniqueId",
+            "length": 634566,
+            "stationTitle": "DAI",
+            "programTitle": "Google Ad Manager Samples",
+            "episodeTitle": "Tears of Steel",
+            "genreName": "Animation",
+            "classifyAsAudioStream": false,
+            "customLabels": {
+                "testcustomlabel": "testcustomvalue"
+            }
+        }
+    }
+]
