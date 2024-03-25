@@ -261,7 +261,10 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             this.transitionToAdvertisement()
         } else if (this.isAfterPostRoll()) {
             if (this.configuration.debug) console.log(`[COMSCORE] Ignore playing event after post-roll (currentTime ${currentTime})`)
-            return   
+            return
+        } else if (this.isBeforePreRoll()) {
+            if (this.configuration.debug) console.log(`[COMSCORE] Ignore playing event before pre-roll (currentTime ${currentTime})`)
+            return
         } else if (currentTime < 1 && this.ended === true) {
             this.ended = false
             if (this.configuration.debug) console.log(`[COMSCORE] playing event after the stream ended`)
@@ -361,7 +364,13 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
         }
         if (!this.lastAdId && this.configuration.debug) {
             console.log("[COMSCORE] AD_BEGIN event with an empty ad id found. Please check the ad configuration")
-        }         
+        }
+        if (this.isPlayingGoogleDAISource()){
+            this.transitionToAdvertisement() 
+            this.streamingAnalytics.notifyPlay()
+            if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] notifyPlay`)
+        }
+                
     }
 
     private onAdBreakEnd = (event: AdBreakEvent<"adbreakend">) => {
@@ -384,7 +393,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
         }
     }
 
+    private isBeforePreRoll = () => this.player.ads?.scheduledAdBreaks.length && this.player.ads?.scheduledAdBreaks[0].timeOffset === 0
     private isAfterPostRoll = () => this.lastAdBreakOffset && this.lastAdBreakOffset < 0 && this.player.duration - this.player.currentTime < 1
-
-
+    private isPlayingGoogleDAISource = () => this.player.ads?.currentAdBreak?.integration === "google-dai"
 }
