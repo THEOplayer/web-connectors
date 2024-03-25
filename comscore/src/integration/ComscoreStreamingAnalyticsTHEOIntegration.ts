@@ -259,9 +259,10 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
 
         if (this.inAd) {
             this.transitionToAdvertisement()
-        } else if (this.lastAdBreakOffset && this.lastAdBreakOffset < 0 && this.player.duration - currentTime < 1) {
-            if (this.configuration.debug) console.log(`[COMSCORE] Ignore playing event after post-roll (currentTime ${currentTime})`)    
-        } else if (currentTime < 1) {
+        } else if (this.isAfterPostRoll()) {
+            if (this.configuration.debug) console.log(`[COMSCORE] Ignore playing event after post-roll (currentTime ${currentTime})`)
+            return   
+        } else if (currentTime < 1 && this.ended === true) {
             this.ended = false
             if (this.configuration.debug) console.log(`[COMSCORE] playing event after the stream ended`)
             this.streamingAnalytics.createPlaybackSession()
@@ -288,7 +289,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
 
     private onLoadedMetadata = (event: LoadedMetadataEvent) => {
         if (this.configuration.debug && LOG_THEOPLAYER_EVENTS) console.log(`[COMSCORE - THEOplayer EVENTS] ${event.type} event`)
-        if (!this.inAd && this.state === ComscoreState.ADVERTISEMENT) {
+        if (!this.inAd && this.state === ComscoreState.ADVERTISEMENT && !this.isAfterPostRoll()) {
             this.transitionToVideo()
         }
         if (this.metadata.length === 0 && !this.inAd) {
@@ -382,6 +383,8 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] notifyBufferStart`)
         }
     }
+
+    private isAfterPostRoll = () => this.lastAdBreakOffset && this.lastAdBreakOffset < 0 && this.player.duration - this.player.currentTime < 1
 
 
 }
