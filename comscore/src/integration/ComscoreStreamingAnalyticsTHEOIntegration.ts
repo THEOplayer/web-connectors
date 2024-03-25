@@ -16,6 +16,12 @@ enum ComscoreState {
     STOPPED = "STOPPED"
 }
 
+enum AdBreakType {
+    PRE_ROLL,
+    MID_ROLL,
+    POST_ROLL
+}
+
 export class ComscoreStreamingAnalyticsTHEOIntegration {
     // References for constructor arguments
     private player: ChromelessPlayer;
@@ -38,7 +44,8 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
     private inAd: boolean = false
     private lastAdId: string | undefined = undefined
     private lastAdDuration: number | undefined = undefined
-    private lastAdBreakOffset: number | undefined = undefined
+    private lastAdBreakType: AdBreakType | undefined = undefined
+
 
     constructor(player: ChromelessPlayer, configuration: ComscoreConfiguration, metadata: ComscoreMetadata) {
         this.player = player
@@ -110,13 +117,13 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
 
     }
 
-    private setAdMetadata(adDuration: number, adBreakOffset: number, adId: string): void {
+    private setAdMetadata(adDuration: number, adBreakType: AdBreakType, adId: string): void {
         const adMetadata = new this.analytics.StreamingAnalytics.AdvertisementMetadata()
         if (this.player.duration === Infinity) {
             adMetadata.setMediaType(this.analytics.StreamingAnalytics.AdvertisementMetadata.AdvertisementType.LIVE)
-        } else if (adBreakOffset === 0) {
+        } else if (adBreakType === AdBreakType.PRE_ROLL) {
             adMetadata.setMediaType(this.analytics.StreamingAnalytics.AdvertisementMetadata.AdvertisementType.ON_DEMAND_PRE_ROLL)
-        } else if (adBreakOffset === -1) {
+        } else if (adBreakType === AdBreakType.POST_ROLL) {
             adMetadata.setMediaType(this.analytics.StreamingAnalytics.AdvertisementMetadata.AdvertisementType.ON_DEMAND_POST_ROLL)
         } else {
             adMetadata.setMediaType(this.analytics.StreamingAnalytics.AdvertisementMetadata.AdvertisementType.ON_DEMAND_MID_ROLL)
@@ -169,7 +176,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             case ComscoreState.INITIALIZED:
                 if (this.configuration.debug && LOG_STATE_CHANGES) console.log(`[COMSCORE - STATE] State change ${this.state} -> ADVERTISEMENT`);
                 this.state = ComscoreState.ADVERTISEMENT
-                this.setAdMetadata(this.lastAdDuration ?? 0, this.lastAdBreakOffset ?? 0, this.lastAdId ?? "")
+                this.setAdMetadata(this.lastAdDuration ?? 0, this.lastAdBreakType ?? AdBreakType.PRE_ROLL, this.lastAdId ?? "")
                 break;
             case ComscoreState.VIDEO:
             case ComscoreState.VIDEO_PAUSED:
@@ -177,7 +184,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                 this.transitionToStopped();
                 if (this.configuration.debug && LOG_STATE_CHANGES) console.log(`[COMSCORE - STATE] State change ${this.state} -> ADVERTISEMENT`);
                 this.state = ComscoreState.ADVERTISEMENT
-                this.setAdMetadata(this.lastAdDuration ?? 0, this.lastAdBreakOffset ?? 0, this.lastAdId ?? "")
+                this.setAdMetadata(this.lastAdDuration ?? 0, this.lastAdBreakType ?? AdBreakType.PRE_ROLL, this.lastAdId ?? "")
                 break;
             case ComscoreState.ADVERTISEMENT_PAUSED:
                 if (this.configuration.debug && LOG_STATE_CHANGES) console.log(`[COMSCORE - STATE] State change ${this.state} -> ADVERTISEMENT`);
@@ -356,7 +363,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
         const { adIdProcessor } = this.configuration
 
         this.inAd = true
-        this.lastAdBreakOffset = ad.adBreak.timeOffset
+        this.lastAdBreakType = this.findAdBreakType(ad.adBreak.timeOffset, ad.adBreak.maxDuration ?? 0, ad.adBreak.integration ?? "")
         this.lastAdId = adIdProcessor ? adIdProcessor(ad) : ad.id
         this.lastAdDuration = ad.duration
         if (!this.lastAdDuration && this.configuration.debug) {
@@ -393,7 +400,37 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
         }
     }
 
-    private isBeforePreRoll = () => this.player.ads?.scheduledAdBreaks.length && this.player.ads?.scheduledAdBreaks[0].timeOffset === 0
-    private isAfterPostRoll = () => this.lastAdBreakOffset && this.lastAdBreakOffset < 0 && this.player.duration - this.player.currentTime < 1
-    private isPlayingGoogleDAISource = () => this.player.ads?.currentAdBreak?.integration === "google-dai"
+    private findAdBreakType = (offset: number, maxDuration: number, integration: string ): AdBreakType => {
+        if (offset === 0) {
+            if (this.configuration.debug) console.log('[COMSCORE] Mark as PRE_ROLL')
+            return AdBreakType.PRE_ROLL
+        }
+
+        switch (integration) {
+            case "google-ima":
+            case "theo":
+                if (offset === -1) {
+                    if (this.configuration.debug) console.log('[COMSCORE] Mark as POST_ROLL')
+                    return AdBreakType.POST_ROLL
+                } 
+                if (this.configuration.debug) console.log('[COMSCORE] Mark as MID_ROLL')
+                return AdBreakType.MID_ROLL                
+            case "google-dai":
+                if (this.player.duration - (offset + maxDuration) <= 0) {
+                    if (this.configuration.debug) console.log('[COMSCORE] Mark as POST_ROLL')
+                    return AdBreakType.POST_ROLL
+                } 
+                if (this.configuration.debug) console.log('[COMSCORE] Mark as MID_ROLL')
+                return AdBreakType.MID_ROLL
+                
+            default:
+                if (this.configuration.debug) console.log('[COMSCORE] Untested ad integration used, please contact THEOplayer')
+                return AdBreakType.MID_ROLL
+        }
+    }
+
+    private isBeforePreRoll = (): boolean => this.player.ads?.scheduledAdBreaks.length ? this.player.ads?.scheduledAdBreaks[0].timeOffset === 0 : false
+    // private isAfterPostRoll = () => this.lastAdBreakOffset && this.lastAdBreakOffset < 0 && this.player.duration - this.player.currentTime < 1
+    private isAfterPostRoll = (): boolean => this.lastAdBreakType ? this.lastAdBreakType  === AdBreakType.POST_ROLL : false
+    private isPlayingGoogleDAISource = (): boolean => this.player.ads?.currentAdBreak?.integration === "google-dai"
 }
