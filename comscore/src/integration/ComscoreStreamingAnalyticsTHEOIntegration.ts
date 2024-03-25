@@ -288,6 +288,9 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
 
     private onLoadedMetadata = (event: LoadedMetadataEvent) => {
         if (this.configuration.debug && LOG_THEOPLAYER_EVENTS) console.log(`[COMSCORE - THEOplayer EVENTS] ${event.type} event`)
+        if (!this.inAd && this.state === ComscoreState.ADVERTISEMENT) {
+            this.transitionToVideo()
+        }
         if (this.metadata.length === 0 && !this.inAd) {
             if (this.configuration.debug) console.log(`[COMSCORE] LIVE stream detected`)
             try {
@@ -315,6 +318,9 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
 
     private onSeeked = (event: SeekedEvent) => {
         if (this.configuration.debug && LOG_THEOPLAYER_EVENTS) console.log(`[COMSCORE - THEOplayer EVENTS] ${event.type} event`)
+        if (!this.inAd && this.state === ComscoreState.ADVERTISEMENT) {
+            this.transitionToVideo()
+        }
         const { currentTime } = event
 
         if (this.player.duration === Infinity) {
