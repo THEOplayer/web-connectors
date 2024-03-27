@@ -1,5 +1,11 @@
 # @theoplayer/nielsen-connector-web
 
+## 1.1.1
+
+### 🐛 Issues
+
+- Added support for DASH emsg cue payloads.
+
 ## 1.1.0
 
 ### ✨ Features
