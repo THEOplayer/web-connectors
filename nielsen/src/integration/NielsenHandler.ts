@@ -139,7 +139,7 @@ export class NielsenHandler {
 
                     // sanitise payload before submitting:
                     // - only allow printable characters within ASCII 32 to 126 range.
-                    // - no character beyong the last digit.
+                    // - no character beyond the last digit.
                     // - drop everything before ID3 PRIV{
                     let sanitizedPayload = payload.replace(/[^ -~]|\D+$/g, '');
                     const privIndex = sanitizedPayload.indexOf(EMSG_PRIV_SUFFIX);
