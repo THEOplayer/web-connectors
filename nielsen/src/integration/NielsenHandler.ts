@@ -3,6 +3,9 @@ import { loadNielsenLibrary } from '../nielsen/NOLBUNDLE';
 import { AdMetadata, ContentMetadata, NielsenOptions } from '../nielsen/Types';
 import { getAdType } from '../utils/Util';
 
+const EMSG_PRIV_SUFFIX = "PRIV{";
+const EMSG_PAYLOAD_SUFFIX = "payload=";
+
 export class NielsenHandler {
     private player: ChromelessPlayer;
 
@@ -11,6 +14,8 @@ export class NielsenHandler {
     private sessionInProgress: boolean = false;
 
     private duration: number = NaN;
+
+    private decoder = new TextDecoder('utf-8');
 
     constructor(player: ChromelessPlayer, appId: string, instanceName: string, options?: NielsenOptions) {
         this.player = player;
@@ -91,8 +96,8 @@ export class NielsenHandler {
     private onAddTrack = (event: AddTrackEvent) => {
         if (event.track.kind === 'metadata') {
             const track = event.track as TextTrack;
-            if (track.type === 'id3') {
-                // || track.type === 'emsg') {
+            if (track.type === 'id3' || track.type === 'emsg') {
+                // Make sure we get cues.
                 if (track.mode === 'disabled') {
                     track.mode = 'hidden';
                 }
@@ -103,14 +108,51 @@ export class NielsenHandler {
 
     private onEnterCue = (event: TextTrackEnterCueEvent) => {
         const { cue } = event;
-        if (cue.track.type === 'id3') {
-            if (cue.content.id === 'PRIV' && cue.content.ownerIdentifier.indexOf('www.nielsen.com') !== -1) {
-                this.nSdkInstance.ggPM('sendID3', cue.content.ownerIdentifier);
+        if (cue.content) {
+            if (cue.track.type === 'id3') {
+                this.handleNielsenId3Payload(cue.content);
+            } else if (cue.track.type === 'emsg') {
+                this.handleNielsenEmsgPayload(cue.content);
             }
-        } else {
-            // TODO emsg is not supported for now
         }
     };
+
+    private handleNielsenId3Payload = (content: any) => {
+        if (content.id === 'PRIV' && content.ownerIdentifier.indexOf('www.nielsen.com') !== -1) {
+            this.nSdkInstance.ggPM('sendID3', content.ownerIdentifier);
+        }
+    }
+
+    private handleNielsenEmsgPayload = (content: any) => {
+        const cueContentText = this.decoder.decode(content);
+        if (cueContentText.startsWith('type=nielsen_tag')) {
+            // extract payload
+            const base64Index = cueContentText.indexOf(EMSG_PAYLOAD_SUFFIX);
+            try {
+                if (base64Index !== -1) {
+                    const base64Payload = cueContentText.substring(base64Index + EMSG_PAYLOAD_SUFFIX.length);
+
+                    // sanitise base64payload before decoding, remove null and %-encoded chars.
+                    // eslint-disable-next-line no-control-regex
+                    const sanitizedBase64Payload = base64Payload.replace(/\x00|%[0-9A-Fa-f]{2}/g, '');
+                    const payload = atob(sanitizedBase64Payload);
+
+                    // sanitise payload before submitting:
+                    // - only allow printable characters within ASCII 32 to 126 range.
+                    // - no character beyond the last digit.
+                    // - drop everything before ID3 PRIV{
+                    let sanitizedPayload = payload.replace(/[^ -~]|\D+$/g, '');
+                    const privIndex = sanitizedPayload.indexOf(EMSG_PRIV_SUFFIX);
+                    sanitizedPayload = privIndex !== -1 ? sanitizedPayload.substring(privIndex + EMSG_PRIV_SUFFIX.length) : sanitizedPayload;
+
+                    // send payload. Note that there is no separate method for sending emsg content.
+                    this.nSdkInstance.ggPM('sendID3', sanitizedPayload);
+                }
+            } catch (error) {
+                console.error("NielsenConnector", "Failed to parse Nielsen payload", error);
+            }
+        }
+    }
 
     private onAdBegin = () => {
         const currentAd = this.player.ads!.currentAds.filter((ad: Ad) => ad.type === 'linear');
