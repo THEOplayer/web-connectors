@@ -34,11 +34,11 @@
     "package.json"
   ],
   "dependencies": {
-    "@convivainc/conviva-js-coresdk": "^4.6.1"
+    "@convivainc/conviva-js-coresdk": "^4.7.4"
   },
   "peerDependencies": {
-    "theoplayer": "^5.0.0 || ^6.0.0",
-    "@theoplayer/yospace-connector-web": "^2.1.0"
+    "@theoplayer/yospace-connector-web": "^2.1.0",
+    "theoplayer": "^5.0.0 || ^6.0.0"
   },
   "peerDependenciesMeta": {
     "@theoplayer/yospace-connector-web": {
