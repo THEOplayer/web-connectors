@@ -2,7 +2,7 @@ import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd } from 'theoplayer';
 import { AdAnalytics, Constants, ConvivaMetadata, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
 import { calculateAdType, calculateCurrentAdBreakInfo, collectAdMetadata, collectPlayerInfo } from '../../utils/Utils';
 
-export class CsaiAdReporter {
+export class AdReporter {
     private readonly player: ChromelessPlayer;
     private readonly convivaVideoAnalytics: VideoAnalytics;
     private readonly convivaAdAnalytics: AdAnalytics;
