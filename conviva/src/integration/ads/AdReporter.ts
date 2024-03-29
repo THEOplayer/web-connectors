@@ -124,7 +124,7 @@ export class AdReporter {
     private addEventListeners(): void {
         this.player.addEventListener('playing', this.onPlaying);
         this.player.addEventListener('pause', this.onPause);
-        [this.player.ads, this.player.ads?.convivaAdEventsExtension].forEach((dispatcher)=> {
+        [this.player.ads, this.player.ads?.convivaAdEventsExtension].forEach((dispatcher) => {
             dispatcher?.addEventListener('adbreakbegin', this.onAdBreakBegin);
             dispatcher?.addEventListener('adbreakend', this.onAdBreakEnd);
             dispatcher?.addEventListener('adbegin', this.onAdBegin);
@@ -138,7 +138,7 @@ export class AdReporter {
     private removeEventListeners(): void {
         this.player.removeEventListener('playing', this.onPlaying);
         this.player.removeEventListener('pause', this.onPause);
-        [this.player.ads, this.player.ads?.convivaAdEventsExtension].forEach((dispatcher)=> {
+        [this.player.ads, this.player.ads?.convivaAdEventsExtension].forEach((dispatcher) => {
             dispatcher?.removeEventListener('adbreakbegin', this.onAdBreakBegin);
             dispatcher?.removeEventListener('adbreakend', this.onAdBreakEnd);
             dispatcher?.removeEventListener('adbegin', this.onAdBegin);
