@@ -2,14 +2,14 @@
   "name": "@theoplayer/nielsen-connector-web",
   "version": "1.1.1",
   "description": "A connector implementing Nielsen with THEOplayer.",
-  "main": "dist/THEOplayerNielsenConnector.umd.js",
-  "module": "dist/THEOplayerNielsenConnector.esm.js",
-  "types": "dist/THEOplayerNielsenConnector.d.ts",
+  "main": "dist/nielsen-connector.umd.js",
+  "module": "dist/nielsen-connector.esm.js",
+  "types": "dist/nielsen-connector.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/THEOplayerNielsenConnector.d.ts",
-      "import": "./dist/THEOplayerNielsenConnector.esm.js",
-      "require": "./dist/THEOplayerNielsenConnector.umd.js"
+      "types": "./dist/nielsen-connector.d.ts",
+      "import": "./dist/nielsen-connector.esm.js",
+      "require": "./dist/nielsen-connector.umd.js"
     },
     "./dist/*": "./dist/*",
     "./package": "./package.json",
