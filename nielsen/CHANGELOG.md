@@ -1,5 +1,11 @@
 # @theoplayer/nielsen-connector-web
 
+## 1.1.2
+
+### 🐛 Issues
+
+- Fixed an issue where the package did not properly export the Nielsen types.
+
 ## 1.1.1
 
 ### 🐛 Issues
