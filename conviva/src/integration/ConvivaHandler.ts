@@ -10,7 +10,7 @@ import {
     collectPlayerInfo,
     flattenAndStringifyObject
 } from '../utils/Utils';
-import { CsaiAdReporter } from './ads/CsaiAdReporter';
+import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
 import { VerizonAdReporter } from './ads/VerizonAdReporter';
 
@@ -29,7 +29,7 @@ export class ConvivaHandler {
     private convivaVideoAnalytics: VideoAnalytics | undefined;
     private convivaAdAnalytics: AdAnalytics | undefined;
 
-    private adReporter: CsaiAdReporter | undefined;
+    private adReporter: AdReporter | undefined;
     private yospaceAdReporter: YospaceAdReporter | undefined;
     private verizonAdReporter: VerizonAdReporter | undefined;
 
@@ -62,14 +62,12 @@ export class ConvivaHandler {
 
         this.convivaAdAnalytics = Analytics.buildAdAnalytics(this.convivaVideoAnalytics);
 
-        if (this.player.ads !== undefined) {
-            this.adReporter = new CsaiAdReporter(
-                this.player,
-                this.convivaVideoAnalytics,
-                this.convivaAdAnalytics,
-                () => this.customMetadata
-            );
-        }
+        this.adReporter = new AdReporter(
+            this.player,
+            this.convivaVideoAnalytics,
+            this.convivaAdAnalytics,
+            () => this.customMetadata
+        );
 
         if (this.player.verizonMedia !== undefined) {
             this.verizonAdReporter = new VerizonAdReporter(
@@ -121,6 +119,10 @@ export class ConvivaHandler {
     reportPlaybackFailed(errorMessage: string): void {
         this.convivaVideoAnalytics?.reportPlaybackFailed(errorMessage);
         this.releaseSession();
+    }
+
+    reportPlaybackEvent(eventType: string, eventDetail?: object): void {
+        this.convivaVideoAnalytics?.reportPlaybackEvent(eventType, eventDetail);
     }
 
     stopAndStartNewSession(metadata: ConvivaMetadata): void {

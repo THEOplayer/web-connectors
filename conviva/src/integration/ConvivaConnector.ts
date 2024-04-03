@@ -43,6 +43,15 @@ export class ConvivaConnector {
     }
 
     /**
+     * Reports a custom event to the current Conviva session.
+     * @param eventType the type of the custom event.
+     * @param eventDetail an optional object containing event details.
+     */
+    reportPlaybackEvent(eventType: string, eventDetail?: object): void {
+        this.convivaHandler.reportPlaybackEvent(eventType, eventDetail);
+    }
+
+    /**
      * Explicitly stop the current session and start a new one.
      *
      * This can be used to manually mark the start of a new session during a live stream,

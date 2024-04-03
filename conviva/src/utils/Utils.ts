@@ -17,6 +17,12 @@ export function collectDeviceMetadata(): ConvivaDeviceMetadata {
     };
 }
 
+type AdBreakPosition = 'preroll' | 'midroll' | 'postroll';
+
+export function calculateAdType(player: ChromelessPlayer) {
+    return player.source?.ads?.length ? Constants.AdType.CLIENT_SIDE : Constants.AdType.SERVER_SIDE;
+}
+
 export function calculateVerizonAdBreakInfo(adBreak: VerizonMediaAdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
     return {
         [Constants.POD_DURATION]: adBreak.duration!,
@@ -131,9 +137,6 @@ export function collectAdMetadata(ad: Ad): ConvivaMetadata {
     // [Required] The creative id of the ad. This creative id is from the Ad Server that actually has the ad creative.
     // For wrapper ads, this is the last creative id at the end of the wrapper chain. Set to "NA" if not available.
     adMetadata['c3.ad.creativeId'] = ad.creativeId || 'NA';
-
-    // [Required] The ad technology as CLIENT_SIDE/SERVER_SIDE
-    adMetadata['c3.ad.technology'] = Constants.AdType.CLIENT_SIDE;
 
     // [Required] The ad position as a string "Pre-roll", "Mid-roll" or "Post-roll"
     adMetadata['c3.ad.position'] = calculateCurrentAdBreakPosition(ad.adBreak);

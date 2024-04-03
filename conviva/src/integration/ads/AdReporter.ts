@@ -1,8 +1,8 @@
 import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd } from 'theoplayer';
 import { AdAnalytics, Constants, ConvivaMetadata, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
-import { calculateCurrentAdBreakInfo, collectAdMetadata, collectPlayerInfo } from '../../utils/Utils';
+import { calculateAdType, calculateCurrentAdBreakInfo, collectAdMetadata, collectPlayerInfo } from '../../utils/Utils';
 
-export class CsaiAdReporter {
+export class AdReporter {
     private readonly player: ChromelessPlayer;
     private readonly convivaVideoAnalytics: VideoAnalytics;
     private readonly convivaAdAnalytics: AdAnalytics;
@@ -29,7 +29,7 @@ export class CsaiAdReporter {
     private readonly onAdBreakBegin = (event: any) => {
         this.currentAdBreak = event.ad as AdBreak;
         this.convivaVideoAnalytics.reportAdBreakStarted(
-            Constants.AdType.CLIENT_SIDE,
+            calculateAdType(this.player),
             Constants.AdPlayer.CONTENT,
             calculateCurrentAdBreakInfo(this.currentAdBreak, this.adBreakCounter)
         );
@@ -57,6 +57,9 @@ export class CsaiAdReporter {
         adMetadata.contentAssetName =
             this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
 
+        // [Required] The ad technology as CLIENT_SIDE/SERVER_SIDE
+        adMetadata['c3.ad.technology'] = calculateAdType(this.player);
+
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
         this.convivaAdAnalytics.reportAdStarted(adMetadata);
@@ -66,6 +69,11 @@ export class CsaiAdReporter {
             this.player.videoHeight
         );
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.BITRATE, (currentAd as GoogleImaAd).bitrate || 0);
+
+        // Report playing state in case of SSAI.
+        if (calculateAdType(this.player) === Constants.AdType.SERVER_SIDE) {
+            this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
+        }
     };
 
     private readonly onAdEnd = (event: any) => {
@@ -116,33 +124,29 @@ export class CsaiAdReporter {
     private addEventListeners(): void {
         this.player.addEventListener('playing', this.onPlaying);
         this.player.addEventListener('pause', this.onPause);
-        if (this.player.ads === undefined) {
-            // should not happen
-            return;
-        }
-        this.player.ads.addEventListener('adbreakbegin', this.onAdBreakBegin);
-        this.player.ads.addEventListener('adbreakend', this.onAdBreakEnd);
-        this.player.ads.addEventListener('adbegin', this.onAdBegin);
-        this.player.ads.addEventListener('adend', this.onAdEnd);
-        this.player.ads.addEventListener('adskip', this.onAdSkip);
-        this.player.ads.addEventListener('adbuffering', this.onAdBuffering);
-        this.player.ads.addEventListener('aderror', this.onAdError);
+        [this.player.ads, this.player.ads?.convivaAdEventsExtension].forEach((dispatcher) => {
+            dispatcher?.addEventListener('adbreakbegin', this.onAdBreakBegin);
+            dispatcher?.addEventListener('adbreakend', this.onAdBreakEnd);
+            dispatcher?.addEventListener('adbegin', this.onAdBegin);
+            dispatcher?.addEventListener('adend', this.onAdEnd);
+            dispatcher?.addEventListener('adskip', this.onAdSkip);
+            dispatcher?.addEventListener('adbuffering', this.onAdBuffering);
+            dispatcher?.addEventListener('aderror', this.onAdError);
+        });
     }
 
     private removeEventListeners(): void {
         this.player.removeEventListener('playing', this.onPlaying);
         this.player.removeEventListener('pause', this.onPause);
-        if (this.player.ads === undefined) {
-            // should not happen
-            return;
-        }
-        this.player.ads.removeEventListener('adbreakbegin', this.onAdBreakBegin);
-        this.player.ads.removeEventListener('adbreakend', this.onAdBreakEnd);
-        this.player.ads.removeEventListener('adbegin', this.onAdBegin);
-        this.player.ads.removeEventListener('adend', this.onAdEnd);
-        this.player.ads.removeEventListener('adskip', this.onAdSkip);
-        this.player.ads.removeEventListener('adbuffering', this.onAdBuffering);
-        this.player.ads.removeEventListener('aderror', this.onAdError);
+        [this.player.ads, this.player.ads?.convivaAdEventsExtension].forEach((dispatcher) => {
+            dispatcher?.removeEventListener('adbreakbegin', this.onAdBreakBegin);
+            dispatcher?.removeEventListener('adbreakend', this.onAdBreakEnd);
+            dispatcher?.removeEventListener('adbegin', this.onAdBegin);
+            dispatcher?.removeEventListener('adend', this.onAdEnd);
+            dispatcher?.removeEventListener('adskip', this.onAdSkip);
+            dispatcher?.removeEventListener('adbuffering', this.onAdBuffering);
+            dispatcher?.removeEventListener('aderror', this.onAdError);
+        });
     }
 
     reset(): void {
