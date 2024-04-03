@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 2.0.1
+
+### 🐛 Issues
+
+- Added functionality to listen for external ad events using the `convivaAdEventsExtension` property.
+
 ## 2.0.0
 
 ### 📦 Dependency Updates
