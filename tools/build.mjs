@@ -28,6 +28,7 @@ export function getSharedBuildConfiguration({ fileName, globalName, banner = [] 
                     banner
                 }
             ],
+            external: ['theoplayer'],
             plugins: [
                 nodeResolve({
                     extensions: ['.ts', '.js']
@@ -54,6 +55,7 @@ export function getSharedBuildConfiguration({ fileName, globalName, banner = [] 
                     footer: `export as namespace ${globalName};`
                 }
             ],
+            external: ['theoplayer'],
             plugins: [
                 dts({
                     tsconfig: 'tsconfig.json'
