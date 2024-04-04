@@ -19,5 +19,5 @@ export interface SessionProperties {
 }
 
 export interface SessionPropertiesConstructor {
-    new(): SessionProperties;
+    new (): SessionProperties;
 }
