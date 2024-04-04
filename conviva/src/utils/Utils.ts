@@ -25,8 +25,6 @@ export function collectDeviceMetadata(): ConvivaDeviceMetadata {
     };
 }
 
-type AdBreakPosition = 'preroll' | 'midroll' | 'postroll';
-
 export function calculateAdType(player: ChromelessPlayer) {
     return player.source?.ads?.length ? Constants.AdType.CLIENT_SIDE : Constants.AdType.SERVER_SIDE;
 }
@@ -85,7 +83,6 @@ export function collectContentMetadata(
     if (!Number.isNaN(duration) && duration !== Infinity) {
         contentInfo[Constants.DURATION] = duration;
     }
-    // @ts-ignore
     return {
         ...configuredContentMetadata,
         ...contentInfo

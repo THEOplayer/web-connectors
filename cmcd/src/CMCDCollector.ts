@@ -162,7 +162,7 @@ export class CMCDCollector {
                     [CMCDReservedKey.OBJECT_TYPE]: CMCDObjectType.KEY_LICENSE_OR_CERTIFICATE
                 };
             }
-            case 'segment':
+            case 'segment': {
                 if (request.subType === 'initialization-segment') {
                     return {
                         ...sessionKeys,
@@ -235,6 +235,7 @@ export class CMCDCollector {
                 // TODO object duration
                 // TODO next request... and next range
                 return payload;
+            }
             default:
                 return {};
         }
