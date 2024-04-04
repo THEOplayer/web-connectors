@@ -15,7 +15,8 @@ export default typescriptEslint.config(
                 {
                     argsIgnorePattern: '^_'
                 }
-            ]
+            ],
+            '@typescript-eslint/no-explicit-any': 'off'
         }
     }
 );
