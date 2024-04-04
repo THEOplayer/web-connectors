@@ -1,4 +1,4 @@
-import { ChromelessPlayer } from 'theoplayer';
+import type { ChromelessPlayer } from 'theoplayer';
 import { AnalyticEventObserver, SessionErrorCode } from '../yospace/AnalyticEventObserver';
 import { AdBreak, AdVert, ResourceType } from '../yospace/AdBreak';
 import { YospaceUiHandler } from './YospaceUIHandler';

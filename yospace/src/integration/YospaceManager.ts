@@ -1,4 +1,4 @@
-import { ChromelessPlayer, SourceDescription, YospaceTypedSource } from 'theoplayer';
+import type { ChromelessPlayer, SourceDescription, YospaceTypedSource } from 'theoplayer';
 import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
 import { PromiseController } from '../utils/PromiseController';
 import { PlayerEvent } from '../yospace/PlayerEvent';

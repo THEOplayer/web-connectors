@@ -1,4 +1,4 @@
-import {
+import type {
     ChromelessPlayer,
     VerizonMediaAdBeginEvent,
     VerizonMediaAdBreak,
@@ -7,7 +7,7 @@ import {
     VerizonMediaRemoveAdBreakEvent,
     VideoQuality
 } from 'theoplayer';
-import { AdAnalytics, Constants, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { type AdAnalytics, Constants, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
 import { calculateVerizonAdBreakInfo, collectPlayerInfo, collectVerizonAdMetadata } from '../../utils/Utils';
 
 export class VerizonAdReporter {

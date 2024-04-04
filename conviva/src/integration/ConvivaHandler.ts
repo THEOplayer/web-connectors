@@ -1,6 +1,12 @@
-import { ChromelessPlayer, SourceDescription, VideoQuality } from 'theoplayer';
-import { AdAnalytics, Analytics, Constants, ConvivaMetadata, VideoAnalytics } from '@convivainc/conviva-js-coresdk';
-import { YospaceConnector } from '@theoplayer/yospace-connector-web';
+import type { ChromelessPlayer, SourceDescription, VideoQuality } from 'theoplayer';
+import {
+    type AdAnalytics,
+    Analytics,
+    Constants,
+    type ConvivaMetadata,
+    type VideoAnalytics
+} from '@convivainc/conviva-js-coresdk';
+import type { YospaceConnector } from '@theoplayer/yospace-connector-web';
 import { CONVIVA_CALLBACK_FUNCTIONS } from './ConvivaCallbackFunctions';
 import {
     calculateBufferLength,

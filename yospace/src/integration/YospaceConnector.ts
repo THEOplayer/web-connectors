@@ -1,4 +1,4 @@
-import { ChromelessPlayer, SourceDescription } from 'theoplayer';
+import type { ChromelessPlayer, SourceDescription } from 'theoplayer';
 import { YospaceManager } from './YospaceManager';
 import { SessionProperties } from '../yospace/SessionProperties';
 import { AnalyticEventObserver } from '../yospace/AnalyticEventObserver';

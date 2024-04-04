@@ -1,6 +1,6 @@
-import { ChromelessPlayer } from 'theoplayer';
-import { ConvivaMetadata } from '@convivainc/conviva-js-coresdk';
-import { YospaceConnector } from '@theoplayer/yospace-connector-web';
+import type { ChromelessPlayer } from 'theoplayer';
+import type { ConvivaMetadata } from '@convivainc/conviva-js-coresdk';
+import type { YospaceConnector } from '@theoplayer/yospace-connector-web';
 import { ConvivaConfiguration, ConvivaHandler } from './ConvivaHandler';
 
 export class ConvivaConnector {

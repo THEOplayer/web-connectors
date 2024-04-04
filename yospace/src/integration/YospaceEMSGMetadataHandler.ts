@@ -1,4 +1,4 @@
-import { EmsgCue, TextTrackCue, TextTrackCueChangeEvent, YospaceId } from 'theoplayer';
+import type { EmsgCue, TextTrackCue, TextTrackCueChangeEvent, YospaceId } from 'theoplayer';
 import { YospaceMetadataHandler, YospaceReport } from './YospaceMetadataHandler';
 
 export const YOSPACE_EMSG_SCHEME_ID_URI = 'urn:yospace:a:id3:2016';

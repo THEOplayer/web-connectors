@@ -1,4 +1,4 @@
-import { YospaceServerSideAdInsertionConfiguration, YospaceSSAIIntegrationID, YospaceTypedSource } from 'theoplayer';
+import type { YospaceServerSideAdInsertionConfiguration, YospaceSSAIIntegrationID, YospaceTypedSource } from 'theoplayer';
 import { implementsInterface, isTypedSource } from './SourceUtils';
 import { YospaceWindow } from '../yospace/YospaceWindow';
 
