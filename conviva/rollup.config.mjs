@@ -11,4 +11,4 @@ const banner = `
  */`.trim();
 
 
-export default getSharedBuildConfiguration(fileName, globalName, banner);
+export default getSharedBuildConfiguration({ fileName, globalName, banner });

@@ -4,7 +4,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
 
-export function getSharedBuildConfiguration(fileName, globalName, banner) {
+export function getSharedBuildConfiguration({ fileName, globalName, banner }) {
     return defineConfig([{
         input: {
             [fileName]: "src/index.ts"
