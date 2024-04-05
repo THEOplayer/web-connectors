@@ -20,7 +20,8 @@
     "prettier": "prettier --check \"*/(src|test)/**/*\"",
     "prettier:fix": "prettier --write \"*/(src|test)/**/*\"",
     "lint": "eslint \"*/src/**/*.ts\" \"*/test*/**/*.ts\"",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "docs": "typedoc"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
@@ -43,6 +44,9 @@
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
+    "typedoc": "^0.25.12",
+    "typedoc-plugin-external-resolver": "^1.0.3",
+    "typedoc-plugin-mdn-links": "^3.1.19",
     "typescript": "^5.4.3",
     "typescript-eslint": "^7.5.0"
   }
