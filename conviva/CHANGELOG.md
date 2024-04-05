@@ -1,5 +1,15 @@
 # @theoplayer/conviva-connector-web
 
+## 2.0.2
+
+### 🐛 Issues
+
+- Fixed an issue where the THEOplayer library and the Yospace connector were accidentally bundled together with the Conviva connector.
+
+### 📦 Dependency Updates
+
+- @theoplayer/yospace-connector-web@2.1.1
+
 ## 2.0.1
 
 ### 🐛 Issues
