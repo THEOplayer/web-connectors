@@ -6,10 +6,10 @@
   "repository": "https://github.com/THEOplayer/conviva-connector-web",
   "homepage": "https://theoplayer.com/",
   "module": "dist/conviva-connector.esm.js",
-  "types": "dist/conviva-connector.d.ts",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/conviva-connector.d.ts",
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/conviva-connector.esm.js",
       "require": "./dist/conviva-connector.umd.js"
     },

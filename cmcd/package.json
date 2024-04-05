@@ -10,10 +10,10 @@
   },
   "homepage": "https://theoplayer.com/",
   "module": "dist/cmcd-connector.esm.js",
-  "types": "dist/cmcd-connector.d.ts",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/cmcd-connector.d.ts",
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/cmcd-connector.esm.js",
       "require": "./dist/cmcd-connector.umd.js"
     },

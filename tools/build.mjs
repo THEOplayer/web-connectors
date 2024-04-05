@@ -2,7 +2,6 @@ import { defineConfig } from 'rollup';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
-import dts from 'rollup-plugin-dts';
 
 export function getSharedBuildConfiguration({ fileName, globalName, banner, external, globals }) {
     return defineConfig([
@@ -37,25 +36,6 @@ export function getSharedBuildConfiguration({ fileName, globalName, banner, exte
                     include: ['node_modules/**', '../node_modules/**']
                 }),
                 typescript({
-                    tsconfig: 'tsconfig.json'
-                })
-            ]
-        },
-        {
-            input: {
-                [fileName]: 'src/index.ts'
-            },
-            output: [
-                {
-                    dir: 'dist',
-                    format: 'esm',
-                    banner,
-                    footer: `export as namespace ${globalName};`
-                }
-            ],
-            external: ['theoplayer', ...(external ?? [])],
-            plugins: [
-                dts({
                     tsconfig: 'tsconfig.json'
                 })
             ]

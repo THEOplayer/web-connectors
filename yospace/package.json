@@ -10,10 +10,10 @@
   },
   "homepage": "https://theoplayer.com/",
   "module": "dist/yospace-connector.esm.js",
-  "types": "dist/yospace-connector.d.ts",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/yospace-connector.d.ts",
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/yospace-connector.esm.js",
       "require": "./dist/yospace-connector.umd.js"
     },
