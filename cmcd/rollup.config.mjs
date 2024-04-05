@@ -10,4 +10,4 @@ const banner = `
  * THEOplayer CMCD Connector v${version}
  */`.trim();
 
-export default getSharedBuildConfiguration(fileName, globalName, banner);
+export default getSharedBuildConfiguration({ fileName, globalName, banner });

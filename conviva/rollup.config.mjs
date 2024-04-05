@@ -9,6 +9,10 @@ const banner = `
 /**
  * THEOplayer Conviva Connector v${version}
  */`.trim();
+const external = ['@convivainc/conviva-js-coresdk', '@theoplayer/yospace-connector-web'];
+const globals = {
+    '@convivainc/conviva-js-coresdk': 'Conviva',
+    '@theoplayer/yospace-connector-web': 'THEOplayerYospaceConnector'
+};
 
-
-export default getSharedBuildConfiguration(fileName, globalName, banner);
+export default getSharedBuildConfiguration({ fileName, globalName, banner, external, globals });

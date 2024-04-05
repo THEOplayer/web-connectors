@@ -11,4 +11,4 @@ const banner = `
  * Nielsen Web Connector v${version}
  */`.trim();
 
-export default getSharedBuildConfiguration(fileName, globalName, banner);
+export default getSharedBuildConfiguration({ fileName, globalName, banner });
