@@ -7,5 +7,6 @@
     "src/index.ts"
   ],
   "tsconfig": "tsconfig.json",
+  "readme": "README.md",
   "name": "CMCD Connector"
 }

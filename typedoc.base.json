@@ -1,6 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "readme": "none",
+  "includeVersion": true,
   "plugin": [
     "typedoc-plugin-external-resolver",
     "typedoc-plugin-mdn-links"
