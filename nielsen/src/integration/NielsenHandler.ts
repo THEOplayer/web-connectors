@@ -1,10 +1,17 @@
-import { Ad, AddTrackEvent, ChromelessPlayer, TextTrack, TextTrackEnterCueEvent, VolumeChangeEvent } from 'theoplayer';
+import type {
+    Ad,
+    AddTrackEvent,
+    ChromelessPlayer,
+    TextTrack,
+    TextTrackEnterCueEvent,
+    VolumeChangeEvent
+} from 'theoplayer';
 import { loadNielsenLibrary } from '../nielsen/NOLBUNDLE';
 import { AdMetadata, ContentMetadata, NielsenOptions } from '../nielsen/Types';
 import { getAdType } from '../utils/Util';
 
-const EMSG_PRIV_SUFFIX = "PRIV{";
-const EMSG_PAYLOAD_SUFFIX = "payload=";
+const EMSG_PRIV_SUFFIX = 'PRIV{';
+const EMSG_PAYLOAD_SUFFIX = 'payload=';
 
 export class NielsenHandler {
     private player: ChromelessPlayer;
@@ -121,7 +128,7 @@ export class NielsenHandler {
         if (content.id === 'PRIV' && content.ownerIdentifier.indexOf('www.nielsen.com') !== -1) {
             this.nSdkInstance.ggPM('sendID3', content.ownerIdentifier);
         }
-    }
+    };
 
     private handleNielsenEmsgPayload = (content: any) => {
         const cueContentText = this.decoder.decode(content);
@@ -143,16 +150,19 @@ export class NielsenHandler {
                     // - drop everything before ID3 PRIV{
                     let sanitizedPayload = payload.replace(/[^ -~]|\D+$/g, '');
                     const privIndex = sanitizedPayload.indexOf(EMSG_PRIV_SUFFIX);
-                    sanitizedPayload = privIndex !== -1 ? sanitizedPayload.substring(privIndex + EMSG_PRIV_SUFFIX.length) : sanitizedPayload;
+                    sanitizedPayload =
+                        privIndex !== -1
+                            ? sanitizedPayload.substring(privIndex + EMSG_PRIV_SUFFIX.length)
+                            : sanitizedPayload;
 
                     // send payload. Note that there is no separate method for sending emsg content.
                     this.nSdkInstance.ggPM('sendID3', sanitizedPayload);
                 }
             } catch (error) {
-                console.error("NielsenConnector", "Failed to parse Nielsen payload", error);
+                console.error('NielsenConnector', 'Failed to parse Nielsen payload', error);
             }
         }
-    }
+    };
 
     private onAdBegin = () => {
         const currentAd = this.player.ads!.currentAds.filter((ad: Ad) => ad.type === 'linear');

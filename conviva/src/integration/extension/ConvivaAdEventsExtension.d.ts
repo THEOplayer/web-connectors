@@ -1,4 +1,4 @@
-import { AdsEventMap, EventDispatcher } from 'theoplayer';
+import type { AdsEventMap, EventDispatcher } from 'theoplayer';
 
 declare module 'theoplayer' {
     interface Ads extends EventDispatcher<AdsEventMap> {

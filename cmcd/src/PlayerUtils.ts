@@ -1,4 +1,4 @@
-import { TypedSource } from 'theoplayer';
+import type { TypedSource } from 'theoplayer';
 import { CMCDStreamingFormat } from './CMCDPayload';
 
 function isM3U8SourceString(source: string): boolean {

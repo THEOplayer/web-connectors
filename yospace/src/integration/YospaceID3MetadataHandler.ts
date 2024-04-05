@@ -1,4 +1,4 @@
-import { ID3Frame, ID3Yospace, TextTrackCue, TextTrackCueChangeEvent } from 'theoplayer';
+import type { ID3Frame, ID3Yospace, TextTrackCue, TextTrackCueChangeEvent } from 'theoplayer';
 import { YospaceMetadataHandler, YospaceReport } from './YospaceMetadataHandler';
 
 function isID3YospaceFrame(frame: ID3Frame): frame is ID3Yospace {

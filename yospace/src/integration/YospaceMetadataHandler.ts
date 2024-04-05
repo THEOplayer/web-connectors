@@ -1,4 +1,4 @@
-import { AddTrackEvent, TextTrack, TextTrackCue, TextTrackCueChangeEvent, TextTracksList } from 'theoplayer';
+import type { AddTrackEvent, TextTrack, TextTrackCue, TextTrackCueChangeEvent, TextTracksList } from 'theoplayer';
 import { YospaceWindow } from '../yospace/YospaceWindow';
 import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
 

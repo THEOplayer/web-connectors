@@ -1,13 +1,21 @@
 import {
     Constants,
-    ConvivaAdBreakInfo,
-    ConvivaDeviceMetadata,
-    ConvivaMetadata,
-    ConvivaOptions,
-    ConvivaPlayerInfo
+    type ConvivaAdBreakInfo,
+    type ConvivaDeviceMetadata,
+    type ConvivaMetadata,
+    type ConvivaOptions,
+    type ConvivaPlayerInfo
 } from '@convivainc/conviva-js-coresdk';
-import { AdVert } from '@theoplayer/yospace-connector-web';
-import { Ad, AdBreak, ChromelessPlayer, GoogleImaAd, VerizonMediaAd, VerizonMediaAdBreak, version } from 'theoplayer';
+import type { AdVert } from '@theoplayer/yospace-connector-web';
+import {
+    type Ad,
+    type AdBreak,
+    type ChromelessPlayer,
+    type GoogleImaAd,
+    type VerizonMediaAd,
+    type VerizonMediaAdBreak,
+    version
+} from 'theoplayer';
 import { ConvivaConfiguration } from '../integration/ConvivaHandler';
 
 export function collectDeviceMetadata(): ConvivaDeviceMetadata {
@@ -16,8 +24,6 @@ export function collectDeviceMetadata(): ConvivaDeviceMetadata {
         [Constants.DeviceMetadata.CATEGORY]: Constants.DeviceCategory.WEB
     };
 }
-
-type AdBreakPosition = 'preroll' | 'midroll' | 'postroll';
 
 export function calculateAdType(player: ChromelessPlayer) {
     return player.source?.ads?.length ? Constants.AdType.CLIENT_SIDE : Constants.AdType.SERVER_SIDE;
@@ -77,7 +83,6 @@ export function collectContentMetadata(
     if (!Number.isNaN(duration) && duration !== Infinity) {
         contentInfo[Constants.DURATION] = duration;
     }
-    // @ts-ignore
     return {
         ...configuredContentMetadata,
         ...contentInfo

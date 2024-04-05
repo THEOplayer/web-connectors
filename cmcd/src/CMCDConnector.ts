@@ -1,4 +1,4 @@
-import { ChromelessPlayer, InterceptableRequest, Request } from 'theoplayer';
+import type { ChromelessPlayer, InterceptableRequest, Request } from 'theoplayer';
 import { CMCDCollector } from './CMCDCollector';
 import { CMCDPayload } from './CMCDPayload';
 import { Configuration, TransmissionMode } from './Configuration';

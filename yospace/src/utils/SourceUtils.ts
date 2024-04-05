@@ -1,4 +1,4 @@
-import { Source, Sources, TypedSource } from 'theoplayer';
+import type { Source, Sources, TypedSource } from 'theoplayer';
 
 export function isObject(x: unknown): x is object {
     return typeof x === 'object' && x !== null;

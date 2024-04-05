@@ -1,6 +1,4 @@
 export interface SessionProperties {
-    new (): SessionProperties;
-
     getAllowCorsForAnalytics(): boolean;
     getApplyEncryptedTracking(): boolean;
     getCustomHttpHeaders(): Map<string, string>;
@@ -18,4 +16,8 @@ export interface SessionProperties {
     setPrefetchResources(prefetch: boolean): void;
     setRequestTimeout(requestTimeout: number): void;
     setUserAgent(userAgent: string): void;
+}
+
+export interface SessionPropertiesConstructor {
+    new (): SessionProperties;
 }

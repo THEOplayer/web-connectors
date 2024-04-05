@@ -1,4 +1,4 @@
-import { ChromelessPlayer, CurrentSourceChangeEvent, MediaTrack, MediaType, Quality, Request } from 'theoplayer';
+import type { ChromelessPlayer, CurrentSourceChangeEvent, MediaTrack, MediaType, Quality, Request } from 'theoplayer';
 import { CMCDObjectType, CMCDPayload, CMCDReservedKey, CMCDStreamingFormat, CMCDStreamType } from './CMCDPayload';
 import { Configuration } from './Configuration';
 import { calculateBufferSize, getStreamingFormatFromTypedSource } from './PlayerUtils';
@@ -162,7 +162,7 @@ export class CMCDCollector {
                     [CMCDReservedKey.OBJECT_TYPE]: CMCDObjectType.KEY_LICENSE_OR_CERTIFICATE
                 };
             }
-            case 'segment':
+            case 'segment': {
                 if (request.subType === 'initialization-segment') {
                     return {
                         ...sessionKeys,
@@ -235,6 +235,7 @@ export class CMCDCollector {
                 // TODO object duration
                 // TODO next request... and next range
                 return payload;
+            }
             default:
                 return {};
         }

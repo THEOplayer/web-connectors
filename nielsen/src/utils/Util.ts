@@ -1,4 +1,4 @@
-import { AdBreak } from 'theoplayer';
+import type { AdBreak } from 'theoplayer';
 import { AdType } from '../nielsen/Types';
 
 export function getAdType(adBreak: AdBreak): AdType {

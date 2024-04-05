@@ -1,4 +1,4 @@
-import { InterceptableRequest } from 'theoplayer';
+import type { InterceptableRequest } from 'theoplayer';
 import { CMCDHeaderName, CMCDPayload } from '../CMCDPayload';
 import { extractKeysFor, transformToQueryParameters } from '../CMCDPayloadUtils';
 import { TransmissionModeStrategy } from './TransmissionModeStrategy';

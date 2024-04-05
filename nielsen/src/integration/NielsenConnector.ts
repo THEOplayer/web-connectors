@@ -1,4 +1,4 @@
-import { ChromelessPlayer } from 'theoplayer';
+import type { ChromelessPlayer } from 'theoplayer';
 import { NielsenOptions } from '../nielsen/Types';
 import { NielsenHandler } from './NielsenHandler';
 
