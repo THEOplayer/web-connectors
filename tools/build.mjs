@@ -37,9 +37,7 @@ export function getSharedBuildConfiguration({ fileName, globalName, banner, exte
                     include: ['node_modules/**', '../node_modules/**']
                 }),
                 typescript({
-                    tsconfig: 'tsconfig.json',
-                    module: 'es2015',
-                    include: ['src/**/*']
+                    tsconfig: 'tsconfig.json'
                 })
             ]
         },
