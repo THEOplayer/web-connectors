@@ -4,7 +4,7 @@ const { workspaces } = require('./package.json');
 module.exports = {
     extends: ['./typedoc.base.json'],
     name: 'THEOplayer Web SDK Connectors',
-    entryPoints: workspaces,
+    entryPoints: workspaces.slice().sort(),
     entryPointStrategy: 'packages',
     includeVersion: false,
     out: 'api',
