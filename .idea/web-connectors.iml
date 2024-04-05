@@ -9,6 +9,7 @@
       <excludeFolder url="file://$MODULE_DIR$/yospace/dist" />
       <excludeFolder url="file://$MODULE_DIR$/nielsen/dist" />
       <excludeFolder url="file://$MODULE_DIR$/cmcd/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/api" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
