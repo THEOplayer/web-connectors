@@ -1,13 +1,11 @@
 {
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "strict": true,
-    "baseUrl": "./",
-    "rootDir": ".",
-    "paths": { "THEOplayer": ["./src/THEOplayer"] },
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "rootDir": "src",
+    "outDir": "dist",
+    "declarationDir": "dist/types"
+  },
+  "include": [
+    "src/**/*"
+  ]
 }

@@ -5,7 +5,7 @@ export enum ResourceType {
     UNKNOWN
 }
 
-interface Resource {
+export interface Resource {
     getByteData(): number[];
     getCreativeType(): string;
     getResourceType(): ResourceType;
