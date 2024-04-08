@@ -33,10 +33,8 @@
     "LICENSE.md",
     "package.json"
   ],
-  "dependencies": {
-    "@convivainc/conviva-js-coresdk": "^4.7.4"
-  },
   "peerDependencies": {
+    "@convivainc/conviva-js-coresdk": "^4.7.4",
     "@theoplayer/yospace-connector-web": "^2.1.1",
     "theoplayer": "^5.0.0 || ^6.0.0 || ^7.0.0"
   },
@@ -44,5 +42,8 @@
     "@theoplayer/yospace-connector-web": {
       "optional": true
     }
+  },
+  "devDependencies": {
+    "@convivainc/conviva-js-coresdk": "^4.7.4"
   }
 }
