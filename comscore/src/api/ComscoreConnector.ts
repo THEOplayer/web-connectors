@@ -70,8 +70,9 @@ export class ComscoreConnector {
     }
 
     /**
-     * Set persistent labels on the ComScore PublisherConfiguration
-     * @param labels object of key value pairs
+     * Set persistent label on the ComScore PublisherConfiguration
+     * @param label
+     * @param value
      */
     setPersistentLabel(label: string, value: string): void {
         this.analytics.configuration
