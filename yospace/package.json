@@ -41,7 +41,7 @@
     "theoplayer": "^5.0.0 || ^6.0.0 || ^7.0.0"
   },
   "bugs": {
-    "url": "https://github.com/THEOplayer/yospace-connector-web/issues"
+    "url": "https://github.com/THEOplayer/web-connectors/issues"
   },
   "directories": {
     "test": "test"

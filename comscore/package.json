@@ -24,7 +24,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/THEOplayer/web-connectors.git"
+    "url": "git+https://github.com/THEOplayer/web-connectors.git",
+    "directory": "comscore"
   },
   "author": "THEO Technologies NV",
   "license": "MIT",
