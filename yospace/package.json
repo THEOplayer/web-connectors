@@ -1,6 +1,6 @@
 {
   "name": "@theoplayer/yospace-connector-web",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A connector implementing Yospace for web.",
   "main": "dist/yospace-connector.umd.js",
   "repository": {

@@ -1,5 +1,19 @@
 # @theoplayer/conviva-connector-web
 
+## 2.1.0
+
+### ✨ Features
+
+- Changed Conviva SDK to a peer dependency, enabling users to update it independently from the Conviva connector.
+
+### 🐛 Issues
+
+- Fixed an issue where TypeScript could throw a TS2307 type error on the generated type definitions when the optional `@theoplayer/yospace-connector-web` peer dependency is not installed.
+
+### 📦 Dependency Updates
+
+- @theoplayer/yospace-connector-web@2.1.2
+
 ## 2.0.2
 
 ### 🐛 Issues
