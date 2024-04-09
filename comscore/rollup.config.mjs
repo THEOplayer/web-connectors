@@ -9,7 +9,7 @@ const globalName = "THEOplayerComscoreConnector";
 
 const banner = `
 /**
- * Comscore Web Connector v${version}
+ * THEOplayer Comscore Web Connector v${version}
  */`.trim();
 
-export default getSharedBuildConfiguration(fileName, globalName, banner);
+export default getSharedBuildConfiguration({fileName, globalName, banner});
