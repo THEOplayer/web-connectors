@@ -1,5 +1,11 @@
 # @theoplayer/yospace-connector-web
 
+## 2.1.2
+
+### 🐛 Issues
+
+- Fix missing API types in TypeScript type definitions.
+
 ## 2.1.1
 
 ### 🐛 Issues

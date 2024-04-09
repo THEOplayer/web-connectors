@@ -1,6 +1,6 @@
 {
   "name": "@theoplayer/conviva-connector-web",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "A connector implementing Conviva for web.",
   "main": "dist/conviva-connector.umd.js",
   "repository": "https://github.com/THEOplayer/conviva-connector-web",
@@ -35,7 +35,7 @@
   ],
   "peerDependencies": {
     "@convivainc/conviva-js-coresdk": "^4.7.4",
-    "@theoplayer/yospace-connector-web": "^2.1.1",
+    "@theoplayer/yospace-connector-web": "^2.1.2",
     "theoplayer": "^5.0.0 || ^6.0.0 || ^7.0.0"
   },
   "peerDependenciesMeta": {
