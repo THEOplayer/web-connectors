@@ -99,7 +99,8 @@ export class YospaceAdReporter {
     };
 
     private readonly onYospaceSessionError = (code: SessionErrorCode) => {
-        if (code === SessionErrorCode.TIMEOUT) {
+        const yospaceCode = code as number as YospaceSessionErrorCode;
+        if (yospaceCode === YospaceSessionErrorCode.TIMEOUT) {
             this.convivaVideoAnalytics.reportPlaybackError('The Yospace session has timed out.');
         } else {
             this.convivaVideoAnalytics.reportPlaybackError('The Yospace session has errored.');
@@ -120,4 +121,9 @@ export class YospaceAdReporter {
         this.removeEventListeners();
         this.yospaceConnector.unregisterAnalyticEventObserver(this.observer);
     }
+}
+
+// Keep this in sync with SessionErrorCode from yospace-connector-web
+enum YospaceSessionErrorCode {
+    TIMEOUT = 0
 }
