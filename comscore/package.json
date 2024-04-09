@@ -2,7 +2,19 @@
   "name": "@theoplayer/comscore-connector-web",
   "version": "1.0.21",
   "description": "A connector implementing Comscore with THEOplayer",
-  "main": "index.js",
+  "main": "dist/comscore-connector.umd.js",
+  "module": "dist/comscore-connector.esm.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/comscore-connector.esm.js",
+      "require": "./dist/comscore-connector.umd.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package": "./package.json",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "clean": "rimraf lib dist",
     "bundle": "rollup -c rollup.config.mjs",
