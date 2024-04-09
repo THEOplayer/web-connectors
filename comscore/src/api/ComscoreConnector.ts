@@ -20,8 +20,7 @@ export class ComscoreConnector {
      */
     constructor(player: ChromelessPlayer, comscoreConfig: ComscoreConfiguration, comscoreMetadata: ComscoreMetadata) {
         if (typeof ns_ === 'undefined' || typeof this.analytics === 'undefined') {
-            console.error('[COMSCORE] ComScore script missing, cannot init ComScoreAnalytics');
-            return;
+            throw new Error('[COMSCORE] ComScore script missing, cannot init ComScoreAnalytics');
         }
 
         this.configuration = comscoreConfig

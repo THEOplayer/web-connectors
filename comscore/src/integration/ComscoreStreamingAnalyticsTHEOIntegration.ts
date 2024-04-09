@@ -38,7 +38,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
     private streamingAnalytics = new this.analytics.StreamingAnalytics();
 
     // Copy of main content's ContentMetadata
-    private contentMetadata: ns_.analytics.StreamingAnalytics.ContentMetadata | null;
+    private contentMetadata: ns_.analytics.StreamingAnalytics.ContentMetadata | null = null;
 
     // Advertisement related fields for use outside of ad event handlers
     private inAd: boolean = false
