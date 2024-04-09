@@ -20,7 +20,7 @@
     "url": "https://github.com/THEOplayer/web-connectors/issues"
   },
   "homepage": "https://github.com/THEOplayer/web-connectors#readme",
-  "dependencies": {
-    "theoplayer": "^6.12.0"
+  "peerDependencies": {
+    "theoplayer": "^7.0.0"
   }
 }
