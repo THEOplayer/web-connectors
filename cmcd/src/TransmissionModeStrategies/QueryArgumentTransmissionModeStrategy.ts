@@ -19,7 +19,7 @@ export class QueryArgumentTransmissionModeStrategy implements TransmissionModeSt
         const url = new URL(request.url);
         const parameters = transformToQueryParameters(payload);
         if (parameters) {
-            url.searchParams.append('CMCD', parameters);
+            url.searchParams.set('CMCD', parameters);
             request.redirect({
                 ...request,
                 url: url.href
