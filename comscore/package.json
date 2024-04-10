@@ -19,7 +19,7 @@
     "clean": "rimraf lib dist",
     "bundle": "rollup -c rollup.config.mjs",
     "build": "npm run clean && npm run bundle",
-    "serve": "http-server . -o /test/pages/main.html",
+    "serve": "http-server ./.. -o /comscore/test/pages/main.html",
     "test": "echo \"No tests yet\""
   },
   "repository": {
