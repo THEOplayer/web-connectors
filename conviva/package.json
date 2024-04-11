@@ -3,7 +3,6 @@
   "version": "2.1.0",
   "description": "A connector implementing Conviva for web.",
   "main": "dist/conviva-connector.umd.js",
-  "repository": "https://github.com/THEOplayer/conviva-connector-web",
   "homepage": "https://theoplayer.com/",
   "module": "dist/conviva-connector.esm.js",
   "types": "dist/types/index.d.ts",
@@ -25,6 +24,14 @@
     "test": "jest"
   },
   "author": "THEO Technologies NV",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/THEOplayer/web-connectors.git",
+    "directory": "conviva"
+  },
+  "bugs": {
+    "url": "https://github.com/THEOplayer/web-connectors/issues"
+  },
   "license": "MIT",
   "files": [
     "dist/",

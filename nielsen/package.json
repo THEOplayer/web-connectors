@@ -23,6 +23,14 @@
     "test": "jest"
   },
   "author": "THEO Technologies NV",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/THEOplayer/web-connectors.git",
+    "directory": "nielsen"
+  },
+  "bugs": {
+    "url": "https://github.com/THEOplayer/web-connectors/issues"
+  },
   "license": "MIT",
   "files": [
     "dist/",

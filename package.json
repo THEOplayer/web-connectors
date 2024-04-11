@@ -10,7 +10,8 @@
     "yospace",
     "conviva",
     "nielsen",
-    "cmcd"
+    "cmcd",
+    "comscore"
   ],
   "scripts": {
     "changeset:version": "changeset version && node .changeset/post-process.js",
