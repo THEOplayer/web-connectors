@@ -104,3 +104,7 @@ Based on the `ComscoreMetadata` type, you can tell which fields are mandatory an
 | `clipUrl?`                         |          |   V C    |
 | `videoDimension?`                  |          |    C     |
 | `customLabels?`                    |          |   All    |
+
+## Documentation
+
+The integration guidelines from ComScore can be found on their [Unified Digital Measurements page](https://www.comscore.com/Products/Digital/Unified-Digital-Measurement-Enhanced) in the Tagging section.
