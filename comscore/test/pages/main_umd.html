@@ -8,6 +8,11 @@
         <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css" />
         <script src="/node_modules/theoplayer/THEOplayer.js"></script>
         <script src="./../../src/comscore/comscore.js"></script>
+        <script>
+            if (!window.ns_) {
+                console.warn('ComScore SDK was not found. Please add the comscore.js file to src/comscore/ or make the necessary changes to the script tag that loads the library')
+            }
+        </script>
         <script src="./../../dist/comscore-connector.umd.js"></script>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 

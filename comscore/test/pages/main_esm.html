@@ -6,8 +6,12 @@
         <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
         <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3_dai.js"></script>
         <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css" />
-        <!-- <script src="/node_modules/theoplayer/THEOplayer.js"></script> -->
         <script src="./../../src/comscore/comscore.js"></script>
+        <script>
+            if (!window.ns_) {
+                console.warn('ComScore SDK was not found. Please add the comscore.js file to src/comscore/ or make the necessary changes to the script tag that loads the library')
+            }
+        </script>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
         <style>
