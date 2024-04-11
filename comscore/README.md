@@ -8,6 +8,12 @@ The Comscore connector provides a Comscore integration for THEOplayer.
 npm install @theoplayer/comscore-connector-web
 ```
 
+This connector depends on the JavaScript ComScore SDK, which should be loaded and available in the global scope before the connector. Get it from your ComScore dashboard or talk to a ComScore representative. This connector was developed and tested with versions 7.2.0.200214 and 7.6.1.210506
+
+```html
+<script src="/path/to/comscore.js">
+```
+
 ## Usage
 
 ### Configuring the connector
