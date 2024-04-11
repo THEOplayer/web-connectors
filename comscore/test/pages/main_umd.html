@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Connector test page</title>
+        <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+        <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3_dai.js"></script>
+        <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css" />
+        <script src="/node_modules/theoplayer/THEOplayer.js"></script>
+        <script src="./../../src/comscore/comscore.js"></script>
+        <script src="./../../dist/comscore-connector.umd.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+        <style>
+            .dropdown {
+              width: 100%;
+            }
+
+            .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+                background-color: #ffc50f;
+                border-color: #ffc50f;
+            }
+          </style>
+    </head>
+    <body>
+        <div class="container" style="padding-bottom: 5px; padding-top: 5px;">
+            <div class="row">
+              <div class="col-auto">
+                <button id="loadbutton" type="button" class="btn btn-primary">Load</button>
+              </div>
+              <div class="col">
+                <select id="source" class="form-control" name="source" style="width: 90%"></select>
+              </div>
+            </div>
+        </div>
+        <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+        <script type="text/javascript">
+            const element = document.querySelector("#THEOplayer");
+            const selector = document.querySelector('select')
+            const loadButton = document.querySelector('#loadbutton')
+
+            let testAssets
+            let comscoreConnector
+            const comscoreConfig = {
+                publisherId: '<your publisher id>',
+                applicationName: 'Test App',
+                userConsent: "1",
+                adIdProcessor: (ad) => ad.id,
+                debug: true
+            };
+
+            const loadSource = () => {
+                setSourceWithComscoreMetadata(testAssets[selector.value])
+            }
+
+            loadButton.onclick = loadSource
+
+            const player = new THEOplayer.Player(element, {
+                ui: {
+                    fluid: true
+                },
+                libraryLocation: "/node_modules/theoplayer/",
+                license: "<your license>"
+            });
+
+            const setSourceWithComscoreMetadata = (testAsset) => {
+                player.source = testAsset.source
+                comscoreConnector.update(testAsset.metadata)
+            }
+
+            const populateSourceSelector = (testAssets) => {
+                for (let i=0 ; i < testAssets.length ; i++) {
+                    const optionNode = document.createElement('option')
+                    optionNode.label = testAssets[i].label
+                    optionNode.value = i
+                    selector.appendChild(optionNode)
+                }
+            }
+
+            fetch('test-assets.json')
+                .then(res => res.json())
+                .then(jsonResponse => {
+                    testAssets = jsonResponse
+                    player.source = jsonResponse[0].source
+                    const comscoreMetadata = jsonResponse[0].metadata
+                    comscoreConnector = new THEOplayerComscoreConnector.ComscoreConnector(
+                        player,
+                        comscoreConfig,
+                        comscoreMetadata,
+                    )
+                    populateSourceSelector(jsonResponse)
+                    selector.value = 0
+                })
+
+        </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>
