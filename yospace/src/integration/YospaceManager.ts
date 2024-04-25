@@ -1,4 +1,4 @@
-import type { ChromelessPlayer, SourceDescription, YospaceTypedSource } from 'theoplayer';
+import type { AdIntegrationController, ChromelessPlayer, SourceDescription, YospaceTypedSource } from 'theoplayer';
 import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
 import { PromiseController } from '../utils/PromiseController';
 import { PlayerEvent } from '../yospace/PlayerEvent';
@@ -24,10 +24,9 @@ import { BaseEvent } from '../utils/event/Event';
 
 export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private readonly player: ChromelessPlayer;
-
     private yospaceSessionManager: YospaceSessionManager | undefined;
-
     private adHandler: YospaceAdHandler | undefined;
+    private adIntegrationController: AdIntegrationController | undefined;
 
     private id3MetadataHandler: YospaceID3MetadataHandler | undefined;
 
@@ -53,6 +52,12 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         super();
         this.player = player;
         this.yospaceSourceDescriptionDefined = new PromiseController<void>();
+
+        this.player.ads?.addIntegration('yospace', (controller) => {
+            this.adIntegrationController = controller;
+            // TODO Make proper ad integration?
+            return {};
+        });
     }
 
     get sessionManager(): YospaceSessionManager | undefined {
@@ -119,7 +124,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.yospaceSessionManager = sessionManager;
 
         const yospaceUiHandler = new YospaceUiHandler(this.player.element, sessionManager);
-        this.adHandler = new YospaceAdHandler(this, yospaceUiHandler, this.player);
+        this.adHandler = new YospaceAdHandler(this, yospaceUiHandler, this.player, this.adIntegrationController!);
         this.addEventListenersToNotifyYospace();
         if (!this.needsTimedMetadata) {
             this.playbackPositionUpdater = setInterval(this.updateYospaceWithPlaybackPosition, 250);
