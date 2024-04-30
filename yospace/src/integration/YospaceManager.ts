@@ -24,6 +24,7 @@ import { BaseEvent } from '../utils/event/Event';
 
 export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private readonly player: ChromelessPlayer;
+    private readonly uiHandler: YospaceUiHandler;
     private yospaceSessionManager: YospaceSessionManager | undefined;
     private adHandler: YospaceAdHandler | undefined;
     private adIntegrationController: AdIntegrationController | undefined;
@@ -51,6 +52,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     constructor(player: ChromelessPlayer) {
         super();
         this.player = player;
+        this.uiHandler = new YospaceUiHandler(this.player.element);
         this.yospaceSourceDescriptionDefined = new PromiseController<void>();
 
         this.player.ads?.addIntegration('yospace', (controller) => {
@@ -123,8 +125,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private initialiseSession(sessionManager: YospaceSessionManager) {
         this.yospaceSessionManager = sessionManager;
 
-        const yospaceUiHandler = new YospaceUiHandler(this.player.element);
-        this.adHandler = new YospaceAdHandler(this, yospaceUiHandler, this.player, this.adIntegrationController!);
+        this.adHandler = new YospaceAdHandler(this, this.uiHandler, this.player, this.adIntegrationController!);
         this.addEventListenersToNotifyYospace();
         if (!this.needsTimedMetadata) {
             this.playbackPositionUpdater = setInterval(this.updateYospaceWithPlaybackPosition, 250);
@@ -265,6 +266,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.sessionManager?.shutdown();
         clearInterval(this.playbackPositionUpdater);
 
+        this.uiHandler.reset();
         this.adHandler?.reset();
         this.adHandler = undefined;
         this.id3MetadataHandler?.reset();

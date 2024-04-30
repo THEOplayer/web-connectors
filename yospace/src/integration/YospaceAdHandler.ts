@@ -225,7 +225,6 @@ export class YospaceAdHandler {
 
     reset(): void {
         this.analyticEventObservers = [];
-        this.uiHandler.reset();
     }
 }
 
