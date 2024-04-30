@@ -80,14 +80,20 @@ export class YospaceAdHandler {
 
     private getAdInit(advert: YospaceAdvert): AdInit {
         const yospace = (window as unknown as YospaceWindow).YospaceAdManagement;
-        const creative = advert.isNonLinear()
+        const isNonLinear = advert.isNonLinear();
+        const nonLinearCreative = isNonLinear
             ? advert.getNonLinearCreativesByType(yospace.ResourceType.STATIC)?.[0]
-            : advert.getLinearCreative();
+            : undefined;
+        const linearCreative = !isNonLinear ? advert.getLinearCreative() : undefined;
+        const creative = isNonLinear ? nonLinearCreative : linearCreative;
         return {
             id: advert.getIdentifier(),
             timeOffset: advert.getStart() / 1000,
             type: advert.isNonLinear() ? 'nonlinear' : 'linear',
             duration: advert.getDuration() / 1000,
+            width: parseOptionalNumber(nonLinearCreative?.getProperty('width')?.getValue()),
+            height: parseOptionalNumber(nonLinearCreative?.getProperty('height')?.getValue()),
+            resourceURI: nonLinearCreative?.getResource(ResourceType.STATIC)?.getStringData(),
             clickThrough: creative?.getClickThroughUrl(),
             companions: undefined, // TODO
             skipOffset: advert.getSkipOffset() / 1000,
@@ -221,4 +227,8 @@ export class YospaceAdHandler {
         this.analyticEventObservers = [];
         this.uiHandler.reset();
     }
+}
+
+function parseOptionalNumber(value: string | null | undefined): number | undefined {
+    return value == undefined ? undefined : Number(value);
 }
