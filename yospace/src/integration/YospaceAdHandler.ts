@@ -2,7 +2,6 @@ import type { Ad, AdBreak, AdBreakInit, AdInit, AdIntegrationController, Chromel
 import { AnalyticEventObserver, SessionErrorCode } from '../yospace/AnalyticEventObserver';
 import { AdBreak as YospaceAdBreak, Advert as YospaceAdvert, ResourceType } from '../yospace/AdBreak';
 import { YospaceUiHandler } from './YospaceUIHandler';
-import { YoSpaceLinearAd, YoSpaceNonLinearAd } from './YospaceAd';
 import { YospaceManager } from './YospaceManager';
 import { arrayRemove } from '../utils/DefaultEventDispatcher';
 import { TrackingError } from '../yospace/TrackingError';
@@ -132,16 +131,14 @@ export class YospaceAdHandler {
 
         const linearCreative = advert.getLinearCreative();
         if (linearCreative) {
-            this.uiHandler.createLinearClickThrough(new YoSpaceLinearAd(linearCreative.getClickThroughUrl()));
+            this.uiHandler.createLinearClickThrough(linearCreative.getClickThroughUrl());
         }
 
         const nonLinearCreatives = advert.getNonLinearCreativesByType(ResourceType.STATIC);
         nonLinearCreatives.forEach((nonLinearCreative) => {
             const nonlinearUrl = nonLinearCreative.getResource(ResourceType.STATIC);
             if (nonlinearUrl) {
-                this.uiHandler.createNonLinear(
-                    new YoSpaceNonLinearAd(nonLinearCreative.getClickThroughUrl(), nonlinearUrl.getStringData())
-                );
+                this.uiHandler.createNonLinear(nonLinearCreative.getClickThroughUrl(), nonlinearUrl.getStringData());
             }
         });
     }

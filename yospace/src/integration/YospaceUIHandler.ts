@@ -1,4 +1,3 @@
-import { YoSpaceLinearAd, YoSpaceNonLinearAd } from './YospaceAd';
 import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
 
 export function stretchToParent(element: HTMLElement): void {
@@ -42,13 +41,13 @@ export class YospaceUiHandler {
         this.sessionManager = sessionManager;
     }
 
-    createNonLinear(adToPlay: YoSpaceNonLinearAd) {
+    createNonLinear(clickThroughUrl: string, imageUrl: string) {
         const adImage = document.createElement('img');
-        adImage.src = adToPlay.imageUrl;
+        adImage.src = imageUrl;
         adImage.className = 'theoplayer-yospace-non-linear-image';
         adImage.style.maxWidth = '100%';
 
-        const nonLinearClickThrough = createClickThrough(adToPlay.clickThroughUrl, 'theoplayer-yospace-advert');
+        const nonLinearClickThrough = createClickThrough(clickThroughUrl, 'theoplayer-yospace-advert');
         nonLinearClickThrough.appendChild(adImage);
         nonLinearClickThrough.style.zIndex = '10';
         nonLinearClickThrough.style.position = 'absolute';
@@ -78,8 +77,8 @@ export class YospaceUiHandler {
         this.removeNonLinears();
     }
 
-    createLinearClickThrough(adToPlay: YoSpaceLinearAd): void {
-        const clickThrough = createClickThrough(adToPlay.clickThroughUrl, 'theoplayer-yospace-ad-clickthrough');
+    createLinearClickThrough(clickThroughUrl: string): void {
+        const clickThrough = createClickThrough(clickThroughUrl, 'theoplayer-yospace-ad-clickthrough');
         clickThrough.style.zIndex = '10';
         stretchToParent(clickThrough);
 
