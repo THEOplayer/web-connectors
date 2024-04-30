@@ -123,7 +123,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private initialiseSession(sessionManager: YospaceSessionManager) {
         this.yospaceSessionManager = sessionManager;
 
-        const yospaceUiHandler = new YospaceUiHandler(this.player.element, sessionManager);
+        const yospaceUiHandler = new YospaceUiHandler(this.player.element);
         this.adHandler = new YospaceAdHandler(this, yospaceUiHandler, this.player, this.adIntegrationController!);
         this.addEventListenersToNotifyYospace();
         if (!this.needsTimedMetadata) {

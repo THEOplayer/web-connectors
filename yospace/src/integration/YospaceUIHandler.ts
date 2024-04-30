@@ -30,16 +30,11 @@ function createClickThrough(clickThroughURL: string, classToAdd?: string): HTMLE
 
 export class YospaceUiHandler {
     private element: HTMLElement;
-
-    private sessionManager: YospaceSessionManager;
-
     private linearClickThrough: HTMLElement | undefined;
-
     private nonLinears: HTMLElement[] = [];
 
-    constructor(element: HTMLElement, sessionManager: YospaceSessionManager) {
+    constructor(element: HTMLElement) {
         this.element = element;
-        this.sessionManager = sessionManager;
     }
 
     createNonLinear(creative: NonLinearCreative, imageUrl: string) {
