@@ -20,6 +20,7 @@ export class YospaceAdHandler {
     private adBreaks: WeakMap<YospaceAdBreak, AdBreak> = new WeakMap<YospaceAdBreak, AdBreak>();
     private currentAdBreak: AdBreak | undefined;
     private currentAd: Ad | undefined;
+    private currentAdvert: YospaceAdvert | undefined;
 
     constructor(
         yospaceManager: YospaceManager,
@@ -31,6 +32,7 @@ export class YospaceAdHandler {
         this.uiHandler = uiHandler;
         this.player = player;
         this.adIntegrationController = adIntegrationController;
+        this.player.addEventListener('timeupdate', this.handleTimeupdate);
         this.initialiseAdSession();
     }
 
@@ -103,6 +105,7 @@ export class YospaceAdHandler {
         if (this.currentAd !== undefined) {
             this.adIntegrationController.skipAd(this.currentAd);
             this.currentAd = undefined;
+            this.currentAdvert = undefined;
         }
         this.onAdvertBreakEnd();
     }
@@ -123,6 +126,7 @@ export class YospaceAdHandler {
         const ad = this.ads.get(advert);
         if (ad !== undefined) {
             this.currentAd = ad;
+            this.currentAdvert = advert;
             this.adIntegrationController.beginAd(ad);
         }
 
@@ -146,9 +150,22 @@ export class YospaceAdHandler {
         if (this.currentAd !== undefined) {
             this.adIntegrationController.endAd(this.currentAd);
             this.currentAd = undefined;
+            this.currentAdvert = undefined;
         }
         this.uiHandler.removeAllAds();
     }
+
+    private readonly handleTimeupdate = (): void => {
+        const currentAdvert = this.currentAdvert;
+        const currentAd = this.currentAd;
+        if (currentAdvert === undefined || currentAd === undefined) {
+            return;
+        }
+        const duration = currentAdvert.getDuration();
+        const remainingTime = currentAdvert.getRemainingTime(this.player.currentTime * 1000);
+        const progress = Math.max(0, duration - remainingTime) / duration;
+        this.adIntegrationController.updateAdProgress(currentAd, progress);
+    };
 
     /**
      * Registers a callback object to the session manager which receives new advert events.
