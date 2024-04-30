@@ -13,8 +13,8 @@ export function stretchToParent(element: HTMLElement): void {
 
 function createClickThrough(clickThroughURL: string, classToAdd?: string): HTMLElement {
     const clickThroughElement = document.createElement('a');
-    clickThroughElement.setAttribute('href', clickThroughURL);
-    clickThroughElement.setAttribute('target', '_blank');
+    clickThroughElement.href = clickThroughURL;
+    clickThroughElement.target = '_blank';
 
     if (classToAdd) {
         clickThroughElement.className = classToAdd;
@@ -22,7 +22,7 @@ function createClickThrough(clickThroughURL: string, classToAdd?: string): HTMLE
 
     // security enhancement
     // read more @ https://mathiasbynens.github.io/rel-noopener/
-    clickThroughElement.setAttribute('rel', 'noopener');
+    clickThroughElement.rel = 'noopener';
 
     return clickThroughElement;
 }
@@ -56,14 +56,14 @@ export class YospaceUiHandler {
         this.nonLinears.push(nonLinearClickThrough);
     }
 
-    private removeNonLinears = (): void => {
+    private removeNonLinears(): void {
         this.nonLinears.forEach((nonLinear) => {
             if (nonLinear && nonLinear.parentElement) {
                 nonLinear.parentElement.removeChild(nonLinear);
             }
         });
         this.nonLinears.length = 0;
-    };
+    }
 
     private removeLinearClickThrough(): void {
         if (this.linearClickThrough && this.linearClickThrough.parentNode) {
