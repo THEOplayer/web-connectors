@@ -149,9 +149,9 @@ export class YospaceAdHandler {
     private onAdvertEnd(): void {
         if (this.currentAd !== undefined) {
             this.adIntegrationController.endAd(this.currentAd);
-            this.currentAd = undefined;
-            this.currentAdvert = undefined;
         }
+        this.currentAd = undefined;
+        this.currentAdvert = undefined;
         this.uiHandler.removeAllAds();
     }
 
