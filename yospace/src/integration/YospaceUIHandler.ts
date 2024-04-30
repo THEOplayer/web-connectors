@@ -61,18 +61,14 @@ export class YospaceUiHandler {
     }
 
     private removeNonLinears(): void {
-        this.nonLinears.forEach((nonLinear) => {
-            if (nonLinear && nonLinear.parentElement) {
-                nonLinear.parentElement.removeChild(nonLinear);
-            }
-        });
+        for (const nonLinear of this.nonLinears) {
+            nonLinear?.parentNode?.removeChild(nonLinear);
+        }
         this.nonLinears.length = 0;
     }
 
     private removeLinearClickThrough(): void {
-        if (this.linearClickThrough && this.linearClickThrough.parentNode) {
-            this.linearClickThrough.parentNode.removeChild(this.linearClickThrough);
-        }
+        this.linearClickThrough?.parentNode?.removeChild(this.linearClickThrough);
         this.linearClickThrough = undefined;
     }
 
