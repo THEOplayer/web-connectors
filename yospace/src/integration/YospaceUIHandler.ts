@@ -1,4 +1,5 @@
 import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
+import { LinearCreative, NonLinearCreative } from '../yospace/AdBreak';
 
 export function stretchToParent(element: HTMLElement): void {
     const { style } = element;
@@ -41,16 +42,19 @@ export class YospaceUiHandler {
         this.sessionManager = sessionManager;
     }
 
-    createNonLinear(clickThroughUrl: string, imageUrl: string) {
+    createNonLinear(creative: NonLinearCreative, imageUrl: string) {
         const adImage = document.createElement('img');
         adImage.src = imageUrl;
         adImage.className = 'theoplayer-yospace-non-linear-image';
         adImage.style.maxWidth = '100%';
 
-        const nonLinearClickThrough = createClickThrough(clickThroughUrl, 'theoplayer-yospace-advert');
+        const nonLinearClickThrough = createClickThrough(creative.getClickThroughUrl(), 'theoplayer-yospace-advert');
         nonLinearClickThrough.appendChild(adImage);
         nonLinearClickThrough.style.zIndex = '10';
         nonLinearClickThrough.style.position = 'absolute';
+        nonLinearClickThrough.addEventListener('click', () => {
+            creative.onClickThrough();
+        });
 
         this.element.appendChild(nonLinearClickThrough);
         this.nonLinears.push(nonLinearClickThrough);
@@ -77,10 +81,13 @@ export class YospaceUiHandler {
         this.removeNonLinears();
     }
 
-    createLinearClickThrough(clickThroughUrl: string): void {
-        const clickThrough = createClickThrough(clickThroughUrl, 'theoplayer-yospace-ad-clickthrough');
+    createLinearClickThrough(creative: LinearCreative): void {
+        const clickThrough = createClickThrough(creative.getClickThroughUrl(), 'theoplayer-yospace-ad-clickthrough');
         clickThrough.style.zIndex = '10';
         stretchToParent(clickThrough);
+        clickThrough.addEventListener('click', () => {
+            creative.onClickThrough();
+        });
 
         this.element.appendChild(clickThrough);
         this.linearClickThrough = clickThrough;

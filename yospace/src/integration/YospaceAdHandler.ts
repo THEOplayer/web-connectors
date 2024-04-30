@@ -137,14 +137,14 @@ export class YospaceAdHandler {
 
         const linearCreative = advert.getLinearCreative();
         if (linearCreative) {
-            this.uiHandler.createLinearClickThrough(linearCreative.getClickThroughUrl());
+            this.uiHandler.createLinearClickThrough(linearCreative);
         }
 
         const nonLinearCreatives = advert.getNonLinearCreativesByType(ResourceType.STATIC);
         nonLinearCreatives.forEach((nonLinearCreative) => {
             const nonlinearUrl = nonLinearCreative.getResource(ResourceType.STATIC);
             if (nonlinearUrl) {
-                this.uiHandler.createNonLinear(nonLinearCreative.getClickThroughUrl(), nonlinearUrl.getStringData());
+                this.uiHandler.createNonLinear(nonLinearCreative, nonlinearUrl.getStringData());
             }
         });
     }
