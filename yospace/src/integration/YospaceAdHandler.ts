@@ -1,6 +1,14 @@
-import type { Ad, AdBreak, AdBreakInit, AdInit, AdIntegrationController, ChromelessPlayer } from 'theoplayer';
+import type {
+    Ad,
+    AdBreak,
+    AdBreakInit,
+    AdInit,
+    AdIntegrationController,
+    ChromelessPlayer,
+    UniversalAdId
+} from 'theoplayer';
 import { AnalyticEventObserver, SessionErrorCode } from '../yospace/AnalyticEventObserver';
-import { AdBreak as YospaceAdBreak, Advert as YospaceAdvert, ResourceType } from '../yospace/AdBreak';
+import { AdBreak as YospaceAdBreak, Advert as YospaceAdvert, ResourceType, VASTProperty } from '../yospace/AdBreak';
 import { YospaceUiHandler } from './YospaceUIHandler';
 import { YospaceManager } from './YospaceManager';
 import { arrayRemove } from '../utils/DefaultEventDispatcher';
@@ -106,7 +114,7 @@ export class YospaceAdHandler {
             companions: undefined, // TODO
             skipOffset: advert.getSkipOffset() / 1000,
             creativeId: creative?.getCreativeIdentifier(),
-            universalAdIds: undefined // TODO: creative?.getUniversalAdIds()
+            universalAdIds: creative?.getUniversalAdIds().map(vastPropertyToUniversalAdId)
         };
     }
 
@@ -252,4 +260,14 @@ export class YospaceAdHandler {
 
 function parseOptionalNumber(value: string | null | undefined): number | undefined {
     return value == undefined ? undefined : Number(value);
+}
+
+function vastPropertyToUniversalAdId(vastProperty: VASTProperty): UniversalAdId {
+    const attributes = vastProperty.getAttributes();
+    const adIdRegistry = attributes.get('idRegistry') ?? '';
+    const adIdValue = attributes.get('idValue') ?? vastProperty.getValue();
+    return {
+        adIdRegistry,
+        adIdValue
+    };
 }
