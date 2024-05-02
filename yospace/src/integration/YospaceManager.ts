@@ -55,7 +55,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.uiHandler = new YospaceUiHandler(this.player.element);
         this.yospaceSourceDescriptionDefined = new PromiseController<void>();
 
-        this.player.ads?.addIntegration('yospace', (controller) => {
+        this.player.ads?.addIntegration?.('yospace', (controller) => {
             this.adIntegrationController = controller;
             // TODO Make proper ad integration?
             return {};
@@ -125,7 +125,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private initialiseSession(sessionManager: YospaceSessionManager) {
         this.yospaceSessionManager = sessionManager;
 
-        this.adHandler = new YospaceAdHandler(this, this.uiHandler, this.player, this.adIntegrationController!);
+        this.adHandler = new YospaceAdHandler(this, this.uiHandler, this.player, this.adIntegrationController);
         this.addEventListenersToNotifyYospace();
         if (!this.needsTimedMetadata) {
             this.playbackPositionUpdater = setInterval(this.updateYospaceWithPlaybackPosition, 250);

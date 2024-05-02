@@ -12,7 +12,7 @@ export class YospaceAdHandler {
     private readonly yospaceManager: YospaceManager;
     private readonly uiHandler: YospaceUiHandler;
     private readonly player: ChromelessPlayer;
-    private readonly adIntegrationController: AdIntegrationController;
+    private readonly adIntegrationController: AdIntegrationController | undefined;
     private advertStartListener: (() => void) | undefined;
     private analyticEventObservers: AnalyticEventObserver[] = [];
     private ads: WeakMap<YospaceAdvert, Ad> = new WeakMap<YospaceAdvert, Ad>();
@@ -25,13 +25,15 @@ export class YospaceAdHandler {
         yospaceManager: YospaceManager,
         uiHandler: YospaceUiHandler,
         player: ChromelessPlayer,
-        adIntegrationController: AdIntegrationController
+        adIntegrationController: AdIntegrationController | undefined
     ) {
         this.yospaceManager = yospaceManager;
         this.uiHandler = uiHandler;
         this.player = player;
         this.adIntegrationController = adIntegrationController;
-        this.player.addEventListener('timeupdate', this.handleTimeupdate);
+        if (this.adIntegrationController !== undefined) {
+            this.player.addEventListener('timeupdate', this.handleTimeupdate);
+        }
         this.initialiseAdSession();
     }
 
@@ -43,7 +45,10 @@ export class YospaceAdHandler {
         arrayRemove(this.analyticEventObservers, analyticsEventObserver);
     }
 
-    private getOrCreateAdBreak(yospaceAdBreak: YospaceAdBreak, update: boolean): AdBreak {
+    private getOrCreateAdBreak(yospaceAdBreak: YospaceAdBreak, update: boolean): AdBreak | undefined {
+        if (this.adIntegrationController === undefined) {
+            return undefined;
+        }
         let adBreak = this.adBreaks.get(yospaceAdBreak);
         const isNew = adBreak === undefined;
         if (adBreak === undefined) {
@@ -67,7 +72,10 @@ export class YospaceAdHandler {
         };
     }
 
-    private getOrCreateAd(advert: YospaceAdvert, adBreak: AdBreak, update: boolean): Ad {
+    private getOrCreateAd(advert: YospaceAdvert, adBreak: AdBreak, update: boolean): Ad | undefined {
+        if (this.adIntegrationController === undefined) {
+            return undefined;
+        }
         let ad = this.ads.get(advert);
         if (ad === undefined) {
             ad = this.adIntegrationController.createAd(this.getAdInit(advert), adBreak);
@@ -108,7 +116,7 @@ export class YospaceAdHandler {
 
     private onAdvertBreakEarlyReturn(_yospaceAdBreak: YospaceAdBreak) {
         if (this.currentAd !== undefined) {
-            this.adIntegrationController.skipAd(this.currentAd);
+            this.adIntegrationController?.skipAd(this.currentAd);
             this.currentAd = undefined;
             this.currentAdvert = undefined;
         }
@@ -117,7 +125,7 @@ export class YospaceAdHandler {
 
     private onAdvertBreakEnd(): void {
         if (this.currentAdBreak !== undefined) {
-            this.adIntegrationController.removeAdBreak(this.currentAdBreak);
+            this.adIntegrationController?.removeAdBreak(this.currentAdBreak);
             this.currentAdBreak = undefined;
         }
     }
@@ -132,7 +140,7 @@ export class YospaceAdHandler {
         if (ad !== undefined) {
             this.currentAd = ad;
             this.currentAdvert = advert;
-            this.adIntegrationController.beginAd(ad);
+            this.adIntegrationController?.beginAd(ad);
         }
 
         const linearCreative = advert.getLinearCreative();
@@ -151,7 +159,7 @@ export class YospaceAdHandler {
 
     private onAdvertEnd(): void {
         if (this.currentAd !== undefined) {
-            this.adIntegrationController.endAd(this.currentAd);
+            this.adIntegrationController?.endAd(this.currentAd);
         }
         this.currentAd = undefined;
         this.currentAdvert = undefined;
@@ -161,7 +169,7 @@ export class YospaceAdHandler {
     private readonly handleTimeupdate = (): void => {
         const currentAdvert = this.currentAdvert;
         const currentAd = this.currentAd;
-        if (currentAdvert === undefined || currentAd === undefined) {
+        if (this.adIntegrationController === undefined || currentAdvert === undefined || currentAd === undefined) {
             return;
         }
         const duration = currentAdvert.getDuration();
