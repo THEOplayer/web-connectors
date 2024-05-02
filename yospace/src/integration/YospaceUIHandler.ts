@@ -1,5 +1,5 @@
 import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
-import { LinearCreative, NonLinearCreative } from '../yospace/AdBreak';
+import { Creative, LinearCreative, NonLinearCreative } from '../yospace/AdBreak';
 
 export function stretchToParent(element: HTMLElement): void {
     const { style } = element;
@@ -28,10 +28,18 @@ function createClickThrough(clickThroughURL: string, classToAdd?: string): HTMLE
     return clickThroughElement;
 }
 
+interface CreativeUi<C extends Creative> {
+    creative: C;
+    element: HTMLElement;
+}
+
+type LinearCreativeUi = CreativeUi<LinearCreative>;
+type NonLinearCreativeUi = CreativeUi<NonLinearCreative>;
+
 export class YospaceUiHandler {
     private element: HTMLElement;
-    private linearClickThrough: HTMLElement | undefined;
-    private nonLinears: HTMLElement[] = [];
+    private linearClickThrough: LinearCreativeUi | undefined;
+    private nonLinears: NonLinearCreativeUi[] = [];
 
     constructor(element: HTMLElement) {
         this.element = element;
@@ -52,18 +60,23 @@ export class YospaceUiHandler {
         });
 
         this.element.appendChild(nonLinearClickThrough);
-        this.nonLinears.push(nonLinearClickThrough);
+        this.nonLinears.push({ creative, element: nonLinearClickThrough });
+        creative.setVisible(true);
     }
 
     private removeNonLinears(): void {
-        for (const nonLinear of this.nonLinears) {
-            nonLinear?.parentNode?.removeChild(nonLinear);
+        for (const { creative, element } of this.nonLinears) {
+            creative.setVisible(false);
+            element.parentNode?.removeChild(element);
         }
         this.nonLinears.length = 0;
     }
 
     private removeLinearClickThrough(): void {
-        this.linearClickThrough?.parentNode?.removeChild(this.linearClickThrough);
+        const linearClickThrough = this.linearClickThrough;
+        if (linearClickThrough) {
+            linearClickThrough.element.parentNode?.removeChild(linearClickThrough.element);
+        }
         this.linearClickThrough = undefined;
     }
 
@@ -81,7 +94,7 @@ export class YospaceUiHandler {
         });
 
         this.element.appendChild(clickThrough);
-        this.linearClickThrough = clickThrough;
+        this.linearClickThrough = { creative, element: clickThrough };
     }
 
     reset(): void {
