@@ -57,7 +57,9 @@ export abstract class YospaceMetadataHandler {
     }
 
     reset(): void {
-        this.textTrackList.forEach((track) => track.removeEventListener('cuechange', this.handleCueChange));
+        for (const track of this.textTrackList) {
+            track.removeEventListener('cuechange', this.handleCueChange);
+        }
         this.textTrackList.removeEventListener('addtrack', this.handleAddTrack);
     }
 }

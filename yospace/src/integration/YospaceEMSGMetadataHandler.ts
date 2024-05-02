@@ -11,10 +11,10 @@ function parseEmsgYospaceMetadata(data: number[]): YospaceReport {
     const emsgString = String.fromCharCode(...data);
     const parsedEmsg = emsgString.split(',');
     const result: YospaceReport = {};
-    parsedEmsg.forEach((metadataElement) => {
+    for (const metadataElement of parsedEmsg) {
         const [key, value] = metadataElement.split('=');
         result[key as YospaceId] = value;
-    });
+    }
     return result;
 }
 
