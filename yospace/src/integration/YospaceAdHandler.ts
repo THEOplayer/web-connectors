@@ -3,8 +3,8 @@ import type {
     AdBreak,
     AdBreakInit,
     AdInit,
-    AdIntegrationController,
     ChromelessPlayer,
+    ServerSideAdIntegrationController,
     UniversalAdId
 } from 'theoplayer';
 import { AnalyticEventObserver, SessionErrorCode } from '../yospace/AnalyticEventObserver';
@@ -20,7 +20,7 @@ export class YospaceAdHandler {
     private readonly yospaceManager: YospaceManager;
     private readonly uiHandler: YospaceUiHandler;
     private readonly player: ChromelessPlayer;
-    private readonly adIntegrationController: AdIntegrationController | undefined;
+    private readonly adIntegrationController: ServerSideAdIntegrationController | undefined;
     private advertStartListener: (() => void) | undefined;
     private analyticEventObservers: AnalyticEventObserver[] = [];
     private ads: WeakMap<YospaceAdvert, Ad> = new WeakMap<YospaceAdvert, Ad>();
@@ -33,7 +33,7 @@ export class YospaceAdHandler {
         yospaceManager: YospaceManager,
         uiHandler: YospaceUiHandler,
         player: ChromelessPlayer,
-        adIntegrationController: AdIntegrationController | undefined
+        adIntegrationController: ServerSideAdIntegrationController | undefined
     ) {
         this.yospaceManager = yospaceManager;
         this.uiHandler = uiHandler;
