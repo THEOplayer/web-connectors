@@ -123,7 +123,16 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     }
 
     private updateYospaceWithPlaybackPosition = () => {
-        const currentTime = this.player.currentTime * 1000;
+        let currentTime = this.player.currentTime * 1000;
+
+        // For Yospace DVRLive sessions we need to offset the playback position from the stream start time
+        if (this.yospaceTypedSource?.ssai.streamType === 'livepause') {
+            const ast = this.sessionManager?.getManifestData('availabilityStartTime');
+            const sst = new Date(this.sessionManager?.getStreamStart());
+            const delta = sst?.getTime() - ast?.getTime() || 0;
+            currentTime = Math.round(currentTime - delta);
+        }
+
         this.sessionManager?.onPlayheadUpdate(currentTime);
     };
 
