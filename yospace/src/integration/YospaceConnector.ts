@@ -48,6 +48,13 @@ export class YospaceConnector implements EventDispatcher<YospaceEventMap> {
     }
 
     /**
+     * Destroy the current session instance once it's no longer required, in order to prevent possible resource leaks on the viewer's device. 
+     */
+    destroy() {
+        this.yospaceManager.reset();
+    }
+
+    /**
      * Unregister an analytics event observer from the Yospace SDK.
      *
      * @param analyticEventObserver the observer that will be unregistered from the Yospace SDK.
