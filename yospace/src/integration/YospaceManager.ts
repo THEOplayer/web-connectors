@@ -233,7 +233,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         }
     };
 
-    private reset() {
+    reset() {
         this.removeEventListenersToNotifyYospace();
         this.sessionManager?.shutdown();
         clearInterval(this.playbackPositionUpdater);
