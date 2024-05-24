@@ -89,3 +89,10 @@ await yospaceConnector.setupYospaceSession(source, sessionProperties);
 ```
 
 Once the setup of the Yospace session is done, you can continue to use the player and the connector will handle everything related to Yospace.
+
+To shutdown the current Yospace session, use the connector's `destroy()` method. The connector automatically calls `session.shutdown()` on session initialization errors and when creating a new session. If you, however, set a non-yospace source to the player after using this connector, it is your responsibility to do this through `destroy()`.
+
+```javascript
+yospaceConnector.destroy();
+player.source = SOME_NON_YOSPACE_SOURCE;
+```
