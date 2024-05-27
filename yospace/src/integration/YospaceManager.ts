@@ -139,9 +139,9 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
 
         // For Yospace DVRLive sessions we need to offset the playback position from the stream start time
         if (isSessionDVRLive(session)) {
-            const ast = session.getManifestData<Date>('availabilityStartTime');
-            const sst = new Date(session.getStreamStart());
-            const delta = sst?.getTime() - (ast?.getTime() || 0);
+            const ast = session.getManifestData<Date>('availabilityStartTime')?.getTime();
+            const sst = session.getStreamStart();
+            const delta = sst - (ast || 0);
             currentTime = Math.round(currentTime - delta);
         }
 
