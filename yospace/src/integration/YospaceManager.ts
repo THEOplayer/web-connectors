@@ -3,7 +3,14 @@ import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/Yospace
 import { PromiseController } from '../utils/PromiseController';
 import { PlayerEvent } from '../yospace/PlayerEvent';
 import { toSources } from '../utils/SourceUtils';
-import { ResultCode, SessionState, YospaceSessionManager } from '../yospace/YospaceSessionManager';
+import {
+    PlaybackMode,
+    ResultCode,
+    SessionState,
+    YospaceSession,
+    YospaceSessionDVRLive,
+    YospaceSessionManager
+} from '../yospace/YospaceSessionManager';
 import { YospaceWindow } from '../yospace/YospaceWindow';
 import { YospaceAdHandler } from './YospaceAdHandler';
 import { YospaceUiHandler } from './YospaceUIHandler';
@@ -123,17 +130,22 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     }
 
     private updateYospaceWithPlaybackPosition = () => {
+        const session = this.sessionManager;
+        if (!session) {
+            return;
+        }
+
         let currentTime = this.player.currentTime * 1000;
 
         // For Yospace DVRLive sessions we need to offset the playback position from the stream start time
-        if (this.yospaceTypedSource?.ssai.streamType === 'livepause') {
-            const ast = this.sessionManager?.getManifestData('availabilityStartTime');
-            const sst = new Date(this.sessionManager?.getStreamStart());
-            const delta = sst?.getTime() - ast?.getTime() || 0;
+        if (isSessionDVRLive(session)) {
+            const ast = session.getManifestData<Date>('availabilityStartTime');
+            const sst = new Date(session.getStreamStart());
+            const delta = sst?.getTime() - (ast?.getTime() || 0);
             currentTime = Math.round(currentTime - delta);
         }
 
-        this.sessionManager?.onPlayheadUpdate(currentTime);
+        session.onPlayheadUpdate(currentTime);
     };
 
     private onInitComplete = (e: any) => {
@@ -261,4 +273,8 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.isStalling = false;
         this.didFirstPlay = false;
     }
+}
+
+function isSessionDVRLive(session: YospaceSession): session is YospaceSessionDVRLive {
+    return session.getPlaybackMode() === PlaybackMode.DVRLIVE;
 }
