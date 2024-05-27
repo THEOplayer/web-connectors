@@ -141,7 +141,8 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         if (isSessionDVRLive(session)) {
             const ast = session.getManifestData<Date>('availabilityStartTime')?.getTime();
             const sst = session.getStreamStart();
-            const delta = sst - (ast || 0);
+            // availabilityStartTime is initially undefined, and streamStart is initially -1
+            const delta = (sst < 0 ? 0 : sst) - (ast || 0);
             currentTime = Math.round(currentTime - delta);
         }
 
