@@ -3,7 +3,14 @@ import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/Yospace
 import { PromiseController } from '../utils/PromiseController';
 import { PlayerEvent } from '../yospace/PlayerEvent';
 import { toSources } from '../utils/SourceUtils';
-import { ResultCode, SessionState, YospaceSessionManager } from '../yospace/YospaceSessionManager';
+import {
+    PlaybackMode,
+    ResultCode,
+    SessionState,
+    YospaceSession,
+    YospaceSessionDVRLive,
+    YospaceSessionManager
+} from '../yospace/YospaceSessionManager';
 import { YospaceWindow } from '../yospace/YospaceWindow';
 import { YospaceAdHandler } from './YospaceAdHandler';
 import { YospaceUiHandler } from './YospaceUIHandler';
@@ -123,8 +130,23 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     }
 
     private updateYospaceWithPlaybackPosition = () => {
-        const currentTime = this.player.currentTime * 1000;
-        this.sessionManager?.onPlayheadUpdate(currentTime);
+        const session = this.sessionManager;
+        if (!session) {
+            return;
+        }
+
+        let currentTime = this.player.currentTime * 1000;
+
+        // For Yospace DVRLive sessions we need to offset the playback position from the stream start time
+        if (isSessionDVRLive(session)) {
+            const ast = session.getManifestData<Date>('availabilityStartTime')?.getTime();
+            const sst = session.getStreamStart();
+            // availabilityStartTime is initially undefined, and streamStart is initially -1
+            const delta = (sst < 0 ? 0 : sst) - (ast || 0);
+            currentTime = Math.round(currentTime - delta);
+        }
+
+        session.onPlayheadUpdate(currentTime);
     };
 
     private onInitComplete = (e: any) => {
@@ -252,4 +274,8 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.isStalling = false;
         this.didFirstPlay = false;
     }
+}
+
+function isSessionDVRLive(session: YospaceSession): session is YospaceSessionDVRLive {
+    return session.getPlaybackMode() === PlaybackMode.DVRLIVE;
 }
