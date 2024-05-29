@@ -26,14 +26,12 @@ export class YospaceID3MetadataHandler extends YospaceMetadataHandler {
             return;
         }
 
-        let report: YospaceReport = {};
-        report.startTime = filteredCues[0].startTime;
+        let report = new YospaceReport(filteredCues[0].startTime);
         for (let i = 0; i < filteredCues.length; i += 1) {
             const cue = filteredCues[i];
             if (cue.startTime !== report.startTime) {
                 this.reportData(report);
-                report = {};
-                report.startTime = cue.startTime;
+                report = new YospaceReport(cue.startTime);
             }
             const frame = cue.content as ID3Yospace;
             report[frame.id] = frame.text;
