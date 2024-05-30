@@ -1,5 +1,11 @@
 # @theoplayer/yospace-connector-web
 
+## 2.1.3
+
+### 🐛 Issues
+
+- Fixed playback position reporting for live DVR streams (with `streamType` set to `"livepause"`).
+
 ## 2.1.2
 
 ### 🐛 Issues
