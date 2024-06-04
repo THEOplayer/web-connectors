@@ -1,6 +1,7 @@
 import type {
     ChromelessPlayer,
     ServerSideAdIntegrationController,
+    ServerSideAdIntegrationHandler,
     SourceDescription,
     YospaceTypedSource
 } from 'theoplayer';
@@ -62,8 +63,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
 
         this.player.ads?.registerServerSideIntegration?.('yospace', (controller) => {
             this.adIntegrationController = controller;
-            // TODO Make proper ad integration?
-            return {};
+            return createIntegrationHandler(this);
         });
     }
 
@@ -266,7 +266,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         }
     };
 
-    private reset() {
+    reset() {
         this.removeEventListenersToNotifyYospace();
         this.sessionManager?.shutdown();
         clearInterval(this.playbackPositionUpdater);
@@ -290,4 +290,15 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
 
 function isSessionDVRLive(session: YospaceSession): session is YospaceSessionDVRLive {
     return session.getPlaybackMode() === PlaybackMode.DVRLIVE;
+}
+
+function createIntegrationHandler(yospaceManager: YospaceManager): ServerSideAdIntegrationHandler {
+    return {
+        resetSource(): void {
+            yospaceManager.reset();
+        },
+        destroy(): void {
+            yospaceManager.reset();
+        }
+    };
 }
