@@ -73,7 +73,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
         const yospaceTypedSource = getFirstYospaceTypedSource(sourceDescription);
         if (isYospaceSDKAvailable && yospaceTypedSource?.src) {
-            await this.createSession(yospaceTypedSource, sourceDescription, sessionProperties);
+            this.player.source = await this.createSession(yospaceTypedSource, sourceDescription, sessionProperties);
         } else if (yospaceTypedSource && !isYospaceSDKAvailable) {
             throw new Error('The Yospace Ad Management SDK has not been loaded.');
         } else {
@@ -96,7 +96,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         yospaceTypedSource: YospaceTypedSource,
         sourceDescription: SourceDescription,
         sessionProperties?: SessionProperties
-    ): Promise<void> {
+    ): Promise<SourceDescription> {
         this.reset();
 
         const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
@@ -119,7 +119,9 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
             case SessionState.INITIALISED:
             case SessionState.NO_ANALYTICS: {
                 this.initialiseSession(session);
-                this.player.source = {
+                this.dispatchEvent(new BaseEvent('sessionavailable'));
+                this.isMuted = this.player.muted;
+                return {
                     ...sourceDescription,
                     sources: [
                         {
@@ -128,15 +130,12 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
                         }
                     ]
                 };
-                this.dispatchEvent(new BaseEvent('sessionavailable'));
-                break;
             }
             case SessionState.FAILED:
             case SessionState.SHUT_DOWN:
             default:
                 this.handleSessionInitialisationErrors(session.getResultCode());
         }
-        this.isMuted = this.player.muted;
     }
 
     private initialiseSession(sessionManager: YospaceSessionManager) {
@@ -172,7 +171,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         session.onPlayheadUpdate(currentTime);
     };
 
-    private handleSessionInitialisationErrors(result: ResultCode) {
+    private handleSessionInitialisationErrors(result: ResultCode): never {
         let errorMessage: string;
         if (result === ResultCode.MALFORMED_URL) {
             errorMessage = 'Yospace: The stream URL is not correctly formatted';
