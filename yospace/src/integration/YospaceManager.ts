@@ -2,11 +2,11 @@ import type {
     ChromelessPlayer,
     ServerSideAdIntegrationController,
     ServerSideAdIntegrationHandler,
-    SourceDescription
+    SourceDescription,
+    YospaceTypedSource
 } from 'theoplayer';
-import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
+import { getFirstYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
 import { PlayerEvent } from '../yospace/PlayerEvent';
-import { toSources } from '../utils/SourceUtils';
 import {
     PlaybackMode,
     ResultCode,
@@ -70,7 +70,15 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         sourceDescription: SourceDescription,
         sessionProperties?: SessionProperties
     ): Promise<void> {
-        await this.createSession(sourceDescription, sessionProperties);
+        const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
+        const yospaceTypedSource = getFirstYospaceTypedSource(sourceDescription);
+        if (isYospaceSDKAvailable && yospaceTypedSource?.src) {
+            await this.createSession(yospaceTypedSource, sourceDescription, sessionProperties);
+        } else if (yospaceTypedSource && !isYospaceSDKAvailable) {
+            throw new Error('The Yospace Ad Management SDK has not been loaded.');
+        } else {
+            throw new Error('The given source is not a Yospace source.');
+        }
     }
 
     registerAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
@@ -85,30 +93,27 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     }
 
     private async createSession(
+        yospaceTypedSource: YospaceTypedSource,
         sourceDescription: SourceDescription,
         sessionProperties?: SessionProperties
     ): Promise<void> {
         this.reset();
 
-        const { sources } = sourceDescription;
-        const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
-        const yospaceTypedSource = sources ? toSources(sources).find(isYospaceTypedSource) : undefined;
-        if (isYospaceSDKAvailable && yospaceTypedSource?.src) {
             const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
             const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
             properties.setUserAgent(navigator.userAgent);
             let session: YospaceSession;
             switch (yospaceTypedSource?.ssai.streamType) {
                 case 'vod':
-                    session = await yospaceWindow.SessionVOD.create(yospaceTypedSource.src, properties);
+                    session = await yospaceWindow.SessionVOD.create(yospaceTypedSource.src!, properties);
                     break;
                 case 'nonlinear':
                 case 'livepause':
-                    session = await yospaceWindow.SessionDVRLive.create(yospaceTypedSource.src, properties);
+                    session = await yospaceWindow.SessionDVRLive.create(yospaceTypedSource.src!, properties);
                     break;
                 default:
                     this.needsTimedMetadata = true;
-                    session = await yospaceWindow.SessionLive.create(yospaceTypedSource.src, properties);
+                    session = await yospaceWindow.SessionLive.create(yospaceTypedSource.src!, properties);
             }
             switch (session.getSessionState()) {
                 case SessionState.INITIALISED:
@@ -132,11 +137,6 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
                     this.handleSessionInitialisationErrors(session.getResultCode());
             }
             this.isMuted = this.player.muted;
-        } else if (yospaceTypedSource && !isYospaceSDKAvailable) {
-            throw new Error('The Yospace Ad Management SDK has not been loaded.');
-        } else {
-            throw new Error('The given source is not a Yospace source.');
-        }
     }
 
     private initialiseSession(sessionManager: YospaceSessionManager) {
