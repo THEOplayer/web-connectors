@@ -118,9 +118,20 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
             }
             switch (session.getSessionState()) {
                 case SessionState.INITIALISED:
-                case SessionState.NO_ANALYTICS:
-                    this.handleSessionInitialised(session);
+                case SessionState.NO_ANALYTICS: {
+                    this.initialiseSession(session);
+                    this.player.source = {
+                        ...this.sourceDescription,
+                        sources: [
+                            {
+                                ...this.yospaceTypedSource,
+                                src: session.getPlaybackUrl()
+                            }
+                        ]
+                    };
+                    this.dispatchEvent(new BaseEvent('sessionavailable'));
                     break;
+                }
                 case SessionState.FAILED:
                 case SessionState.SHUT_DOWN:
                 default:
@@ -166,20 +177,6 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
 
         session.onPlayheadUpdate(currentTime);
     };
-
-    private handleSessionInitialised(session: YospaceSessionManager): void {
-        this.initialiseSession(session);
-        this.player.source = {
-            ...this.sourceDescription,
-            sources: [
-                {
-                    ...this.yospaceTypedSource,
-                    src: session.getPlaybackUrl()
-                }
-            ]
-        };
-        this.dispatchEvent(new BaseEvent('sessionavailable'));
-    }
 
     private handleSessionInitialisationErrors(result: ResultCode) {
         let errorMessage: string;
