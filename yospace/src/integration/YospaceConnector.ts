@@ -34,7 +34,7 @@ export class YospaceConnector implements EventDispatcher<YospaceEventMap> {
         sourceDescription: SourceDescription,
         sessionProperties?: SessionProperties
     ): Promise<void> {
-        await this.yospaceManager.createYospaceSource(sourceDescription, sessionProperties);
+        await this.yospaceManager.setYospaceSource(sourceDescription, sessionProperties);
     }
 
     /**

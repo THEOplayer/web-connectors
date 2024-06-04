@@ -69,10 +69,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         return this.didFirstPlay;
     }
 
-    async createYospaceSource(
-        sourceDescription: SourceDescription,
-        sessionProperties?: SessionProperties
-    ): Promise<void> {
+    async setYospaceSource(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): Promise<void> {
         const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
         const yospaceTypedSource = getFirstYospaceTypedSource(sourceDescription);
         if (isYospaceSDKAvailable && yospaceTypedSource?.src) {
@@ -92,7 +89,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         }
     }
 
-    async createYospaceSourceFromHandler(sourceDescription: SourceDescription): Promise<SourceDescription> {
+    async setYospaceSourceFromHandler(sourceDescription: SourceDescription): Promise<SourceDescription> {
         if (this.isSettingSource) {
             return sourceDescription;
         }
@@ -308,7 +305,7 @@ function isSessionDVRLive(session: YospaceSession): session is YospaceSessionDVR
 function createIntegrationHandler(yospaceManager: YospaceManager): ServerSideAdIntegrationHandler {
     return {
         setSource(sourceDescription: SourceDescription): Promise<SourceDescription> {
-            return yospaceManager.createYospaceSourceFromHandler(sourceDescription);
+            return yospaceManager.setYospaceSourceFromHandler(sourceDescription);
         },
         resetSource(): void {
             yospaceManager.resetFromHandler();
