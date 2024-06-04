@@ -2,8 +2,7 @@ import type {
     ChromelessPlayer,
     ServerSideAdIntegrationController,
     ServerSideAdIntegrationHandler,
-    SourceDescription,
-    YospaceTypedSource
+    SourceDescription
 } from 'theoplayer';
 import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
 import { PlayerEvent } from '../yospace/PlayerEvent';
@@ -37,10 +36,6 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private id3MetadataHandler: YospaceID3MetadataHandler | undefined;
 
     private emsgMetadataHandler: YospaceEMSGMetadataHandler | undefined;
-
-    private sourceDescription: SourceDescription | undefined;
-
-    private yospaceTypedSource: YospaceTypedSource | undefined;
 
     private didFirstPlay: boolean = false;
 
@@ -97,34 +92,33 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
 
         const { sources } = sourceDescription;
         const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
-        this.sourceDescription = sourceDescription;
-        this.yospaceTypedSource = sources ? toSources(sources).find(isYospaceTypedSource) : undefined;
-        if (isYospaceSDKAvailable && this.yospaceTypedSource?.src) {
+        const yospaceTypedSource = sources ? toSources(sources).find(isYospaceTypedSource) : undefined;
+        if (isYospaceSDKAvailable && yospaceTypedSource?.src) {
             const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
             const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
             properties.setUserAgent(navigator.userAgent);
             let session: YospaceSession;
-            switch (this.yospaceTypedSource?.ssai.streamType) {
+            switch (yospaceTypedSource?.ssai.streamType) {
                 case 'vod':
-                    session = await yospaceWindow.SessionVOD.create(this.yospaceTypedSource.src, properties);
+                    session = await yospaceWindow.SessionVOD.create(yospaceTypedSource.src, properties);
                     break;
                 case 'nonlinear':
                 case 'livepause':
-                    session = await yospaceWindow.SessionDVRLive.create(this.yospaceTypedSource.src, properties);
+                    session = await yospaceWindow.SessionDVRLive.create(yospaceTypedSource.src, properties);
                     break;
                 default:
                     this.needsTimedMetadata = true;
-                    session = await yospaceWindow.SessionLive.create(this.yospaceTypedSource.src, properties);
+                    session = await yospaceWindow.SessionLive.create(yospaceTypedSource.src, properties);
             }
             switch (session.getSessionState()) {
                 case SessionState.INITIALISED:
                 case SessionState.NO_ANALYTICS: {
                     this.initialiseSession(session);
                     this.player.source = {
-                        ...this.sourceDescription,
+                        ...sourceDescription,
                         sources: [
                             {
-                                ...this.yospaceTypedSource,
+                                ...yospaceTypedSource,
                                 src: session.getPlaybackUrl()
                             }
                         ]
@@ -138,7 +132,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
                     this.handleSessionInitialisationErrors(session.getResultCode());
             }
             this.isMuted = this.player.muted;
-        } else if (this.yospaceTypedSource && !isYospaceSDKAvailable) {
+        } else if (yospaceTypedSource && !isYospaceSDKAvailable) {
             throw new Error('The Yospace Ad Management SDK has not been loaded.');
         } else {
             throw new Error('The given source is not a Yospace source.');
@@ -267,9 +261,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.id3MetadataHandler = undefined;
         this.emsgMetadataHandler?.reset();
         this.emsgMetadataHandler = undefined;
-        this.yospaceTypedSource = undefined;
         this.yospaceSessionManager = undefined;
-        this.sourceDescription = undefined;
         this.needsTimedMetadata = false;
         this.isMuted = false;
         this.isStalling = false;
