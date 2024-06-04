@@ -99,44 +99,44 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     ): Promise<void> {
         this.reset();
 
-            const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
-            const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
-            properties.setUserAgent(navigator.userAgent);
-            let session: YospaceSession;
-            switch (yospaceTypedSource?.ssai.streamType) {
-                case 'vod':
-                    session = await yospaceWindow.SessionVOD.create(yospaceTypedSource.src!, properties);
-                    break;
-                case 'nonlinear':
-                case 'livepause':
-                    session = await yospaceWindow.SessionDVRLive.create(yospaceTypedSource.src!, properties);
-                    break;
-                default:
-                    this.needsTimedMetadata = true;
-                    session = await yospaceWindow.SessionLive.create(yospaceTypedSource.src!, properties);
+        const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
+        const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
+        properties.setUserAgent(navigator.userAgent);
+        let session: YospaceSession;
+        switch (yospaceTypedSource?.ssai.streamType) {
+            case 'vod':
+                session = await yospaceWindow.SessionVOD.create(yospaceTypedSource.src!, properties);
+                break;
+            case 'nonlinear':
+            case 'livepause':
+                session = await yospaceWindow.SessionDVRLive.create(yospaceTypedSource.src!, properties);
+                break;
+            default:
+                this.needsTimedMetadata = true;
+                session = await yospaceWindow.SessionLive.create(yospaceTypedSource.src!, properties);
+        }
+        switch (session.getSessionState()) {
+            case SessionState.INITIALISED:
+            case SessionState.NO_ANALYTICS: {
+                this.initialiseSession(session);
+                this.player.source = {
+                    ...sourceDescription,
+                    sources: [
+                        {
+                            ...yospaceTypedSource,
+                            src: session.getPlaybackUrl()
+                        }
+                    ]
+                };
+                this.dispatchEvent(new BaseEvent('sessionavailable'));
+                break;
             }
-            switch (session.getSessionState()) {
-                case SessionState.INITIALISED:
-                case SessionState.NO_ANALYTICS: {
-                    this.initialiseSession(session);
-                    this.player.source = {
-                        ...sourceDescription,
-                        sources: [
-                            {
-                                ...yospaceTypedSource,
-                                src: session.getPlaybackUrl()
-                            }
-                        ]
-                    };
-                    this.dispatchEvent(new BaseEvent('sessionavailable'));
-                    break;
-                }
-                case SessionState.FAILED:
-                case SessionState.SHUT_DOWN:
-                default:
-                    this.handleSessionInitialisationErrors(session.getResultCode());
-            }
-            this.isMuted = this.player.muted;
+            case SessionState.FAILED:
+            case SessionState.SHUT_DOWN:
+            default:
+                this.handleSessionInitialisationErrors(session.getResultCode());
+        }
+        this.isMuted = this.player.muted;
     }
 
     private initialiseSession(sessionManager: YospaceSessionManager) {
