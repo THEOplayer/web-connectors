@@ -25,6 +25,7 @@
     "clean": "rimraf lib dist",
     "bundle": "rollup -c rollup.config.mjs",
     "build": "npm run clean && npm run bundle",
+    "watch": "npm run bundle -- --watch",
     "serve": "http-server",
     "test": "jest"
   },
