@@ -1,6 +1,6 @@
 import type { Event, EventDispatcher, EventListener, EventMap } from 'theoplayer';
 
-export function nextEvent(target: EventDispatcher<EventMap<any>>, type: string): Promise<Event> {
+export function nextEvent(target: EventDispatcher<EventMap<any>>, type: string | string[]): Promise<Event> {
     return new Promise<Event>((resolve) => {
         const listener: EventListener<Event> = (event) => {
             target.removeEventListener(type, listener);

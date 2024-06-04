@@ -76,7 +76,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
             const yospaceSource = await this.createSession(yospaceTypedSource, sourceDescription, sessionProperties);
             try {
                 this.isSettingSource = true;
-                const nextSourceChange = nextEvent(this.player, 'sourcechange');
+                const nextSourceChange = nextEvent(this.player, ['sourcechange', 'error', 'destroy']);
                 this.player.source = yospaceSource;
                 await nextSourceChange;
             } finally {
