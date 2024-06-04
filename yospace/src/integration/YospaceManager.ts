@@ -25,6 +25,7 @@ import { AnalyticEventObserver } from '../yospace/AnalyticEventObserver';
 import { DefaultEventDispatcher } from '../utils/DefaultEventDispatcher';
 import { YospaceEventMap } from './YospaceConnector';
 import { BaseEvent } from '../utils/event/Event';
+import { nextEvent } from '../utils/EventUtils';
 
 export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private readonly player: ChromelessPlayer;
@@ -44,6 +45,8 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private isStalling: boolean = false;
 
     private needsTimedMetadata: boolean = false;
+
+    private isSettingSource: boolean = false;
 
     private playbackPositionUpdater: any;
 
@@ -73,7 +76,15 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
         const yospaceTypedSource = getFirstYospaceTypedSource(sourceDescription);
         if (isYospaceSDKAvailable && yospaceTypedSource?.src) {
-            this.player.source = await this.createSession(yospaceTypedSource, sourceDescription, sessionProperties);
+            const yospaceSource = await this.createSession(yospaceTypedSource, sourceDescription, sessionProperties);
+            try {
+                this.isSettingSource = true;
+                const nextSourceChange = nextEvent(this.player, 'sourcechange');
+                this.player.source = yospaceSource;
+                await nextSourceChange;
+            } finally {
+                this.isSettingSource = false;
+            }
         } else if (yospaceTypedSource && !isYospaceSDKAvailable) {
             throw new Error('The Yospace Ad Management SDK has not been loaded.');
         } else {
@@ -82,6 +93,9 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     }
 
     async createYospaceSourceFromHandler(sourceDescription: SourceDescription): Promise<SourceDescription> {
+        if (this.isSettingSource) {
+            return sourceDescription;
+        }
         const yospaceTypedSource = getFirstYospaceTypedSource(sourceDescription);
         if (!yospaceTypedSource) {
             return sourceDescription;
@@ -278,6 +292,13 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.isStalling = false;
         this.didFirstPlay = false;
     }
+
+    resetFromHandler() {
+        if (this.isSettingSource) {
+            return;
+        }
+        this.reset();
+    }
 }
 
 function isSessionDVRLive(session: YospaceSession): session is YospaceSessionDVRLive {
@@ -290,7 +311,7 @@ function createIntegrationHandler(yospaceManager: YospaceManager): ServerSideAdI
             return yospaceManager.createYospaceSourceFromHandler(sourceDescription);
         },
         resetSource(): void {
-            yospaceManager.reset();
+            yospaceManager.resetFromHandler();
         },
         destroy(): void {
             yospaceManager.reset();
