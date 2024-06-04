@@ -23,9 +23,8 @@ export enum PlaybackMode {
     VOD = 2
 }
 
-export type YospaceSessionCallback = (state: SessionState, result: ResultCode) => void;
 export type YospaceSessionManagerCreator = {
-    create(url: string, properties: object, successCallback: YospaceSessionCallback): void;
+    create(url: string, properties: object): Promise<YospaceSession>;
 };
 
 export interface YospaceSession {

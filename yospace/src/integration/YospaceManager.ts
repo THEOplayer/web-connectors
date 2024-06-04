@@ -6,7 +6,6 @@ import type {
     YospaceTypedSource
 } from 'theoplayer';
 import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
-import { PromiseController } from '../utils/PromiseController';
 import { PlayerEvent } from '../yospace/PlayerEvent';
 import { toSources } from '../utils/SourceUtils';
 import {
@@ -43,8 +42,6 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
 
     private yospaceTypedSource: YospaceTypedSource | undefined;
 
-    private yospaceSourceDescriptionDefined: PromiseController<void>;
-
     private didFirstPlay: boolean = false;
 
     private isMuted: boolean = false;
@@ -59,7 +56,6 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         super();
         this.player = player;
         this.uiHandler = new YospaceUiHandler(this.player.element);
-        this.yospaceSourceDescriptionDefined = new PromiseController<void>();
 
         this.player.ads?.registerServerSideIntegration?.('yospace', (controller) => {
             this.adIntegrationController = controller;
@@ -79,10 +75,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         sourceDescription: SourceDescription,
         sessionProperties?: SessionProperties
     ): Promise<void> {
-        this.yospaceSourceDescriptionDefined.abort();
-        this.yospaceSourceDescriptionDefined = new PromiseController<void>();
-        this.createSession(sourceDescription, sessionProperties);
-        await this.yospaceSourceDescriptionDefined.promise;
+        await this.createSession(sourceDescription, sessionProperties);
     }
 
     registerAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
@@ -96,7 +89,10 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.adHandler?.unregisterAnalyticEventObserver(analyticEventObserver);
     }
 
-    private createSession(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): void {
+    private async createSession(
+        sourceDescription: SourceDescription,
+        sessionProperties?: SessionProperties
+    ): Promise<void> {
         this.reset();
 
         const { sources } = sourceDescription;
@@ -107,17 +103,28 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
             const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
             const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
             properties.setUserAgent(navigator.userAgent);
+            let session: YospaceSession;
             switch (this.yospaceTypedSource?.ssai.streamType) {
                 case 'vod':
-                    yospaceWindow.SessionVOD.create(this.yospaceTypedSource.src, properties, this.onInitComplete);
+                    session = await yospaceWindow.SessionVOD.create(this.yospaceTypedSource.src, properties);
                     break;
                 case 'nonlinear':
                 case 'livepause':
-                    yospaceWindow.SessionDVRLive.create(this.yospaceTypedSource.src, properties, this.onInitComplete);
+                    session = await yospaceWindow.SessionDVRLive.create(this.yospaceTypedSource.src, properties);
                     break;
                 default:
                     this.needsTimedMetadata = true;
-                    yospaceWindow.SessionLive.create(this.yospaceTypedSource.src, properties, this.onInitComplete);
+                    session = await yospaceWindow.SessionLive.create(this.yospaceTypedSource.src, properties);
+            }
+            switch (session.getSessionState()) {
+                case SessionState.INITIALISED:
+                case SessionState.NO_ANALYTICS:
+                    this.handleSessionInitialised(session);
+                    break;
+                case SessionState.FAILED:
+                case SessionState.SHUT_DOWN:
+                default:
+                    this.handleSessionInitialisationErrors(session.getResultCode());
             }
             this.isMuted = this.player.muted;
         } else if (this.yospaceTypedSource && !isYospaceSDKAvailable) {
@@ -160,20 +167,6 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         session.onPlayheadUpdate(currentTime);
     };
 
-    private onInitComplete = (e: any) => {
-        const session: YospaceSessionManager = e.getPayload();
-        switch (session.getSessionState()) {
-            case SessionState.INITIALISED:
-            case SessionState.NO_ANALYTICS:
-                this.handleSessionInitialised(session);
-                break;
-            case SessionState.FAILED:
-            case SessionState.SHUT_DOWN:
-            default:
-                this.handleSessionInitialisationErrors(session.getResultCode());
-        }
-    };
-
     private handleSessionInitialised(session: YospaceSessionManager): void {
         this.initialiseSession(session);
         this.player.source = {
@@ -186,7 +179,6 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
             ]
         };
         this.dispatchEvent(new BaseEvent('sessionavailable'));
-        this.yospaceSourceDescriptionDefined.resolve();
     }
 
     private handleSessionInitialisationErrors(result: ResultCode) {
