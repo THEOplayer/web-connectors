@@ -81,6 +81,18 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         }
     }
 
+    async createYospaceSourceFromHandler(sourceDescription: SourceDescription): Promise<SourceDescription> {
+        const yospaceTypedSource = getFirstYospaceTypedSource(sourceDescription);
+        if (!yospaceTypedSource) {
+            return sourceDescription;
+        }
+        const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
+        if (!isYospaceSDKAvailable) {
+            throw new Error('The Yospace Ad Management SDK has not been loaded.');
+        }
+        return await this.createSession(yospaceTypedSource, sourceDescription);
+    }
+
     registerAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
         if (!this.adHandler) {
             throw new Error("The observer can't be registered because the session is not yet initialised");
@@ -274,6 +286,9 @@ function isSessionDVRLive(session: YospaceSession): session is YospaceSessionDVR
 
 function createIntegrationHandler(yospaceManager: YospaceManager): ServerSideAdIntegrationHandler {
     return {
+        setSource(sourceDescription: SourceDescription): Promise<SourceDescription> {
+            return yospaceManager.createYospaceSourceFromHandler(sourceDescription);
+        },
         resetSource(): void {
             yospaceManager.reset();
         },
