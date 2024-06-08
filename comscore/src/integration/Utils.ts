@@ -1,6 +1,3 @@
-export const toMilliSeconds = (seconds: number | undefined) => {
-    if (seconds === undefined) {
-        return undefined
-    } 
+export const toMilliSeconds = (seconds: number) => {
     return Math.round(seconds * 1000)
 } 
