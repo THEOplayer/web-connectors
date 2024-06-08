@@ -415,9 +415,10 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                 );
         } else {
             if (this.configuration.debug) console.log(`[COMSCORE] seeked in a VOD stream`);
-            this.streamingAnalytics.startFromPosition(currentTime * 1000);
+            const currentTimeInMilliSeconds = toMilliSeconds(currentTime)
+            this.streamingAnalytics.startFromPosition(currentTimeInMilliSeconds);
             if (this.configuration.debug && LOG_STREAMINGANALYTICS)
-                console.log(`[COMSCORE - StreamingAnalytics] startFromPosition ${currentTime * 1000}`);
+                console.log(`[COMSCORE - StreamingAnalytics] startFromPosition ${currentTimeInMilliSeconds}`);
         }
     };
 
