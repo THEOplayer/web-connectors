@@ -440,7 +440,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             ad.adBreak.integration ?? ''
         );
         this.lastAdId = adIdProcessor ? adIdProcessor(ad) : ad.id;
-        this.lastAdDuration = toMilliSeconds(ad.duration);
+        this.lastAdDuration = toMilliSeconds(ad.duration ?? 0);
         if (!this.lastAdDuration && this.configuration.debug) {
             console.log('[COMSCORE] AD_BEGIN event with an ad duration of 0 found. Please check the ad configuration');
         }
