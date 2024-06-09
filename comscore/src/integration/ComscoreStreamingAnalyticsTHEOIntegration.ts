@@ -151,7 +151,9 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
         adMetadata.setUniqueId(adId);
         adMetadata.setLength(adDuration);
 
-        if (!this.contentMetadata) buildContentMetadata(this.metadata);
+        if (!this.contentMetadata) {
+            this.contentMetadata = buildContentMetadata(this.metadata);
+        }
         adMetadata.setRelatedContentMetadata(this.contentMetadata);
         if (this.configuration.debug && LOG_STREAMINGANALYTICS) {
             console.log(`[COMSCORE - StreamingAnalytics] setMetadata (advertisement)`, adMetadata.getMetadataLabels());
