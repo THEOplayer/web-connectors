@@ -99,6 +99,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
 
         if (this.player.ads) {
             this.player.ads.addEventListener('adbegin', this.onAdBegin);
+            this.player.ads.addEventListener('adend', this.onAdEnd);
             this.player.ads.addEventListener('adbreakend', this.onAdBreakEnd);
         }
     }
@@ -118,6 +119,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
 
         if (this.player.ads) {
             this.player.ads.removeEventListener('adbegin', this.onAdBegin);
+            this.player.ads.removeEventListener('adend', this.onAdEnd);
             this.player.ads.removeEventListener('adbreakend', this.onAdBreakEnd);
         }
     }
@@ -457,6 +459,12 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                 console.log(`[COMSCORE - StreamingAnalytics] notifyPlay`);
         }
     };
+
+    private onAdEnd = (event: AdEvent<'adend'>) => {
+        if (this.configuration.debug && LOG_THEOPLAYER_EVENTS)
+            console.log(`[COMSCORE - THEOplayer EVENTS] ${event.type} event`);
+        this.transitionToStopped();
+    }
 
     private onAdBreakEnd = (event: AdBreakEvent<'adbreakend'>) => {
         if (this.configuration.debug && LOG_THEOPLAYER_EVENTS)
