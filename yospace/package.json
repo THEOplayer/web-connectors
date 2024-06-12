@@ -8,7 +8,10 @@
     "url": "git+https://github.com/THEOplayer/web-connectors.git",
     "directory": "yospace"
   },
-  "homepage": "https://theoplayer.com/",
+  "bugs": {
+    "url": "https://github.com/THEOplayer/web-connectors/issues"
+  },
+  "homepage": "https://github.com/THEOplayer/web-connectors/tree/main/yospace#readme",
   "module": "dist/yospace-connector.esm.js",
   "types": "dist/types/index.d.ts",
   "exports": {
@@ -39,9 +42,6 @@
   ],
   "peerDependencies": {
     "theoplayer": "^5.0.0 || ^6.0.0 || ^7.0.0"
-  },
-  "bugs": {
-    "url": "https://github.com/THEOplayer/web-connectors/issues"
   },
   "directories": {
     "test": "test"

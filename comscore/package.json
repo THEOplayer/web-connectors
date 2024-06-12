@@ -32,7 +32,7 @@
   "bugs": {
     "url": "https://github.com/THEOplayer/web-connectors/issues"
   },
-  "homepage": "https://github.com/THEOplayer/web-connectors#readme",
+  "homepage": "https://github.com/THEOplayer/web-connectors/tree/main/comscore#readme",
   "peerDependencies": {
     "theoplayer": "^7.0.0"
   }

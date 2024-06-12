@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/THEOplayer/web-connectors/issues"
   },
-  "homepage": "https://theoplayer.com/",
+  "homepage": "https://github.com/THEOplayer/web-connectors/tree/main/cmcd#readme",
   "module": "dist/cmcd-connector.esm.js",
   "types": "dist/types/index.d.ts",
   "exports": {
