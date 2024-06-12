@@ -37,6 +37,28 @@
             }
 
             setupYospaceConnector(player);
+
+            player.ads.addEventListener(
+                [
+                    'adbegin',
+                    'adend',
+                    'adskip',
+                    'updatead',
+                    'adbreakbegin',
+                    'adbreakend',
+                    'updateadbreak',
+                    'addad',
+                    'removead',
+                    'addadbreak',
+                    'removeadbreak',
+                    'adfirstquartile',
+                    'admidpoint',
+                    'adthirdquartile',
+                ],
+                (event) => {
+                    console.log(event.type, event, player.ads.currentAds, player.ads.currentAdBreak);
+                }
+            );
         </script>
     </body>
 </html>

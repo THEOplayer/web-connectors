@@ -25,6 +25,8 @@ export class YospaceConnector implements EventDispatcher<YospaceEventMap> {
     /**
      * Creates the Yospace session and sets the Yospace source from the session to the player.
      *
+     * As of THEOplayer 7.4.0, you can also set `player.source` directly instead of using this method.
+     *
      * @param sourceDescription the source that will be used to create the Yospace session.
      * @param sessionProperties the properties that will be used set to customize the Yospace session.
      * @throws `Error` if the Yospace Ad Management SDK is not available.
@@ -34,7 +36,7 @@ export class YospaceConnector implements EventDispatcher<YospaceEventMap> {
         sourceDescription: SourceDescription,
         sessionProperties?: SessionProperties
     ): Promise<void> {
-        await this.yospaceManager.createYospaceSource(sourceDescription, sessionProperties);
+        await this.yospaceManager.setYospaceSource(sourceDescription, sessionProperties);
     }
 
     /**

@@ -7,14 +7,14 @@ function isValidYospaceSchemeIDURI(schemeIDURI: string): boolean {
     return schemeIDURI === YOSPACE_EMSG_SCHEME_ID_URI;
 }
 
-function parseEmsgYospaceMetadata(data: number[]): YospaceReport {
+function parseEmsgYospaceMetadata(data: number[], startTime: number): YospaceReport {
     const emsgString = String.fromCharCode(...data);
     const parsedEmsg = emsgString.split(',');
-    const result: YospaceReport = {};
-    parsedEmsg.forEach((metadataElement) => {
+    const result = new YospaceReport(startTime);
+    for (const metadataElement of parsedEmsg) {
         const [key, value] = metadataElement.split('=');
         result[key as YospaceId] = value;
-    });
+    }
     return result;
 }
 
@@ -32,8 +32,7 @@ export class YospaceEMSGMetadataHandler extends YospaceMetadataHandler {
 
         for (let i = 0; i < filteredCues.length; i += i) {
             const cue = filteredCues[i];
-            const metadata: YospaceReport = parseEmsgYospaceMetadata(cue.content);
-            metadata.startTime = cue.startTime;
+            const metadata = parseEmsgYospaceMetadata(cue.content, cue.startTime);
             this.reportData(metadata);
         }
     }

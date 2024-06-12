@@ -25,9 +25,9 @@ export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> im
         if (typeof types === 'string') {
             this.addSingleEventListener(types, listener);
         } else {
-            types.forEach((type) => {
+            for (const type of types) {
                 this.addSingleEventListener(type, listener);
-            });
+            }
         }
     }
 
@@ -68,9 +68,9 @@ export class DefaultEventDispatcher<TMap extends EventMap<StringKeyOf<TMap>>> im
         if (typeof types === 'string') {
             this.removeSingleEventListener(types, listener);
         } else {
-            types.forEach((type) => {
+            for (const type of types) {
                 this.removeSingleEventListener(type, listener);
-            });
+            }
         }
     }
 
@@ -127,9 +127,9 @@ export function callEventListenerList<TEvent extends Event>(
         list.call(scope, event);
     } else {
         // Array of listeners
-        list.forEach((listener) => {
+        for (const listener of list) {
             listener.call(scope, event);
-        });
+        }
     }
 }
 

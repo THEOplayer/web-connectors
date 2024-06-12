@@ -2,16 +2,19 @@ import type { AddTrackEvent, TextTrack, TextTrackCue, TextTrackCueChangeEvent, T
 import { YospaceWindow } from '../yospace/YospaceWindow';
 import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
 
-export interface YospaceMetadata {
-    YMID: string;
-    YSEQ: string;
-    YTYP: string;
-    YDUR: string;
-    YCSP: string;
-    startTime: number;
-}
+export class YospaceReport {
+    YMID: string | undefined = undefined;
+    YSEQ: string | undefined = undefined;
+    YTYP: string | undefined = undefined;
+    YDUR: string | undefined = undefined;
+    YCSP: string | undefined = undefined;
 
-export type YospaceReport = Partial<YospaceMetadata>;
+    constructor(readonly startTime: number) {}
+
+    isComplete(): boolean {
+        return this.YMID !== undefined && this.YDUR !== undefined && this.YSEQ !== undefined && this.YTYP !== undefined;
+    }
+}
 
 export abstract class YospaceMetadataHandler {
     private textTrackList: TextTracksList;
@@ -42,14 +45,14 @@ export abstract class YospaceMetadataHandler {
     protected abstract doHandleCueChange(cueChangeEvent: TextTrackCueChangeEvent): void;
 
     protected reportData(report: YospaceReport) {
-        if (report.YMID && report.YDUR && report.YSEQ && report.YTYP && report.startTime) {
+        if (report.isComplete()) {
             const timedMetadata = (
                 window as unknown as YospaceWindow
             ).YospaceAdManagement.TimedMetadata.createFromMetadata(
-                report.YMID,
-                report.YSEQ,
-                report.YTYP,
-                report.YDUR,
+                report.YMID!,
+                report.YSEQ!,
+                report.YTYP!,
+                report.YDUR!,
                 report.startTime * 1000
             );
             this.sessionManager.onTimedMetadata(timedMetadata);
@@ -57,7 +60,9 @@ export abstract class YospaceMetadataHandler {
     }
 
     reset(): void {
-        this.textTrackList.forEach((track) => track.removeEventListener('cuechange', this.handleCueChange));
+        for (const track of this.textTrackList) {
+            track.removeEventListener('cuechange', this.handleCueChange);
+        }
         this.textTrackList.removeEventListener('addtrack', this.handleAddTrack);
     }
 }

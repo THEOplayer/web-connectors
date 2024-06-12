@@ -1,8 +1,12 @@
-import type { ChromelessPlayer, SourceDescription, YospaceTypedSource } from 'theoplayer';
-import { isYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
-import { PromiseController } from '../utils/PromiseController';
+import type {
+    ChromelessPlayer,
+    ServerSideAdIntegrationController,
+    ServerSideAdIntegrationHandler,
+    SourceDescription,
+    YospaceTypedSource
+} from 'theoplayer';
+import { getFirstYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
 import { PlayerEvent } from '../yospace/PlayerEvent';
-import { toSources } from '../utils/SourceUtils';
 import {
     PlaybackMode,
     ResultCode,
@@ -21,23 +25,18 @@ import { AnalyticEventObserver } from '../yospace/AnalyticEventObserver';
 import { DefaultEventDispatcher } from '../utils/DefaultEventDispatcher';
 import { YospaceEventMap } from './YospaceConnector';
 import { BaseEvent } from '../utils/event/Event';
+import { nextEvent } from '../utils/EventUtils';
 
 export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     private readonly player: ChromelessPlayer;
-
+    private readonly uiHandler: YospaceUiHandler;
     private yospaceSessionManager: YospaceSessionManager | undefined;
-
     private adHandler: YospaceAdHandler | undefined;
+    private adIntegrationController: ServerSideAdIntegrationController | undefined;
 
     private id3MetadataHandler: YospaceID3MetadataHandler | undefined;
 
     private emsgMetadataHandler: YospaceEMSGMetadataHandler | undefined;
-
-    private sourceDescription: SourceDescription | undefined;
-
-    private yospaceTypedSource: YospaceTypedSource | undefined;
-
-    private yospaceSourceDescriptionDefined: PromiseController<void>;
 
     private didFirstPlay: boolean = false;
 
@@ -47,12 +46,19 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
 
     private needsTimedMetadata: boolean = false;
 
+    private isSettingSource: boolean = false;
+
     private playbackPositionUpdater: any;
 
     constructor(player: ChromelessPlayer) {
         super();
         this.player = player;
-        this.yospaceSourceDescriptionDefined = new PromiseController<void>();
+        this.uiHandler = new YospaceUiHandler(this.player.element);
+
+        this.player.ads?.registerServerSideIntegration?.('yospace', (controller) => {
+            this.adIntegrationController = controller;
+            return createIntegrationHandler(this);
+        });
     }
 
     get sessionManager(): YospaceSessionManager | undefined {
@@ -63,14 +69,39 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         return this.didFirstPlay;
     }
 
-    async createYospaceSource(
-        sourceDescription: SourceDescription,
-        sessionProperties?: SessionProperties
-    ): Promise<void> {
-        this.yospaceSourceDescriptionDefined.abort();
-        this.yospaceSourceDescriptionDefined = new PromiseController<void>();
-        this.createSession(sourceDescription, sessionProperties);
-        await this.yospaceSourceDescriptionDefined.promise;
+    async setYospaceSource(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): Promise<void> {
+        const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
+        const yospaceTypedSource = getFirstYospaceTypedSource(sourceDescription);
+        if (isYospaceSDKAvailable && yospaceTypedSource?.src) {
+            const yospaceSource = await this.createSession(yospaceTypedSource, sourceDescription, sessionProperties);
+            try {
+                this.isSettingSource = true;
+                const nextSourceChange = nextEvent(this.player, ['sourcechange', 'error', 'destroy']);
+                this.player.source = yospaceSource;
+                await nextSourceChange;
+            } finally {
+                this.isSettingSource = false;
+            }
+        } else if (yospaceTypedSource && !isYospaceSDKAvailable) {
+            throw new Error('The Yospace Ad Management SDK has not been loaded.');
+        } else {
+            throw new Error('The given source is not a Yospace source.');
+        }
+    }
+
+    async setYospaceSourceFromHandler(sourceDescription: SourceDescription): Promise<SourceDescription> {
+        if (this.isSettingSource) {
+            return sourceDescription;
+        }
+        const yospaceTypedSource = getFirstYospaceTypedSource(sourceDescription);
+        if (!yospaceTypedSource) {
+            return sourceDescription;
+        }
+        const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
+        if (!isYospaceSDKAvailable) {
+            throw new Error('The Yospace Ad Management SDK has not been loaded.');
+        }
+        return await this.createSession(yospaceTypedSource, sourceDescription);
     }
 
     registerAnalyticEventObserver(analyticEventObserver: AnalyticEventObserver) {
@@ -84,42 +115,56 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         this.adHandler?.unregisterAnalyticEventObserver(analyticEventObserver);
     }
 
-    private createSession(sourceDescription: SourceDescription, sessionProperties?: SessionProperties): void {
+    private async createSession(
+        yospaceTypedSource: YospaceTypedSource,
+        sourceDescription: SourceDescription,
+        sessionProperties?: SessionProperties
+    ): Promise<SourceDescription> {
         this.reset();
 
-        const { sources } = sourceDescription;
-        const isYospaceSDKAvailable = yoSpaceWebSdkIsAvailable();
-        this.sourceDescription = sourceDescription;
-        this.yospaceTypedSource = sources ? toSources(sources).find(isYospaceTypedSource) : undefined;
-        if (isYospaceSDKAvailable && this.yospaceTypedSource?.src) {
-            const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
-            const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
-            properties.setUserAgent(navigator.userAgent);
-            switch (this.yospaceTypedSource?.ssai.streamType) {
-                case 'vod':
-                    yospaceWindow.SessionVOD.create(this.yospaceTypedSource.src, properties, this.onInitComplete);
-                    break;
-                case 'nonlinear':
-                case 'livepause':
-                    yospaceWindow.SessionDVRLive.create(this.yospaceTypedSource.src, properties, this.onInitComplete);
-                    break;
-                default:
-                    this.needsTimedMetadata = true;
-                    yospaceWindow.SessionLive.create(this.yospaceTypedSource.src, properties, this.onInitComplete);
+        const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
+        const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
+        properties.setUserAgent(navigator.userAgent);
+        let session: YospaceSession;
+        switch (yospaceTypedSource?.ssai.streamType) {
+            case 'vod':
+                session = await yospaceWindow.SessionVOD.create(yospaceTypedSource.src!, properties);
+                break;
+            case 'nonlinear':
+            case 'livepause':
+                session = await yospaceWindow.SessionDVRLive.create(yospaceTypedSource.src!, properties);
+                break;
+            default:
+                this.needsTimedMetadata = true;
+                session = await yospaceWindow.SessionLive.create(yospaceTypedSource.src!, properties);
+        }
+        switch (session.getSessionState()) {
+            case SessionState.INITIALISED:
+            case SessionState.NO_ANALYTICS: {
+                this.initialiseSession(session);
+                this.dispatchEvent(new BaseEvent('sessionavailable'));
+                this.isMuted = this.player.muted;
+                return {
+                    ...sourceDescription,
+                    sources: [
+                        {
+                            ...yospaceTypedSource,
+                            src: session.getPlaybackUrl()
+                        }
+                    ]
+                };
             }
-            this.isMuted = this.player.muted;
-        } else if (this.yospaceTypedSource && !isYospaceSDKAvailable) {
-            throw new Error('The Yospace Ad Management SDK has not been loaded.');
-        } else {
-            throw new Error('The given source is not a Yospace source.');
+            case SessionState.FAILED:
+            case SessionState.SHUT_DOWN:
+            default:
+                this.handleSessionInitialisationErrors(session.getResultCode());
         }
     }
 
     private initialiseSession(sessionManager: YospaceSessionManager) {
         this.yospaceSessionManager = sessionManager;
 
-        const yospaceUiHandler = new YospaceUiHandler(this.player.element, sessionManager);
-        this.adHandler = new YospaceAdHandler(this, yospaceUiHandler, this.player);
+        this.adHandler = new YospaceAdHandler(this, this.uiHandler, this.player, this.adIntegrationController);
         this.addEventListenersToNotifyYospace();
         if (!this.needsTimedMetadata) {
             this.playbackPositionUpdater = setInterval(this.updateYospaceWithPlaybackPosition, 250);
@@ -149,36 +194,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         session.onPlayheadUpdate(currentTime);
     };
 
-    private onInitComplete = (e: any) => {
-        const session: YospaceSessionManager = e.getPayload();
-        switch (session.getSessionState()) {
-            case SessionState.INITIALISED:
-            case SessionState.NO_ANALYTICS:
-                this.handleSessionInitialised(session);
-                break;
-            case SessionState.FAILED:
-            case SessionState.SHUT_DOWN:
-            default:
-                this.handleSessionInitialisationErrors(session.getResultCode());
-        }
-    };
-
-    private handleSessionInitialised(session: YospaceSessionManager): void {
-        this.initialiseSession(session);
-        this.player.source = {
-            ...this.sourceDescription,
-            sources: [
-                {
-                    ...this.yospaceTypedSource,
-                    src: session.getPlaybackUrl()
-                }
-            ]
-        };
-        this.dispatchEvent(new BaseEvent('sessionavailable'));
-        this.yospaceSourceDescriptionDefined.resolve();
-    }
-
-    private handleSessionInitialisationErrors(result: ResultCode) {
+    private handleSessionInitialisationErrors(result: ResultCode): never {
         let errorMessage: string;
         if (result === ResultCode.MALFORMED_URL) {
             errorMessage = 'Yospace: The stream URL is not correctly formatted';
@@ -255,27 +271,47 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         }
     };
 
-    private reset() {
+    reset() {
         this.removeEventListenersToNotifyYospace();
         this.sessionManager?.shutdown();
         clearInterval(this.playbackPositionUpdater);
 
+        this.uiHandler.reset();
         this.adHandler?.reset();
         this.adHandler = undefined;
         this.id3MetadataHandler?.reset();
         this.id3MetadataHandler = undefined;
         this.emsgMetadataHandler?.reset();
         this.emsgMetadataHandler = undefined;
-        this.yospaceTypedSource = undefined;
         this.yospaceSessionManager = undefined;
-        this.sourceDescription = undefined;
         this.needsTimedMetadata = false;
         this.isMuted = false;
         this.isStalling = false;
         this.didFirstPlay = false;
     }
+
+    resetFromHandler() {
+        if (this.isSettingSource) {
+            return;
+        }
+        this.reset();
+    }
 }
 
 function isSessionDVRLive(session: YospaceSession): session is YospaceSessionDVRLive {
     return session.getPlaybackMode() === PlaybackMode.DVRLIVE;
+}
+
+function createIntegrationHandler(yospaceManager: YospaceManager): ServerSideAdIntegrationHandler {
+    return {
+        setSource(sourceDescription: SourceDescription): Promise<SourceDescription> {
+            return yospaceManager.setYospaceSourceFromHandler(sourceDescription);
+        },
+        resetSource(): void {
+            yospaceManager.resetFromHandler();
+        },
+        destroy(): void {
+            yospaceManager.reset();
+        }
+    };
 }

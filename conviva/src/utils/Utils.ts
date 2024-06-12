@@ -91,12 +91,13 @@ export function collectContentMetadata(
 
 export function collectYospaceAdMetadata(player: ChromelessPlayer, ad: AdVert): ConvivaMetadata {
     return {
-        [Constants.ASSET_NAME]: ad.getProperty('AdTitle')?.getValue(),
+        // Cast to `any` because the index signature in ConvivaMetadata conflicts with its other properties...
+        [Constants.ASSET_NAME]: (ad.getProperty('AdTitle')?.getValue() ?? null) as any,
         [Constants.STREAM_URL]: player.src!,
         [Constants.DURATION]: (ad.getDuration() / 1000) as any,
         'c3.ad.technology': Constants.AdType.SERVER_SIDE,
         'c3.ad.id': ad.getIdentifier(),
-        'c3.ad.system': ad.getProperty('AdSystem')?.getValue(),
+        'c3.ad.system': (ad.getProperty('AdSystem')?.getValue() ?? null) as any,
         'c3.ad.isSlate': ad.isFiller() ? 'true' : 'false',
         'c3.ad.mediaFileApiFramework': 'NA',
         'c3.ad.adStitcher': 'YoSpace',

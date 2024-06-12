@@ -27,12 +27,11 @@ export function toSources(sources: Sources): Source[] {
     if (isSource(sources)) {
         // string | TypedSource
         return [sources];
-    }
-
-    if (Array.isArray(sources) && isSource(sources[0])) {
+    } else if (Array.isArray(sources)) {
         // (string | TypedSource)[]
-        return sources;
+        return sources.filter(isSource);
+    } else {
+        // unknown source
+        return [];
     }
-
-    throw new Error('not a good source');
 }
