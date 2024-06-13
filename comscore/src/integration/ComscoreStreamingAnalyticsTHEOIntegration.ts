@@ -376,11 +376,8 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                     const dvrWindowStart = seekable.start(0);
                     const dvrWindowLengthInSeconds = dvrWindowEnd - dvrWindowStart;
                     if (dvrWindowLengthInSeconds) {
-                        this.streamingAnalytics.setDvrWindowLength(dvrWindowLengthInSeconds * 1000);
-                        if (this.configuration.debug && LOG_STREAMINGANALYTICS)
-                            console.log(
-                                `[COMSCORE - StreamingAnalytics] setDvrWindowLength ${dvrWindowLengthInSeconds * 1000}`
-                            );
+                        this.dvrWindowLengthMs = toMilliSeconds(dvrWindowLengthInSeconds)
+                    if (this.state === ComscoreState.VIDEO || this.state === ComscoreState.VIDEO_PAUSED) this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs)
                     } else if (this.configuration.debug) console.log(`[COMSCORE] DVR window length was not > 0`);
                 }
             } catch (error) {
