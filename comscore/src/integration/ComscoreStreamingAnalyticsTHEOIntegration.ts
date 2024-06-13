@@ -418,11 +418,14 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             }
             const dvrWindowEnd = seekable.end(seekable.length - 1);
             const dvrWindowOffsetInSeconds = dvrWindowEnd - currentTime;
-            this.streamingAnalytics.startFromDvrWindowOffset(dvrWindowOffsetInSeconds * 1000);
-            if (this.configuration.debug && LOG_STREAMINGANALYTICS)
-                console.log(
-                    `[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${dvrWindowOffsetInSeconds * 1000}`
-                );
+            this.dvrWindowOffsetMs = toMilliSeconds(dvrWindowOffsetInSeconds)
+            if (this.state === ComscoreState.VIDEO || this.state === ComscoreState.VIDEO_PAUSED) {
+                this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs);
+                if (this.configuration.debug && LOG_STREAMINGANALYTICS)
+                    console.log(
+                        `[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`
+                    );
+            }
         } else {
             if (this.configuration.debug) console.log(`[COMSCORE] seeked in a VOD stream`);
             const currentTimeInMilliSeconds = toMilliSeconds(currentTime)
