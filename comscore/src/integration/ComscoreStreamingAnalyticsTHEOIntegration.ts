@@ -57,6 +57,10 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
     // Copy of main content's ContentMetadata
     private contentMetadata: ns_.analytics.StreamingAnalytics.ContentMetadata | null = null;
 
+    // Main content related fields for use outside of event handlers
+    private dvrWindowLengthMs: number | undefined = undefined 
+    private dvrWindowOffsetMs: number | undefined = undefined
+
     // Advertisement related fields for use outside of ad event handlers
     private inAd: boolean = false;
     private lastAdId: string | undefined = undefined;
@@ -288,6 +292,8 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             console.log(`[COMSCORE - THEOplayer EVENTS] ${event.type} event`);
         this.state = ComscoreState.INITIALIZED;
         this.contentMetadata = null;
+        this.dvrWindowLengthMs = undefined;
+        this.dvrWindowOffsetMs = undefined;
         this.streamingAnalytics.createPlaybackSession();
         if (this.configuration.debug && LOG_STREAMINGANALYTICS)
             console.log(`[COMSCORE - StreamingAnalytics] createPlaybackSession`);
