@@ -177,6 +177,12 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                     console.log(`[COMSCORE - STATE] State change ${this.state} -> VIDEO`);
                 this.state = ComscoreState.VIDEO;
                 this.setContentMetadata();
+                if (this.dvrWindowLengthMs) {
+                    this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs)
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] setDvrWindowLength ${this.dvrWindowLengthMs}`);
+                    this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs ?? 0)
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`);
+                }
                 break;
             case ComscoreState.ADVERTISEMENT:
             case ComscoreState.ADVERTISEMENT_PAUSED:
@@ -186,6 +192,12 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                     console.log(`[COMSCORE - STATE] State change ${this.state} -> VIDEO`);
                 this.state = ComscoreState.VIDEO;
                 this.setContentMetadata();
+                if (this.dvrWindowLengthMs) {
+                    this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs)
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] setDvrWindowLength ${this.dvrWindowLengthMs}`);
+                    this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs ?? 0)
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`);
+                }
                 break;
             case ComscoreState.VIDEO_PAUSED:
                 if (this.configuration.debug && LOG_STATE_CHANGES)
