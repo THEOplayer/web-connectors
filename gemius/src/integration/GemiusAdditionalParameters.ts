@@ -93,7 +93,7 @@ export interface PlayProgramEventAdditionalParameters {
     customAttributes?: any;
 }
 
-export interface PreviousProgramEventAdditionalParameters {
+export interface ListEventAdditionalParameters {
     listID?: number
 }
 
