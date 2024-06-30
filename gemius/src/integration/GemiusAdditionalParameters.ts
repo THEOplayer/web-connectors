@@ -58,8 +58,8 @@ export interface NewProgramAdditionalParameters {
     externalPremiereDate?: string;
     quality?: Resolution
     resolution?: Resolution
-    volume: number;
-    customAttributes: any;
+    volume?: number;
+    customAttributes?: any;
 }
 
 export interface NewAdAdditionalParameters {
