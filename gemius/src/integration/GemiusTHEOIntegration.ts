@@ -3,16 +3,21 @@ import {
     SourceChangeEvent,
 } from 'theoplayer';
 import { GemiusPlayer } from '../gemius/Gemius';
+import { GemiusConfiguration } from './GemiusConfiguration';
+
 const LOG_THEOPLAYER_EVENTS = true;
+const THEOPLAYER_ID = "THEOplayer"
 
 export class GemiusTHEOIntegration {
     // References for constructor arguments
     private player: ChromelessPlayer;
+    private debug: boolean;
     private gemiusPlayer: GemiusPlayer;
 
-    constructor(player: ChromelessPlayer) {
+    constructor(player: ChromelessPlayer, configuration: GemiusConfiguration) {
         this.player = player;
-        this.gemiusPlayer = new GemiusPlayer('THEOplayer','12345', {})
+        this.debug = configuration.debug ?? false; 
+        this.gemiusPlayer = new GemiusPlayer(THEOPLAYER_ID ,configuration.gemiusID, {});
         this.addListeners();
     }
 
@@ -30,7 +35,7 @@ export class GemiusTHEOIntegration {
 
     // EVENT HANDLERS
     private onSourceChange = (event: SourceChangeEvent) => {
-        if (LOG_THEOPLAYER_EVENTS)
+        if (this.debug && LOG_THEOPLAYER_EVENTS)
             console.log(`[COMSCORE - THEOplayer EVENTS] ${event.type} event`);
         this.gemiusPlayer.newProgram('modern family', {})
     };
