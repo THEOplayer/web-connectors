@@ -1,12 +1,10 @@
 import { ChromelessPlayer } from 'theoplayer';
 import { GemiusTHEOIntegration } from './GemiusTHEOIntegration';
-
-
+import { GemiusConfiguration } from './GemiusConfiguration';
 
 export class GemiusConnector {
 
     private gemiusIntegration: GemiusTHEOIntegration;
-
 
     /**
      * Constructor for the THEOplayer Gemius connector
@@ -16,7 +14,7 @@ export class GemiusConnector {
      * @returns 
      */
     constructor(player: ChromelessPlayer, configuration: GemiusConfiguration, param2: any) {
-        this.gemiusIntegration = new GemiusTHEOIntegration(player)
+        this.gemiusIntegration = new GemiusTHEOIntegration(player, configuration)
     }
 
 

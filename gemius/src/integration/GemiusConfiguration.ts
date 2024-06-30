@@ -1,3 +1,4 @@
 export interface GemiusConfiguration {
-    debug?: boolean
+    gemiusID: string;
+    debug?: boolean;
 }
