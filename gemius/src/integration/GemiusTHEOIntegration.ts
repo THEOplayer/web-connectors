@@ -23,6 +23,7 @@ export class GemiusTHEOIntegration {
 
     public destroy() {
         this.removeListeners();
+        this.gemiusPlayer.dispose();
     }
 
     private addListeners(): void {
