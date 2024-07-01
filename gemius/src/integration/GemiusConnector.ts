@@ -18,11 +18,10 @@ export class GemiusConnector {
     }
 
 
-
     /**
      * Destroy 
      */
     destroy(): void {
-        // TODO
+        this.gemiusIntegration.destroy()
     }
 }
