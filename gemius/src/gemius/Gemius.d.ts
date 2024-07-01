@@ -8,7 +8,7 @@ import {
     ChangeResolutionEventAddtionalParameters,
     ChangeVolumeEventAddtionalParameters,
     ChangeQualityEventAddtionalParameters 
-} from "../integration/GemiusAdditionalParameters";
+} from "../integration/GemiusParameters";
 import { 
     PlayEvent,
     ListEvent,
@@ -50,6 +50,8 @@ export class GemiusPlayer {
     // Basic events for both program and ads that don't require additional parameters
     adEvent(programID: string, adID: string, offset: number, event: BasicEvent)
     programEvent(programID: string, offset: number, event: BasicEvent)
+
+    dispose();
     
 
 
