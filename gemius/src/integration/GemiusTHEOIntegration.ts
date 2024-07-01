@@ -4,6 +4,7 @@ import {
 } from 'theoplayer';
 import { GemiusPlayer } from '../gemius/Gemius';
 import { GemiusConfiguration } from './GemiusConfiguration';
+import { GemiusProgramParameters } from './GemiusParameters';
 
 const LOG_THEOPLAYER_EVENTS = true;
 const THEOPLAYER_ID = "THEOplayer"
@@ -13,6 +14,7 @@ export class GemiusTHEOIntegration {
     private player: ChromelessPlayer;
     private debug: boolean;
     private gemiusPlayer: GemiusPlayer;
+    private programParameters: GemiusProgramParameters | undefined;
 
     constructor(player: ChromelessPlayer, configuration: GemiusConfiguration) {
         this.player = player;
