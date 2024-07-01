@@ -59,7 +59,9 @@ export interface NewProgramAdditionalParameters {
     quality?: Resolution
     resolution?: Resolution
     volume?: number;
-    customAttributes?: any;
+    customAttributes?: {
+        [key: string]: string;
+    };
 }
 
 export interface NewAdAdditionalParameters {
@@ -71,7 +73,9 @@ export interface NewAdAdditionalParameters {
     quality?: Resolution;
     resolution?: Resolution;
     volume?: number;
-    customAttributes?: any;
+    customAttributes?: {
+        [key: string]: string;
+    }
 }
 
 export interface PlayAdEventAdditionalParameters {
@@ -81,7 +85,9 @@ export interface PlayAdEventAdditionalParameters {
     resolution?: Resolution;
     volume?: number;
     adDuration?: number;
-    customAttributes?: any;
+    customAttributes?: {
+        [key: string]: string;
+    }
 }
 
 export interface PlayProgramEventAdditionalParameters {
@@ -90,7 +96,9 @@ export interface PlayProgramEventAdditionalParameters {
     resolution?: Resolution;
     volume?: number;
     programDuration?: number;
-    customAttributes?: any;
+    customAttributes?: {
+        [key: string]: string;
+    }
 }
 
 export interface ListEventAdditionalParameters {
@@ -107,4 +115,8 @@ export interface ChangeVolumeEventAddtionalParameters {
 
 export interface ChangeQualityEventAddtionalParameters {
     quality?: Resolution;
+}
+
+export interface GemiusProgramParameters extends NewProgramAdditionalParameters {
+    programID: string;
 }
