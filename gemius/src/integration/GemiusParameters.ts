@@ -1,8 +1,3 @@
-export type Resolution = {
-    width: number;
-    height: number
-}
-
 export enum ProgramType {
     AUDIO = "audio",
     VIDEO = "video"
@@ -37,7 +32,7 @@ export enum AdFormat {
 export interface PlayerAdditionalParameters {
     currentDomain?: string;
     volume?: number;
-    resolution?: Resolution;
+    resolution?: string;
 }
 
 export interface NewProgramAdditionalParameters {
@@ -56,8 +51,8 @@ export interface NewProgramAdditionalParameters {
     typology?: string;
     premiereDate?: string; 
     externalPremiereDate?: string;
-    quality?: Resolution
-    resolution?: Resolution
+    quality?: string
+    resolution?: string
     volume?: number;
     customAttributes?: {
         [key: string]: string;
@@ -70,8 +65,8 @@ export interface NewAdAdditionalParameters {
     adType?: AdType
     campaignClassification?: string;
     adFormat?: AdFormat;
-    quality?: Resolution;
-    resolution?: Resolution;
+    quality?: string;
+    resolution?: string;
     volume?: number;
     customAttributes?: {
         [key: string]: string;
@@ -82,7 +77,7 @@ export interface PlayAdEventAdditionalParameters {
     autoPlay?: boolean;
     adPosition?: number;
     breakSize?: number;
-    resolution?: Resolution;
+    resolution?: string;
     volume?: number;
     adDuration?: number;
     customAttributes?: {
@@ -93,7 +88,7 @@ export interface PlayAdEventAdditionalParameters {
 export interface PlayProgramEventAdditionalParameters {
     autoPlay?: boolean;
     partID?: number;
-    resolution?: Resolution;
+    resolution?: string;
     volume?: number;
     programDuration?: number;
     customAttributes?: {
@@ -106,7 +101,7 @@ export interface ListEventAdditionalParameters {
 }
 
 export interface ChangeResolutionEventAddtionalParameters {
-    resolution?: Resolution;
+    resolution?: string;
 }
 
 export interface ChangeVolumeEventAddtionalParameters {
@@ -114,7 +109,7 @@ export interface ChangeVolumeEventAddtionalParameters {
 }
 
 export interface ChangeQualityEventAddtionalParameters {
-    quality?: Resolution;
+    quality?: string;
 }
 
 export interface GemiusProgramParameters extends NewProgramAdditionalParameters {
