@@ -1,6 +1,7 @@
 import { ChromelessPlayer } from 'theoplayer';
 import { GemiusTHEOIntegration } from './GemiusTHEOIntegration';
 import { GemiusConfiguration } from './GemiusConfiguration';
+import { GemiusProgramParameters } from './GemiusParameters';
 
 export class GemiusConnector {
 
@@ -10,11 +11,11 @@ export class GemiusConnector {
      * Constructor for the THEOplayer Gemius connector
      * @param player a THEOplayer instance reference
      * @param configuration a configuration object for the Gemius connector
-     * @param param2 docs
+     * @param programParameters the parameters associated with the first source that will be set to the player
      * @returns 
      */
-    constructor(player: ChromelessPlayer, configuration: GemiusConfiguration, param2: any) {
-        this.gemiusIntegration = new GemiusTHEOIntegration(player, configuration)
+    constructor(player: ChromelessPlayer, configuration: GemiusConfiguration, programParameters: GemiusProgramParameters) {
+        this.gemiusIntegration = new GemiusTHEOIntegration(player, configuration, programParameters)
     }
 
 
