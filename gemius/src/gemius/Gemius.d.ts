@@ -19,6 +19,13 @@ import {
     BasicEvent 
 } from '../integration/GemiusEvents'
 
+declare global {
+    interface Window {
+      GemiusPlayer: typeof GemiusPlayer;
+    }
+  }
+  
+
 
 export class GemiusPlayer {
     constructor(playerID: string, gemiusID: string, additionalParameters?: PlayerAdditionalParameters);
@@ -52,7 +59,4 @@ export class GemiusPlayer {
     programEvent(programID: string, offset: number, event: BasicEvent)
 
     dispose();
-    
-
-
 }

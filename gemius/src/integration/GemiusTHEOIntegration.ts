@@ -17,7 +17,7 @@ import {
     VolumeChangeEvent,
     WaitingEvent,
 } from 'theoplayer';
-import { GemiusPlayer } from '../gemius/Gemius';
+import type { GemiusPlayer } from '../gemius/Gemius';
 import { GemiusConfiguration } from './GemiusConfiguration';
 import { GemiusProgramParameters } from './GemiusParameters';
 import { Logger } from '../utils/Logger';
@@ -41,7 +41,7 @@ export class GemiusTHEOIntegration {
     constructor(player: ChromelessPlayer, configuration: GemiusConfiguration, programParameters: GemiusProgramParameters) {
         this.player = player;
         this.debug = configuration.debug ?? false; 
-        this.gemiusPlayer = new GemiusPlayer(THEOPLAYER_ID ,configuration.gemiusID, {});
+        this.gemiusPlayer = new window.GemiusPlayer(THEOPLAYER_ID ,configuration.gemiusID, {});
         this.programParameters = programParameters;
         this.addListeners();
     }
