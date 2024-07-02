@@ -182,6 +182,7 @@ export class GemiusTHEOIntegration {
     }
 
     private onActiveQualityChanged = (event: QualityEvent<"activequalitychanged">) => {
+        Logger.log(event)
         const { quality } = event;
         const videoQuality = quality as VideoQuality
         const { width, height } = videoQuality
