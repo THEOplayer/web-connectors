@@ -202,6 +202,12 @@ export class ConvivaHandler {
                 Constants.Playback.BITRATE,
                 activeQuality.bandwidth / 1000
             );
+            if (activeQuality.averageBandwidth) {
+                this.convivaVideoAnalytics!.reportPlaybackMetric(
+                    Constants.Playback.AVG_BITRATE,
+                    activeQuality.averageBandwidth / 1000
+                );
+            }
             if (frameRate) {
                 this.convivaVideoAnalytics!.reportPlaybackMetric(Constants.Playback.RENDERED_FRAMERATE, frameRate);
             }
