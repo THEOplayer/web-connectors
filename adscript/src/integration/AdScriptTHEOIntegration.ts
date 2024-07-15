@@ -61,6 +61,7 @@ export class AdScriptTHEOIntegration {
     }
 
     private addListeners(): void {
+        this.player.addEventListener('playing', this.onFirstMainContentPlaying)
         this.player.addEventListener('durationchange', this.onDurationChange);
         this.player.addEventListener('sourcechange', this.onSourceChange);
         this.player.addEventListener('timeupdate', this.onTimeUpdate); 
