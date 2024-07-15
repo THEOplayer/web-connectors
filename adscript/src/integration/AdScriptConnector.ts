@@ -14,11 +14,20 @@ export class AdScriptConnector {
      * @returns 
      */
     constructor(player: ChromelessPlayer, configuration: AdScriptConfiguration, metadata: MainVideoContentMetadata)  {
-        if (!window.JHMTApi || !window.JHMT) {
-            console.error('JHMT API not found, make sure you included the script to initialize AdScript Measurement')
-            return;
-        }
-        this.adscriptIntegration = new AdScriptTHEOIntegration(player, configuration, metadata)
+        const interval = window.setInterval(() => { 
+            if (typeof window.JHMTApi === 'object') { 
+                window.clearInterval(interval); 
+                this.adscriptIntegration = new AdScriptTHEOIntegration(player, configuration, metadata)
+
+            } 
+        }, 20) 
+        window.setTimeout(() => {
+            if (!window.JHMTApi) {
+                window.clearInterval(interval)
+                console.error('JHMT API not found, make sure you included the script to initialize AdScript Measurement')
+                return;
+            }
+        }, 5000)
     }
 
     updateMetadata(metadata: any): void {
