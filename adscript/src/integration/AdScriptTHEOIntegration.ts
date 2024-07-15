@@ -125,6 +125,7 @@ export class AdScriptTHEOIntegration {
 
     private onSourceChange = (event: SourceChangeEvent) => {
         Logger.logEvent(event);
+        this.player.removeEventListener('playing', this.onFirstMainContentPlaying)
         this.player.addEventListener('playing', this.onFirstMainContentPlaying)
         this.mainContentLogPoints = []
         this.currentAdLogPoints = []
