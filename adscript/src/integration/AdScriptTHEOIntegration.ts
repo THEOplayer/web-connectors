@@ -110,6 +110,8 @@ export class AdScriptTHEOIntegration {
     private onDurationChange = (event: DurationChangeEvent) => {
         if (this.player.ads?.playing || this.mainContentLogPoints.length) return;
         const { duration } = event;
+        const firstSecondOfMainContent = this.player.ads?.dai?.streamTimeForContentTime(1);
+        const useDAITimeline = firstSecondOfMainContent && firstSecondOfMainContent !== 1;
         this.mainContentDuration = duration
         if (duration === Infinity) {
             this.mainContentLogPoints = [{reported: false, offset: this.player.currentTime + 1, name: "progress1"}]
@@ -118,7 +120,7 @@ export class AdScriptTHEOIntegration {
                 {reported: false, offset: duration * 0.75, name: "thirdQuartile"},
                 {reported: false, offset: duration * 0.5, name: "midpoint"},
                 {reported: false, offset: duration * 0.25, name: "firstQuartile"},
-                {reported: false, offset: 1, name: "progress1"}
+                {reported: false, offset: useDAITimeline ? firstSecondOfMainContent : 1, name: "progress1"}
             ]
         }
     }
@@ -142,7 +144,8 @@ export class AdScriptTHEOIntegration {
     }
 
     private onFirstMainContentPlaying = () => {
-        if (this.player.ads?.playing) return;
+        const isBeforePreroll = this.player.ads?.scheduledAdBreaks.find(adBreak => adBreak.timeOffset === 0);
+        if (this.player.ads?.playing || isBeforePreroll) return;
         Logger.logAdScriptEvent("start",this.mainContentMetadata);
         this.JHMT.push(["start", this.mainContentMetadata]);
         this.player.removeEventListener("playing", this.onFirstMainContentPlaying);
@@ -176,8 +179,13 @@ export class AdScriptTHEOIntegration {
 
     private onAdBreakEnd = (event: AdBreakEvent<'adbreakend'>) => {
         Logger.logEvent(event);
+        const { adBreak } = event;
+        const { timeOffset, integration } = adBreak
         this.currentAdLogPoints = [];
         this.currentAdMetadata = undefined;
+        if (integration === "google-dai" && timeOffset === 0) {
+            this.onFirstMainContentPlaying()
+        }
     }
 
     private onAdFirstQuartile = (event: AdEvent<'adfirstquartile'>) => {
