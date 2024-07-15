@@ -46,7 +46,7 @@ export class AdScriptTHEOIntegration {
         this.mainContentMetadata = metadata;
         Logger.logSetContentMetadata(this.mainContentMetadata)
         this.JHMTApi.setContentMetadata(this.mainContentMetadata)
-        this.reportPlayerState;
+        this.reportPlayerState();
         this.addListeners();
     }
 
