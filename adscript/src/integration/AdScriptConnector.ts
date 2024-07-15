@@ -2,6 +2,7 @@ import { ChromelessPlayer } from 'theoplayer';
 import { AdScriptTHEOIntegration } from './AdScriptTHEOIntegration';
 import { AdScriptConfiguration } from './AdScriptConfiguration';
 import { MainVideoContentMetadata } from '../adscript/AdScript';
+import { Logger } from '../utils/Logger';
 
 export class AdScriptConnector {
 
@@ -17,6 +18,11 @@ export class AdScriptConnector {
         const interval = window.setInterval(() => { 
             if (typeof window.JHMTApi === 'object') { 
                 window.clearInterval(interval); 
+                const { i12n } = configuration
+                for (const id in i12n) {
+                    window.JHMTApi.setI12n(id, i12n[id])
+                    Logger.logsetI12n(id, i12n[id]);
+                }
                 this.adscriptIntegration = new AdScriptTHEOIntegration(player, configuration, metadata)
 
             } 
