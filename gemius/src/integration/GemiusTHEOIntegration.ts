@@ -135,7 +135,7 @@ export class GemiusTHEOIntegration {
                 partID: this.partCount,
                 // resolution: `AxB`; TODO
                 volume: computedVolume,
-                programDuration: this.player.duration
+                programDuration: this.programParameters.programDuration
             })
         }
     }
