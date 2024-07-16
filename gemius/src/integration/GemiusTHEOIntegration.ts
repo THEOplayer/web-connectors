@@ -5,7 +5,6 @@ import {
     AdSkipEvent,
     AddTrackEvent,
     ChromelessPlayer,
-    DurationChangeEvent,
     EndedEvent,
     GoogleImaAd,
     MediaTrack,
@@ -21,7 +20,7 @@ import {
 } from 'theoplayer';
 import type { GemiusPlayer } from '../gemius/Gemius';
 import { GemiusConfiguration } from './GemiusConfiguration';
-import { GemiusProgramParameters } from './GemiusParameters';
+import { AdType, GemiusProgramParameters } from './GemiusParameters';
 import { Logger } from '../utils/Logger';
 import { BasicEvent } from './GemiusEvents';
 
@@ -38,8 +37,6 @@ export class GemiusTHEOIntegration {
     private partCount: number = 1;
     private adCount: number = 1;
     private currentAd: Ad | undefined;
-
-    private mainContentDuration: number | undefined;
 
     constructor(player: ChromelessPlayer, configuration: GemiusConfiguration, programParameters: GemiusProgramParameters) {
         this.player = player;
@@ -60,7 +57,6 @@ export class GemiusTHEOIntegration {
 
     private addListeners(): void {
         this.player.addEventListener('sourcechange', this.onSourceChange);
-        this.player.addEventListener('durationchange', this.onDurationChange);
         this.player.addEventListener('play', this.onPlay);
         this.player.addEventListener('pause', this.onPause);
         this.player.addEventListener('waiting', this.onWaiting);
@@ -80,7 +76,6 @@ export class GemiusTHEOIntegration {
 
     private removeListeners(): void {
         this.player.removeEventListener('sourcechange', this.onSourceChange);
-        this.player.addEventListener('durationchange', this.onDurationChange);
         this.player.removeEventListener('play', this.onPlay);
         this.player.removeEventListener('pause', this.onPause);
         this.player.removeEventListener('waiting', this.onWaiting);
@@ -95,7 +90,6 @@ export class GemiusTHEOIntegration {
             this.player.ads.removeEventListener('adbegin', this.onAdBegin)
             this.player.ads.removeEventListener('adend', this.onAdEnd)
             this.player.ads.removeEventListener('adskip', this.onAdSkip)
-
         }
     }
 
@@ -111,7 +105,6 @@ export class GemiusTHEOIntegration {
             this.reportBasicEvent(BasicEvent.CLOSE)
             return;
         }
-        this.mainContentDuration = undefined;
         this.reportBasicEvent(BasicEvent.CLOSE)
         this.partCount = 1;
         this.currentAd = undefined;
@@ -119,13 +112,6 @@ export class GemiusTHEOIntegration {
         const { programID, customAttributes, ...additionalParameters } = this.programParameters
         this.gemiusPlayer.newProgram(programID, {...additionalParameters, ...customAttributes})
     };
-
-    private onDurationChange = (event: DurationChangeEvent) => {
-        Logger.log(event);
-        if (this.player.ads?.playing) return;
-        const { duration } = event
-        this.mainContentDuration = duration;
-    }
 
     private onPlay = (event: PlayEvent) => {
         Logger.log(event);
@@ -225,14 +211,13 @@ export class GemiusTHEOIntegration {
     private onAdBegin = (event: AdEvent<'adbegin'>) => {
         Logger.log(event);
         const { ad } = event;
-        const { adBreak } = ad;
         this.currentAd = ad
         const { id, duration, width, height } = ad
         const { clientWidth, clientHeight } = this.player.element;
         this.gemiusPlayer.newAd(id ?? DEFAULT_AD_ID, {
             adName: ad.integration?.includes("google") ? (ad as GoogleImaAd).title ?? "" : "",
             adDuration: duration,
-            adType: this.getAdType(adBreak.timeOffset, this.player.duration, adBreak.integration),
+            adType: AdType.BREAK,
             // TODO campaignClassification
             adFormat: 1,
             quality: `${width}x${height}`,
@@ -271,11 +256,4 @@ export class GemiusTHEOIntegration {
         }
     }
 
-    private getAdType = (offset: number, duration: number, integration: string | undefined): EmbeddedContentType => {
-        if (offset === 0) return "preroll";
-        if (offset === -1) return "postroll";
-        if (duration - offset < 1 && integration === "google-dai") return "postroll"
-        if (this.mainContentDuration && this.mainContentDuration - offset < 1 ) return "postroll"
-        return "midroll" 
-    }
 }
