@@ -18,6 +18,10 @@ export class GemiusConnector {
         this.gemiusIntegration = new GemiusTHEOIntegration(player, configuration, programParameters)
     }
 
+    update(programParameters: GemiusProgramParameters) {
+        this.gemiusIntegration.update(programParameters)
+    }
+
 
     /**
      * Destroy 

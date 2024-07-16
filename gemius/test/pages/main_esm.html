@@ -72,7 +72,10 @@
 
             const setSourceWithGemiusMetadata = (testAsset) => {
                 player.source = testAsset.source
-                // gemiusConnector.update(testAsset.metadata)
+                const newMetadata = testAsset.metadata
+                if (newMetadata.transmissionType === 2) newMetadata.transmissionStartTime = Date.now().toString()
+                console.log({newMetadata})
+                gemiusConnector.update(newMetadata)
             }
 
             const populateSourceSelector = (testAssets) => {
@@ -89,12 +92,13 @@
                 .then(jsonResponse => {
                     testAssets = jsonResponse
                     player.source = jsonResponse[0].source
-                    // const gemiusMetadata = jsonResponse[0].metadata
-                    // gemiusConnector = new GemiusConnector(
-                    //     player,
-                    //     gemiusConfig,
-                    //     gemiusMetadata,
-                    // )
+                    const gemiusProgramMetadata = jsonResponse[0].metadata
+                    if (gemiusProgramMetadata.transmissionType === 2) gemiusProgramMetadata.transmissionStartTime = new Date.now()
+                    gemiusConnector = new GemiusConnector(
+                        player,
+                        gemiusConfig,
+                        gemiusProgramMetadata,
+                    )
                     populateSourceSelector(jsonResponse)
                     selector.value = 0
                 })

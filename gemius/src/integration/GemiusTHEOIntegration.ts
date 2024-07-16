@@ -46,6 +46,10 @@ export class GemiusTHEOIntegration {
         this.addListeners();
     }
 
+    public update(programParameters: GemiusProgramParameters) {
+        this.programParameters = programParameters;
+    }
+
     public destroy() {
         this.removeListeners();
         this.gemiusPlayer.dispose();
