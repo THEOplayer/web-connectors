@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 2.1.1
+
+### 🐛 Issues
+
+- Report average bitrate to Conviva.
+
 ## 2.1.0
 
 ### ✨ Features
