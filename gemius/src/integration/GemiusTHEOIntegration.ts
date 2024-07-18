@@ -218,10 +218,11 @@ export class GemiusTHEOIntegration {
         Logger.log(event);
         this.adCount = 1;
         const { adBreak } = event;
+        const { timeOffset } = adBreak;
         if (!this.isPreRoll(adBreak) )this.partCount++
         console.log(` partCount = ${this.partCount}`)
         this.player.removeEventListener('playing',this.onFirstPlaying);
-        this.player.addEventListener('playing',this.onFirstPlaying);
+        if (timeOffset === 0) this.player.addEventListener('playing',this.onFirstPlaying);
     }
 
     private onAdBegin = (event: AdEvent<'adbegin'>) => {
