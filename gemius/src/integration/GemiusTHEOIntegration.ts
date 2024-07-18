@@ -249,6 +249,8 @@ export class GemiusTHEOIntegration {
         const { adBreak } = event;
         const { timeOffset } = adBreak;
         if (!this.isPreRoll(adBreak) )this.partCount++
+        const { programID, customAttributes, ...additionalParameters } = this.programParameters
+        this.gemiusPlayer.newProgram(programID, {...additionalParameters, ...customAttributes})
         this.player.removeEventListener('playing',this.onFirstPlaying);
         if (timeOffset === 0) this.player.addEventListener('playing',this.onFirstPlaying);
     }
