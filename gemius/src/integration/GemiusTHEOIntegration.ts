@@ -120,7 +120,8 @@ export class GemiusTHEOIntegration {
         if (this.currentAd) {
             const { id, adBreak, duration } = this.currentAd;
             const { timeOffset, ads } = adBreak
-            this.gemiusPlayer.adEvent(programID, id ?? DEFAULT_AD_ID, timeOffset, "play", {
+            const normalizedTimeOffset = this.normalizeTime(timeOffset)
+            this.gemiusPlayer.adEvent(programID, id ?? DEFAULT_AD_ID, normalizedTimeOffset, "play", {
                 autoPlay: true,
                 adPosition: this.adCount,
                 breakSize: ads?.length,
@@ -167,7 +168,8 @@ export class GemiusTHEOIntegration {
         if (this.currentAd) {
             const { id, adBreak } = this.currentAd;
             const { timeOffset } = adBreak
-            this.gemiusPlayer.adEvent(programID, id ?? DEFAULT_AD_ID, timeOffset, "chngVol", { volume: computedVolume }); // TODO make SSAI ready
+            const normalizedTimeOffset = this.normalizeTime(timeOffset)
+            this.gemiusPlayer.adEvent(programID, id ?? DEFAULT_AD_ID, normalizedTimeOffset, "chngVol", { volume: computedVolume }); // TODO make SSAI ready
         } else {
             const { currentTime } = this.player
             this.gemiusPlayer.programEvent(programID, currentTime, "chngVol", { volume: computedVolume})
@@ -199,7 +201,11 @@ export class GemiusTHEOIntegration {
         Logger.log(event);
         const { programID } = this.programParameters
         const { adBreak } = event
-        this.gemiusPlayer.programEvent(programID, adBreak.timeOffset, "break");
+        const { timeOffset } = adBreak
+        const normalizedTimeOffset = this.normalizeTime(timeOffset)
+        this.gemiusPlayer.programEvent(programID, normalizedTimeOffset, "break");
+        this.player.removeEventListener('playing',this.onFirstPlaying);
+        this.player.addEventListener('playing',this.onFirstPlaying);
     }
 
     private onAdBreakEnd = (event: AdBreakEvent<'adbreakend'>) => {
@@ -231,7 +237,10 @@ export class GemiusTHEOIntegration {
         Logger.log(event);
         const { programID } = this.programParameters
         const { ad } = event
-        this.gemiusPlayer.programEvent(programID, ad.adBreak.timeOffset, BasicEvent.COMPLETE);
+        const { adBreak } = ad;
+        const { timeOffset} = adBreak
+        const normalizedTimeOffset = this.normalizeTime(timeOffset)
+        this.gemiusPlayer.programEvent(programID, normalizedTimeOffset, BasicEvent.COMPLETE);
         this.adCount++
         this.currentAd = undefined;
     }
@@ -240,7 +249,10 @@ export class GemiusTHEOIntegration {
         Logger.log(event);
         const { programID } = this.programParameters
         const { ad } = event
-        this.gemiusPlayer.programEvent(programID, ad.adBreak.timeOffset, BasicEvent.SKIP);
+        const { adBreak } = ad
+        const { timeOffset} = adBreak
+        const normalizedTimeOffset = this.normalizeTime(timeOffset)
+        this.gemiusPlayer.programEvent(programID, normalizedTimeOffset, BasicEvent.SKIP);
     }
 
 
@@ -250,7 +262,8 @@ export class GemiusTHEOIntegration {
         if (this.currentAd) {
             const { id, adBreak } = this.currentAd;
             const { timeOffset } = adBreak
-            this.gemiusPlayer.adEvent(programID, id ?? DEFAULT_AD_ID, timeOffset, event); // TODO make SSAI ready
+            const normalizedTimeOffset = this.normalizeTime(timeOffset)
+            this.gemiusPlayer.adEvent(programID, id ?? DEFAULT_AD_ID, normalizedTimeOffset, event); // TODO make SSAI ready
         } else {
             this.gemiusPlayer.programEvent(programID,currentTime, event)
         }
