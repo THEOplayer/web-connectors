@@ -18,6 +18,7 @@ import {
 import { ComscoreConfiguration } from '../api/ComscoreConfiguration';
 import { ComscoreMetadata } from '../api/ComscoreMetadata';
 import { buildContentMetadata } from './ComscoreContentMetadata';
+import { toMilliSeconds } from './Utils';
 
 const LOG_STATE_CHANGES = true;
 const LOG_THEOPLAYER_EVENTS = true;
@@ -55,6 +56,10 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
 
     // Copy of main content's ContentMetadata
     private contentMetadata: ns_.analytics.StreamingAnalytics.ContentMetadata | null = null;
+
+    // Main content related fields for use outside of event handlers
+    private dvrWindowLengthMs: number | undefined = undefined 
+    private dvrWindowOffsetMs: number | undefined = undefined
 
     // Advertisement related fields for use outside of ad event handlers
     private inAd: boolean = false;
@@ -98,6 +103,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
 
         if (this.player.ads) {
             this.player.ads.addEventListener('adbegin', this.onAdBegin);
+            this.player.ads.addEventListener('adend', this.onAdEnd);
             this.player.ads.addEventListener('adbreakend', this.onAdBreakEnd);
         }
     }
@@ -117,6 +123,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
 
         if (this.player.ads) {
             this.player.ads.removeEventListener('adbegin', this.onAdBegin);
+            this.player.ads.removeEventListener('adend', this.onAdEnd);
             this.player.ads.removeEventListener('adbreakend', this.onAdBreakEnd);
         }
     }
@@ -150,7 +157,9 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
         adMetadata.setUniqueId(adId);
         adMetadata.setLength(adDuration);
 
-        if (!this.contentMetadata) buildContentMetadata(this.metadata);
+        if (!this.contentMetadata) {
+            this.contentMetadata = buildContentMetadata(this.metadata);
+        }
         adMetadata.setRelatedContentMetadata(this.contentMetadata);
         if (this.configuration.debug && LOG_STREAMINGANALYTICS) {
             console.log(`[COMSCORE - StreamingAnalytics] setMetadata (advertisement)`, adMetadata.getMetadataLabels());
@@ -168,6 +177,12 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                     console.log(`[COMSCORE - STATE] State change ${this.state} -> VIDEO`);
                 this.state = ComscoreState.VIDEO;
                 this.setContentMetadata();
+                if (this.dvrWindowLengthMs) {
+                    this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs)
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] setDvrWindowLength ${this.dvrWindowLengthMs}`);
+                    this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs ?? 0)
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`);
+                }
                 break;
             case ComscoreState.ADVERTISEMENT:
             case ComscoreState.ADVERTISEMENT_PAUSED:
@@ -177,6 +192,12 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                     console.log(`[COMSCORE - STATE] State change ${this.state} -> VIDEO`);
                 this.state = ComscoreState.VIDEO;
                 this.setContentMetadata();
+                if (this.dvrWindowLengthMs) {
+                    this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs)
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] setDvrWindowLength ${this.dvrWindowLengthMs}`);
+                    this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs ?? 0)
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`);
+                }
                 break;
             case ComscoreState.VIDEO_PAUSED:
                 if (this.configuration.debug && LOG_STATE_CHANGES)
@@ -283,6 +304,8 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             console.log(`[COMSCORE - THEOplayer EVENTS] ${event.type} event`);
         this.state = ComscoreState.INITIALIZED;
         this.contentMetadata = null;
+        this.dvrWindowLengthMs = undefined;
+        this.dvrWindowOffsetMs = undefined;
         this.streamingAnalytics.createPlaybackSession();
         if (this.configuration.debug && LOG_STREAMINGANALYTICS)
             console.log(`[COMSCORE - StreamingAnalytics] createPlaybackSession`);
@@ -365,11 +388,8 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                     const dvrWindowStart = seekable.start(0);
                     const dvrWindowLengthInSeconds = dvrWindowEnd - dvrWindowStart;
                     if (dvrWindowLengthInSeconds) {
-                        this.streamingAnalytics.setDvrWindowLength(dvrWindowLengthInSeconds * 1000);
-                        if (this.configuration.debug && LOG_STREAMINGANALYTICS)
-                            console.log(
-                                `[COMSCORE - StreamingAnalytics] setDvrWindowLength ${dvrWindowLengthInSeconds * 1000}`
-                            );
+                        this.dvrWindowLengthMs = toMilliSeconds(dvrWindowLengthInSeconds)
+                    if (this.state === ComscoreState.VIDEO || this.state === ComscoreState.VIDEO_PAUSED) this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs)
                     } else if (this.configuration.debug) console.log(`[COMSCORE] DVR window length was not > 0`);
                 }
             } catch (error) {
@@ -407,16 +427,20 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             }
             const dvrWindowEnd = seekable.end(seekable.length - 1);
             const dvrWindowOffsetInSeconds = dvrWindowEnd - currentTime;
-            this.streamingAnalytics.startFromDvrWindowOffset(dvrWindowOffsetInSeconds * 1000);
-            if (this.configuration.debug && LOG_STREAMINGANALYTICS)
-                console.log(
-                    `[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${dvrWindowOffsetInSeconds * 1000}`
-                );
+            this.dvrWindowOffsetMs = toMilliSeconds(dvrWindowOffsetInSeconds)
+            if (this.state === ComscoreState.VIDEO || this.state === ComscoreState.VIDEO_PAUSED) {
+                this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs);
+                if (this.configuration.debug && LOG_STREAMINGANALYTICS)
+                    console.log(
+                        `[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`
+                    );
+            }
         } else {
             if (this.configuration.debug) console.log(`[COMSCORE] seeked in a VOD stream`);
-            this.streamingAnalytics.startFromPosition(currentTime * 1000);
+            const currentTimeInMilliSeconds = toMilliSeconds(currentTime)
+            this.streamingAnalytics.startFromPosition(currentTimeInMilliSeconds);
             if (this.configuration.debug && LOG_STREAMINGANALYTICS)
-                console.log(`[COMSCORE - StreamingAnalytics] startFromPosition ${currentTime * 1000}`);
+                console.log(`[COMSCORE - StreamingAnalytics] startFromPosition ${currentTimeInMilliSeconds}`);
         }
     };
 
@@ -439,7 +463,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             ad.adBreak.integration ?? ''
         );
         this.lastAdId = adIdProcessor ? adIdProcessor(ad) : ad.id;
-        this.lastAdDuration = ad.duration;
+        this.lastAdDuration = toMilliSeconds(ad.duration ?? 0);
         if (!this.lastAdDuration && this.configuration.debug) {
             console.log('[COMSCORE] AD_BEGIN event with an ad duration of 0 found. Please check the ad configuration');
         }
@@ -453,6 +477,12 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                 console.log(`[COMSCORE - StreamingAnalytics] notifyPlay`);
         }
     };
+
+    private onAdEnd = (event: AdEvent<'adend'>) => {
+        if (this.configuration.debug && LOG_THEOPLAYER_EVENTS)
+            console.log(`[COMSCORE - THEOplayer EVENTS] ${event.type} event`);
+        this.transitionToStopped();
+    }
 
     private onAdBreakEnd = (event: AdBreakEvent<'adbreakend'>) => {
         if (this.configuration.debug && LOG_THEOPLAYER_EVENTS)
