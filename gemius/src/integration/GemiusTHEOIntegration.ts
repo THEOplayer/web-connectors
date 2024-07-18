@@ -59,6 +59,7 @@ export class GemiusTHEOIntegration {
     private addListeners(): void {
         this.player.addEventListener('sourcechange', this.onSourceChange);
         this.player.addEventListener('playing', this.onFirstPlaying);
+        this.player.addEventListener('play', this.onPlay);
         this.player.addEventListener('pause', this.onPause);
         this.player.addEventListener('waiting', this.onWaiting);
         this.player.addEventListener('seeking', this.onSeeking);
@@ -78,6 +79,7 @@ export class GemiusTHEOIntegration {
     private removeListeners(): void {
         this.player.removeEventListener('sourcechange', this.onSourceChange);
         this.player.removeEventListener('playing', this.onFirstPlaying);
+        this.player.removeEventListener('play', this.onPlay);
         this.player.removeEventListener('pause', this.onPause);
         this.player.removeEventListener('waiting', this.onWaiting);
         this.player.removeEventListener('seeking', this.onSeeking);
@@ -148,6 +150,35 @@ export class GemiusTHEOIntegration {
     private onPause = (event: PauseEvent) => {
         Logger.log(event);
         this.reportBasicEvent(BasicEvent.PAUSE)
+    }
+
+    private onPlay = (event: PlayEvent) => {
+        Logger.log(event);
+        const { programID } = this.programParameters;
+        const computedVolume = this.player.muted ? -1 : (this.player.volume * 100)
+        if (this.currentAd) {
+            const { id, adBreak, duration } = this.currentAd;
+            const { timeOffset, ads } = adBreak
+            const normalizedTimeOffset = this.normalizeTime(timeOffset)
+            this.gemiusPlayer.adEvent(programID, id ?? DEFAULT_AD_ID, normalizedTimeOffset, "play", {
+                autoPlay: true,
+                adPosition: this.adCount,
+                breakSize: ads?.length,
+                // resolution: `AxB`, TODO
+                volume: computedVolume,
+                adDuration: duration
+            })
+        } else {
+            if (this.player.ads?.scheduledAdBreaks.some(adBreak => adBreak.timeOffset === 0)) return;
+            const offset = this.player.currentTime < 0.5 ? 0 : this.player.currentTime
+            this.gemiusPlayer.programEvent(programID, offset, "play", {
+                autoPlay: this.player.autoplay,
+                partID: this.partCount,
+                // resolution: `AxB`; TODO
+                volume: computedVolume,
+                programDuration: this.programParameters.programDuration
+            })
+        }
     }
 
     private onWaiting = (event: WaitingEvent) => {
