@@ -1,5 +1,6 @@
 import {
     Ad,
+    AdBreak,
     AdBreakEvent,
     AdEvent,
     AdSkipEvent,
@@ -10,6 +11,7 @@ import {
     MediaTrack,
     PauseEvent,
     PlayEvent,
+    PlayingEvent,
     QualityEvent,
     RemoveTrackEvent,
     SeekingEvent,
@@ -57,7 +59,7 @@ export class GemiusTHEOIntegration {
 
     private addListeners(): void {
         this.player.addEventListener('sourcechange', this.onSourceChange);
-        this.player.addEventListener('play', this.onPlay);
+        this.player.addEventListener('playing', this.onFirstPlaying);
         this.player.addEventListener('pause', this.onPause);
         this.player.addEventListener('waiting', this.onWaiting);
         this.player.addEventListener('seeking', this.onSeeking);
@@ -76,7 +78,7 @@ export class GemiusTHEOIntegration {
 
     private removeListeners(): void {
         this.player.removeEventListener('sourcechange', this.onSourceChange);
-        this.player.removeEventListener('play', this.onPlay);
+        this.player.removeEventListener('playing', this.onFirstPlaying);
         this.player.removeEventListener('pause', this.onPause);
         this.player.removeEventListener('waiting', this.onWaiting);
         this.player.removeEventListener('seeking', this.onSeeking);
@@ -113,7 +115,7 @@ export class GemiusTHEOIntegration {
         this.gemiusPlayer.newProgram(programID, {...additionalParameters, ...customAttributes})
     };
 
-    private onPlay = (event: PlayEvent) => {
+    private onFirstPlaying = (event: PlayingEvent) => {
         Logger.log(event);
         const { programID } = this.programParameters;
         const computedVolume = this.player.muted ? -1 : (this.player.volume * 100)
@@ -130,7 +132,10 @@ export class GemiusTHEOIntegration {
                 adDuration: duration
             })
         } else {
-            this.gemiusPlayer.programEvent(programID, this.player.currentTime, "play", {
+            if (this.player.ads?.scheduledAdBreaks.some(adBreak => adBreak.timeOffset === 0)) return;
+            const offset = this.player.currentTime < 0.5 ? 0 : this.player.currentTime
+            console.log(`play event with partID = ${this.partCount}`)
+            this.gemiusPlayer.programEvent(programID, offset, "play", {
                 autoPlay: this.player.autoplay,
                 partID: this.partCount,
                 // resolution: `AxB`; TODO
@@ -138,6 +143,7 @@ export class GemiusTHEOIntegration {
                 programDuration: this.programParameters.programDuration
             })
         }
+        this.player.removeEventListener('playing',this.onFirstPlaying)
     }
 
     private onPause = (event: PauseEvent) => {
@@ -210,8 +216,12 @@ export class GemiusTHEOIntegration {
 
     private onAdBreakEnd = (event: AdBreakEvent<'adbreakend'>) => {
         Logger.log(event);
-        this.partCount++
         this.adCount = 1;
+        const { adBreak } = event;
+        if (!this.isPreRoll(adBreak) )this.partCount++
+        console.log(` partCount = ${this.partCount}`)
+        this.player.removeEventListener('playing',this.onFirstPlaying);
+        this.player.addEventListener('playing',this.onFirstPlaying);
     }
 
     private onAdBegin = (event: AdEvent<'adbegin'>) => {
@@ -243,6 +253,8 @@ export class GemiusTHEOIntegration {
         this.gemiusPlayer.programEvent(programID, normalizedTimeOffset, BasicEvent.COMPLETE);
         this.adCount++
         this.currentAd = undefined;
+        this.player.removeEventListener('playing',this.onFirstPlaying);
+        this.player.addEventListener('playing',this.onFirstPlaying);
     }
 
     private onAdSkip = (event: AdSkipEvent) => {
@@ -267,6 +279,14 @@ export class GemiusTHEOIntegration {
         } else {
             this.gemiusPlayer.programEvent(programID,currentTime, event)
         }
+    }
+
+    private normalizeTime = (time: number) => {
+        return this.player.ads?.dai?.contentTimeForStreamTime(time) ?? time;
+    }
+
+    private isPreRoll = (adBreak: AdBreak) => {
+        return adBreak.timeOffset === 0
     }
 
 }
