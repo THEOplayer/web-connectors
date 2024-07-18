@@ -10,7 +10,6 @@ import {
     GoogleImaAd,
     MediaTrack,
     PauseEvent,
-    PlayEvent,
     PlayingEvent,
     QualityEvent,
     RemoveTrackEvent,
