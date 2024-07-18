@@ -135,7 +135,6 @@ export class GemiusTHEOIntegration {
         } else {
             if (this.player.ads?.scheduledAdBreaks.some(adBreak => adBreak.timeOffset === 0)) return;
             const offset = this.player.currentTime < 0.5 ? 0 : this.player.currentTime
-            console.log(`play event with partID = ${this.partCount}`)
             this.gemiusPlayer.programEvent(programID, offset, "play", {
                 autoPlay: this.player.autoplay,
                 partID: this.partCount,
@@ -250,7 +249,6 @@ export class GemiusTHEOIntegration {
         const { adBreak } = event;
         const { timeOffset } = adBreak;
         if (!this.isPreRoll(adBreak) )this.partCount++
-        console.log(` partCount = ${this.partCount}`)
         this.player.removeEventListener('playing',this.onFirstPlaying);
         if (timeOffset === 0) this.player.addEventListener('playing',this.onFirstPlaying);
     }
