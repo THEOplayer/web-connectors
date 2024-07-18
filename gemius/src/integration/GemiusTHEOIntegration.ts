@@ -308,8 +308,10 @@ export class GemiusTHEOIntegration {
             const { timeOffset } = adBreak
             const normalizedTimeOffset = this.normalizeTime(timeOffset)
             this.gemiusPlayer.adEvent(programID, id ?? DEFAULT_AD_ID, normalizedTimeOffset, event); // TODO make SSAI ready
+        } 
+        if (!this.currentAd && event !== BasicEvent.PAUSE) {
+            this.gemiusPlayer.programEvent(programID,currentTime, event)
         }
-        this.gemiusPlayer.programEvent(programID,currentTime, event)
     }
 
     private normalizeTime = (time: number) => {
