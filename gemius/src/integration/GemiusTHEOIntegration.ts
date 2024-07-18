@@ -279,7 +279,8 @@ export class GemiusTHEOIntegration {
         const { adBreak } = ad;
         const { timeOffset} = adBreak
         const normalizedTimeOffset = this.normalizeTime(timeOffset)
-        this.gemiusPlayer.programEvent(programID, normalizedTimeOffset, BasicEvent.COMPLETE);
+        this.gemiusPlayer.adEvent(programID, ad.id ?? DEFAULT_AD_ID, normalizedTimeOffset, BasicEvent.COMPLETE);
+        this.gemiusPlayer.adEvent(programID, ad.id ?? DEFAULT_AD_ID, normalizedTimeOffset, BasicEvent.CLOSE);
         this.adCount++
         this.currentAd = undefined;
         this.player.removeEventListener('playing',this.onFirstPlaying);
