@@ -32,7 +32,7 @@ export class AdScriptTHEOIntegration {
     // References for constructor arguments
     private player: ChromelessPlayer;
     private debug: boolean;
-    private adProcessor: ((ad: Ad) => EmbeddedContentMetadata) | undefined;
+    private readonly adProcessor: ((ad: Ad) => EmbeddedContentMetadata) | undefined;
     private mainContentMetadata: MainVideoContentMetadata;
     private mainContentLogPoints: LogPoint[] = [];
     private mainContentDuration: number | undefined;
