@@ -158,7 +158,7 @@ export class AdScriptTHEOIntegration {
 
     private onPlay = (event: PlayEvent) => {
         Logger.logEvent(event);
-        this.reportPlayerState;
+        this.reportPlayerState();
     };
 
     private onEnded = (event: EndedEvent) => {
