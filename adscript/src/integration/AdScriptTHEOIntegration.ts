@@ -31,7 +31,7 @@ interface LogPoint {
 export class AdScriptTHEOIntegration {
     // References for constructor arguments
     private player: ChromelessPlayer;
-    private debug: boolean;
+    private logger: Logger;
     private readonly adProcessor: ((ad: Ad) => EmbeddedContentMetadata) | undefined;
     private mainContentMetadata: MainVideoContentMetadata;
     private mainContentLogPoints: LogPoint[] = [];
@@ -46,18 +46,27 @@ export class AdScriptTHEOIntegration {
 
     constructor(player: ChromelessPlayer, configuration: AdScriptConfiguration, metadata: MainVideoContentMetadata) {
         this.player = player;
-        this.debug = configuration.debug ?? false;
+        this.logger = new Logger(Boolean(configuration.debug));
         this.adProcessor = configuration?.adProcessor;
         this.mainContentMetadata = metadata;
-        Logger.logSetContentMetadata(this.mainContentMetadata);
+
+        // Set the additional information about the logged user.
+        for (const id in configuration.i12n) {
+            this.logger.onSetI12N(id, configuration.i12n[id]);
+            this.JHMTApi.setI12n(id, configuration.i12n[id]);
+        }
+
+        // Set the metadata before attaching event listeners.
+        this.logger.onSetMainVideoContentMetadata(this.mainContentMetadata);
         this.JHMTApi.setContentMetadata(this.mainContentMetadata);
+
         this.reportPlayerState();
         this.addListeners();
     }
 
     public updateMetadata(metadata: MainVideoContentMetadata) {
         this.mainContentMetadata = metadata;
-        Logger.logSetContentMetadata(this.mainContentMetadata);
+        this.logger.onSetMainVideoContentMetadata(this.mainContentMetadata);
         this.JHMTApi.setContentMetadata(this.mainContentMetadata);
     }
 
@@ -135,7 +144,7 @@ export class AdScriptTHEOIntegration {
     };
 
     private onSourceChange = (event: SourceChangeEvent) => {
-        Logger.logEvent(event);
+        this.logger.onEvent(event);
         this.player.removeEventListener('playing', this.onFirstMainContentPlaying);
         this.player.addEventListener('playing', this.onFirstMainContentPlaying);
         this.mainContentLogPoints = [];
@@ -155,39 +164,39 @@ export class AdScriptTHEOIntegration {
     private onFirstMainContentPlaying = () => {
         const isBeforePreroll = this.player.ads?.scheduledAdBreaks.find((adBreak) => adBreak.timeOffset === 0);
         if (this.player.ads?.playing || isBeforePreroll) return;
-        Logger.logAdScriptEvent('start', this.mainContentMetadata);
+        this.logger.onAdScriptEvent('start', this.mainContentMetadata);
         this.JHMT.push(['start', this.mainContentMetadata]);
         this.player.removeEventListener('playing', this.onFirstMainContentPlaying);
     };
 
     private onPlay = (event: PlayEvent) => {
-        Logger.logEvent(event);
+        this.logger.onEvent(event);
         this.reportPlayerState();
     };
 
     private onEnded = (event: EndedEvent) => {
-        Logger.logEvent(event);
-        Logger.logAdScriptEvent('complete', this.mainContentMetadata);
+        this.logger.onEvent(event);
+        this.logger.onAdScriptEvent('complete', this.mainContentMetadata);
         this.JHMT.push(['complete', this.mainContentMetadata]);
     };
 
     private onVolumeChange = (event: VolumeChangeEvent) => {
-        Logger.logEvent(event);
+        this.logger.onEvent(event);
         this.reportPlayerState();
     };
 
     private onRateChange = (event: RateChangeEvent) => {
-        Logger.logEvent(event);
+        this.logger.onEvent(event);
         this.reportPlayerState();
     };
 
     private onPresentationModeChange = (event: Event) => {
-        Logger.logEvent(event);
+        this.logger.onEvent(event);
         this.reportPlayerState();
     };
 
     private onAdBreakEnd = (event: AdBreakEvent<'adbreakend'>) => {
-        Logger.logEvent(event);
+        this.logger.onEvent(event);
         const { adBreak } = event;
         const { timeOffset, integration } = adBreak;
         this.currentAdLogPoints = [];
@@ -198,32 +207,32 @@ export class AdScriptTHEOIntegration {
     };
 
     private onAdFirstQuartile = (event: AdEvent<'adfirstquartile'>) => {
-        Logger.logEvent(event);
-        Logger.logAdScriptEvent('firstquartile', this.currentAdMetadata);
+        this.logger.onEvent(event);
+        this.logger.onAdScriptEvent('firstquartile', this.currentAdMetadata);
         this.JHMT.push(['firstquartile', this.currentAdMetadata]);
     };
     private onAdMidpoint = (event: AdEvent<'admidpoint'>) => {
-        Logger.logEvent(event);
-        Logger.logAdScriptEvent('midpoint', this.currentAdMetadata);
+        this.logger.onEvent(event);
+        this.logger.onAdScriptEvent('midpoint', this.currentAdMetadata);
         this.JHMT.push(['midpoint', this.currentAdMetadata]);
     };
     private onAdTirdQuartile = (event: AdEvent<'adthirdquartile'>) => {
-        Logger.logEvent(event);
-        Logger.logAdScriptEvent('thirdquartile', this.currentAdMetadata);
+        this.logger.onEvent(event);
+        this.logger.onAdScriptEvent('thirdquartile', this.currentAdMetadata);
         this.JHMT.push(['thirdquartile', this.currentAdMetadata]);
     };
     private onAdEnd = (event: AdEvent<'adend'>) => {
-        Logger.logEvent(event);
-        Logger.logAdScriptEvent('complete', this.currentAdMetadata);
+        this.logger.onEvent(event);
+        this.logger.onAdScriptEvent('complete', this.currentAdMetadata);
         this.JHMT.push(['complete', this.currentAdMetadata]);
     };
 
     private onAdBegin = (event: AdEvent<'adbegin'>) => {
-        Logger.logEvent(event);
+        this.logger.onEvent(event);
         if (event.ad.type !== 'linear') return;
         this.currentAdMetadata = this.buildAdMetadataObject(event);
         this.currentAdLogPoints = this.buildAdLogPoints(event.ad);
-        Logger.logAdScriptEvent('start', this.currentAdMetadata);
+        this.logger.onAdScriptEvent('start', this.currentAdMetadata);
         this.JHMT.push(['start', this.currentAdMetadata]);
     };
 
@@ -279,7 +288,7 @@ export class AdScriptTHEOIntegration {
             width: this.player.element.clientWidth,
             height: this.player.element.clientHeight
         };
-        Logger.logPlayerState(playerState);
+        this.logger.onPlayerStateChange(playerState);
         this.JHMTApi.setPlayerState(playerState);
     };
 
@@ -292,7 +301,7 @@ export class AdScriptTHEOIntegration {
             const { reported, offset, name } = logPoint;
             if (!reported && currentTime >= offset && currentTime < offset + 1) {
                 logPoint.reported = true;
-                Logger.logAdScriptEvent(name, metadata);
+                this.logger.onAdScriptEvent(name, metadata);
                 this.JHMT.push([name, metadata]);
             }
         });

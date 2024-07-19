@@ -2,7 +2,6 @@ import type { ChromelessPlayer } from 'theoplayer';
 import { AdScriptTHEOIntegration } from './AdScriptTHEOIntegration';
 import { AdScriptConfiguration } from './AdScriptConfiguration';
 import { MainVideoContentMetadata } from '../adscript/AdScript';
-import { Logger } from '../utils/Logger';
 
 export class AdScriptConnector {
     private readonly player: ChromelessPlayer;
@@ -40,11 +39,6 @@ export class AdScriptConnector {
             return;
         }
         if (typeof window.JHMTApi === 'object') {
-            const { i12n } = this.configuration;
-            for (const id in i12n) {
-                window.JHMTApi.setI12n(id, i12n[id]);
-                Logger.logsetI12n(id, i12n[id]);
-            }
             this.adScriptIntegration = new AdScriptTHEOIntegration(this.player, this.configuration, this.metadata);
             return;
         }
