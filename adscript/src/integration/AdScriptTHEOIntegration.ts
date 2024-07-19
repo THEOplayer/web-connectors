@@ -91,6 +91,7 @@ export class AdScriptTHEOIntegration {
     }
 
     private removeListeners(): void {
+        this.player.removeEventListener('playing', this.onFirstMainContentPlaying);
         this.player.removeEventListener('durationchange', this.onDurationChange);
         this.player.removeEventListener('sourcechange', this.onSourceChange);
         this.player.removeEventListener('timeupdate', this.onTimeUpdate); // TODO
@@ -112,7 +113,6 @@ export class AdScriptTHEOIntegration {
             this.player.ads.removeEventListener('adthirdquartile', this.onAdTirdQuartile);
             this.player.ads.removeEventListener('adend', this.onAdEnd);
         }
-        this.player.removeEventListener('playing', this.onFirstMainContentPlaying);
     }
 
     // EVENT HANDLERS
