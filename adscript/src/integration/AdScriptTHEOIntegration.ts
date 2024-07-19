@@ -221,8 +221,7 @@ export class AdScriptTHEOIntegration {
     private onAdBegin = (event: AdEvent<'adbegin'>) => {
         Logger.logEvent(event);
         if (event.ad.type !== 'linear') return;
-        const adMetadataObject = this.buildAdMetadataObject(event);
-        this.currentAdMetadata = adMetadataObject;
+        this.currentAdMetadata = this.buildAdMetadataObject(event);
         this.currentAdLogPoints = this.buildAdLogPoints(event.ad);
         Logger.logAdScriptEvent('start', this.currentAdMetadata);
         this.JHMT.push(['start', this.currentAdMetadata]);
