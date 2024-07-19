@@ -5,11 +5,12 @@ import { MainVideoContentMetadata } from '../adscript/AdScript';
 import { Logger } from '../utils/Logger';
 
 export class AdScriptConnector {
-    private adscriptIntegration: AdScriptTHEOIntegration | undefined;
     private readonly player: ChromelessPlayer;
     private readonly initialLoadTime: number;
     private readonly configuration: AdScriptConfiguration;
     private readonly metadata: MainVideoContentMetadata;
+
+    private adScriptIntegration: AdScriptTHEOIntegration | undefined;
 
     /**
      * Constructor for the THEOplayer AdScript connector.
@@ -37,7 +38,7 @@ export class AdScriptConnector {
                 window.JHMTApi.setI12n(id, i12n[id]);
                 Logger.logsetI12n(id, i12n[id]);
             }
-            this.adscriptIntegration = new AdScriptTHEOIntegration(this.player, this.configuration, this.metadata);
+            this.adScriptIntegration = new AdScriptTHEOIntegration(this.player, this.configuration, this.metadata);
             return;
         }
         setTimeout(this.createAdScriptIntegrationWhenApiIsAvailable, 20);
@@ -48,13 +49,13 @@ export class AdScriptConnector {
      * @param metadata The MainVideoContentMetadata.
      */
     updateMetadata(metadata: MainVideoContentMetadata): void {
-        this.adscriptIntegration?.updateMetadata(metadata);
+        this.adScriptIntegration?.updateMetadata(metadata);
     }
 
     /**
      * Destroy
      */
     destroy(): void {
-        this.adscriptIntegration?.destroy();
+        this.adScriptIntegration?.destroy();
     }
 }
