@@ -8,7 +8,7 @@ export class AdScriptConnector {
     private adscriptIntegration: AdScriptTHEOIntegration | undefined;
 
     /**
-     * Constructor for the THEOplayer AdScript connector
+     * Constructor for the THEOplayer AdScript connector.
      * @param player a THEOplayer instance reference
      * @param configuration a configuration object for the AdScript connector
      * @param metadata the MainVideoContentMetadata
@@ -37,7 +37,11 @@ export class AdScriptConnector {
         }, 5000);
     }
 
-    updateMetadata(metadata: any): void {
+    /**
+     * Update the medata.
+     * @param metadata The MainVideoContentMetadata.
+     */
+    updateMetadata(metadata: MainVideoContentMetadata): void {
         this.adscriptIntegration?.updateMetadata(metadata);
     }
 
