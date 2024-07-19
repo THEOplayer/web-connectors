@@ -12,7 +12,8 @@ export class AdScriptConnector {
      * Constructor for the THEOplayer AdScript connector
      * @param player a THEOplayer instance reference
      * @param configuration a configuration object for the AdScript connector
-     * @returns 
+     * @param metadata the MainVideoContentMetadata
+     * @returns
      */
     constructor(player: ChromelessPlayer, configuration: AdScriptConfiguration, metadata: MainVideoContentMetadata)  {
         const interval = window.setInterval(() => { 
