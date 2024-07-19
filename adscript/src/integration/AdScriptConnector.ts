@@ -11,6 +11,7 @@ export class AdScriptConnector {
     private readonly metadata: MainVideoContentMetadata;
 
     private adScriptIntegration: AdScriptTHEOIntegration | undefined;
+    private destroyed = false;
 
     /**
      * Constructor for the THEOplayer AdScript connector.
@@ -29,6 +30,11 @@ export class AdScriptConnector {
     }
 
     private readonly createAdScriptIntegrationWhenApiIsAvailable = () => {
+        if (this.destroyed) {
+            // The connector was destroyed before the API became available.
+            // Don't bother creating the integration.
+            return;
+        }
         if (new Date().getTime() > this.initialLoadTime + 5_000) {
             console.error('JHMT API not found, make sure you included the script to initialize AdScript Measurement.');
         }
@@ -56,6 +62,7 @@ export class AdScriptConnector {
      * Destroy
      */
     destroy(): void {
+        this.destroyed = true;
         this.adScriptIntegration?.destroy();
     }
 }
