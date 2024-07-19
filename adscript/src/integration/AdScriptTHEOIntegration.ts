@@ -107,6 +107,10 @@ export class AdScriptTHEOIntegration {
         if (this.player.ads) {
             this.player.ads.removeEventListener('adbreakend', this.onAdBreakEnd); //TODO
             this.player.ads.removeEventListener('adbegin', this.onAdBegin); //TODO
+            this.player.ads.removeEventListener('adfirstquartile', this.onAdFirstQuartile);
+            this.player.ads.removeEventListener('admidpoint', this.onAdMidpoint);
+            this.player.ads.removeEventListener('adthirdquartile', this.onAdTirdQuartile);
+            this.player.ads.removeEventListener('adend', this.onAdEnd);
         }
         this.player.removeEventListener('playing', this.onFirstMainContentPlaying);
     }
