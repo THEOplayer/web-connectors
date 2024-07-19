@@ -6,12 +6,12 @@ import { EmbeddedContentMetadata } from '../adscript/AdScript';
  */
 export interface AdScriptConfiguration {
     /**
-     * Integration ID you received from Nielsen representative
+     * Integration ID you received from Nielsen representative.
      */
     implementationId: string;
 
     /**
-     * Additional information settings (additional information)
+     * Additional information about logged user (customerID, deviceID, profileID) from client´s database.
      * For more information, see the [Additional Information Settings](https://adscript.admosphere.cz/en_adScript_browser.html) section.
      */
     i12n?: { [key: string]: string };
