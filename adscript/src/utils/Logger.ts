@@ -1,4 +1,4 @@
-import { Event } from 'theoplayer';
+import type { Event } from 'theoplayer';
 import { EmbeddedContentMetadata, MainVideoContentMetadata, PlayerState } from '../adscript/AdScript';
 
 const LOG_THEOPLAYER_EVENTS = true;
