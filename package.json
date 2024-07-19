@@ -11,7 +11,8 @@
     "conviva",
     "nielsen",
     "cmcd",
-    "comscore"
+    "comscore",
+    "adscript"
   ],
   "scripts": {
     "changeset:version": "changeset version && node .changeset/post-process.js",
