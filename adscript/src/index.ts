@@ -1,2 +1,2 @@
 export { AdScriptConnector } from './integration/AdScriptConnector';
-export * from './integration/AdScriptConfiguration'
+export * from './integration/AdScriptConfiguration';
