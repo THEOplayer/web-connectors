@@ -32,7 +32,7 @@ First you need to initialize the AdScript Measurement by including the script in
 
 ## Usage
 
-First you need to add the Yospace connector to your app :
+First you need to add the AdScript connector to your app :
 
 * Add as a regular script
 
