@@ -37,6 +37,7 @@ export class AdScriptConnector {
         }
         if (new Date().getTime() > this.initialLoadTime + 5_000) {
             console.error('JHMT API not found, make sure you included the script to initialize AdScript Measurement.');
+            return;
         }
         if (typeof window.JHMTApi === 'object') {
             const { i12n } = this.configuration;
