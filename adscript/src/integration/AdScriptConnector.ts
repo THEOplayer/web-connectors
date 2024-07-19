@@ -26,7 +26,7 @@ export class AdScriptConnector {
         this.metadata = metadata;
         this.initialLoadTime = new Date().getTime();
 
-        setTimeout(this.createAdScriptIntegrationWhenApiIsAvailable, 20);
+        this.createAdScriptIntegrationWhenApiIsAvailable();
     }
 
     private readonly createAdScriptIntegrationWhenApiIsAvailable = () => {
