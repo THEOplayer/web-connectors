@@ -1,4 +1,5 @@
 export type JHMTApiProtocol = 'https:' | 'http:' | 'file:';
+
 interface I12n {
     i1: string;
     i2: string;
@@ -77,6 +78,8 @@ declare global {
 
 export interface JHMTApi {
     setI12n(i12n: I12n);
+
     setContentMetadata(contentMetadata: ContentMetadata);
+
     setPlayerState(playerState: PlayerState);
 }
