@@ -2,7 +2,7 @@ import type { Event } from 'theoplayer';
 import { EmbeddedContentMetadata, MainVideoContentMetadata, PlayerState } from '../adscript/AdScript';
 
 export class Logger {
-    private debug: boolean;
+    private readonly debug: boolean;
 
     constructor(debug: boolean = false) {
         this.debug = debug;
