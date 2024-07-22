@@ -29,7 +29,6 @@ interface LogPoint {
 }
 
 export class AdScriptTHEOIntegration {
-    // References for constructor arguments
     private player: ChromelessPlayer;
     private logger: Logger;
     private readonly adProcessor: ((ad: Ad) => EmbeddedContentMetadata) | undefined;
@@ -38,8 +37,6 @@ export class AdScriptTHEOIntegration {
     private mainContentDuration: number | undefined;
     private currentAdMetadata: EmbeddedContentMetadata | undefined;
     private currentAdLogPoints: LogPoint[] = [];
-
-    private latestReportedEvent: string | undefined;
 
     private JHMTApi = window.JHMTApi;
     private JHMT = window.JHMT;
@@ -134,7 +131,6 @@ export class AdScriptTHEOIntegration {
         }
     }
 
-    // EVENT HANDLERS
     private onDurationChange = (event: DurationChangeEvent) => {
         if (this.player.ads?.playing || this.mainContentLogPoints.length) return;
         const { duration } = event;
