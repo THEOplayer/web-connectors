@@ -1,5 +1,32 @@
 import type { Ad } from 'theoplayer';
-import { EmbeddedContentMetadata } from '../adscript/AdScript';
+
+/**
+ * The main content information settings.
+ * For more information, see the [main content information settings](https://adscript.admosphere.cz/en_adScript_browser.html) section in the AdScript documentation.
+ */
+export interface MainVideoContentMetadata {
+    assetid: string;
+    type: 'content';
+    program: string;
+    title: string;
+    length: string;
+    crossId: string;
+    livestream: string;
+    channelId: string;
+    attributes: string;
+}
+
+/**
+ * The embedded content metadata, about the currently playing ad.
+ */
+export interface EmbeddedContentMetadata {
+    assetid: string;
+    type: 'preroll' | 'midroll' | 'postroll';
+    length: string;
+    title: string;
+    asmea: string;
+    attributes: string;
+}
 
 /**
  * The configuration for the AdScript Connector.

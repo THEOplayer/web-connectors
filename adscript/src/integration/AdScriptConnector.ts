@@ -1,7 +1,6 @@
 import type { ChromelessPlayer } from 'theoplayer';
 import { AdScriptTHEOIntegration } from './AdScriptTHEOIntegration';
-import { AdScriptConfiguration } from './AdScriptConfiguration';
-import { MainVideoContentMetadata } from '../adscript/AdScript';
+import { AdScriptConfiguration, MainVideoContentMetadata } from './AdScriptConfiguration';
 import { loadAdScriptSDK } from './LoadAdScriptSDK';
 
 export class AdScriptConnector {

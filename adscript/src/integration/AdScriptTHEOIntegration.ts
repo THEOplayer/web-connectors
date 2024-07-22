@@ -13,13 +13,8 @@ import type {
     TimeUpdateEvent,
     VolumeChangeEvent
 } from 'theoplayer';
-import { AdScriptConfiguration } from './AdScriptConfiguration';
-import {
-    EmbeddedContentMetadata,
-    EmbeddedContentType,
-    MainVideoContentMetadata,
-    PlayerState
-} from './../adscript/AdScript';
+import { AdScriptConfiguration, EmbeddedContentMetadata, MainVideoContentMetadata } from './AdScriptConfiguration';
+import { EmbeddedContentType } from './../adscript/AdScript';
 import { Logger } from '../utils/Logger';
 
 interface LogPoint {
@@ -276,7 +271,7 @@ export class AdScriptTHEOIntegration {
     };
 
     private reportPlayerState = () => {
-        const playerState: PlayerState = {
+        const playerState = {
             muted: this.player.muted ? 1 : 0,
             volume: this.player.volume * 100,
             triggeredByUser: this.player.autoplay ? 1 : 0,
