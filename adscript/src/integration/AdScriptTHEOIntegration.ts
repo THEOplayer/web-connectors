@@ -32,7 +32,7 @@ export class AdScriptTHEOIntegration {
     private player: ChromelessPlayer;
     private logger: Logger;
     private readonly adProcessor: ((ad: Ad) => EmbeddedContentMetadata) | undefined;
-    private mainContentMetadata: MainVideoContentMetadata;
+    private mainContentMetadata: MainVideoContentMetadata | undefined;
     private mainContentLogPoints: LogPoint[] = [];
     private mainContentDuration: number | undefined;
     private currentAdMetadata: EmbeddedContentMetadata | undefined;
@@ -41,24 +41,16 @@ export class AdScriptTHEOIntegration {
     private JHMTApi = window.JHMTApi;
     private JHMT = window.JHMT;
 
-    constructor(
-        player: ChromelessPlayer,
-        configuration: AdScriptConfiguration,
-        initialMetadata: MainVideoContentMetadata
-    ) {
+    constructor(player: ChromelessPlayer, configuration: AdScriptConfiguration) {
         this.player = player;
         this.logger = new Logger(Boolean(configuration.debug));
         this.adProcessor = configuration?.adProcessor;
-        this.mainContentMetadata = initialMetadata;
+    }
 
-        // Set the additional information about the logged user.
-        if (configuration.i12n) {
-            this.updateUser(configuration.i12n);
+    public start() {
+        if (this.mainContentMetadata === undefined) {
+            throw Error('Metadata of the main video content needs to be set before the first measured event occurs.');
         }
-
-        // Set the metadata before attaching event listeners.
-        this.updateMetadata(initialMetadata);
-
         this.reportPlayerState();
         this.addListeners();
     }
@@ -163,7 +155,7 @@ export class AdScriptTHEOIntegration {
         if (this.currentAdMetadata) {
             this.maybeReportLogPoint(currentTime, this.currentAdMetadata, this.currentAdLogPoints);
         } else {
-            this.maybeReportLogPoint(currentTime, this.mainContentMetadata, this.mainContentLogPoints);
+            this.maybeReportLogPoint(currentTime, this.mainContentMetadata!, this.mainContentLogPoints);
         }
     };
 

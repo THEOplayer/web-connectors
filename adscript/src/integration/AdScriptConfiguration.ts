@@ -11,6 +11,13 @@ export interface AdScriptConfiguration {
     implementationId: string;
 
     /**
+     * The initial main content information settings.
+     * Metadata of the main video content needs to be set before the first measured event occurs.
+     * For more information, see the [main content information settings](https://adscript.admosphere.cz/en_adScript_browser.html) section in the AdScript documentation.
+     */
+    metadata: MainVideoContentMetadata;
+
+    /**
      * Additional information about logged user (customerID, deviceID, profileID) from client´s database.
      * For more information, see the [Additional Information Settings](https://adscript.admosphere.cz/en_adScript_browser.html) section.
      */

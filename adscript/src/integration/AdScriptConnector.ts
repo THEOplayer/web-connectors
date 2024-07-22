@@ -8,7 +8,9 @@ export class AdScriptConnector {
     private readonly player: ChromelessPlayer;
     private readonly initialLoadTime: number;
     private readonly configuration: AdScriptConfiguration;
-    private readonly metadata: MainVideoContentMetadata;
+
+    private metadata: MainVideoContentMetadata;
+    private i12n: { [key: string]: string } | undefined;
 
     private adScriptIntegration: AdScriptTHEOIntegration | undefined;
     private destroyed = false;
@@ -17,17 +19,13 @@ export class AdScriptConnector {
      * Constructor for the THEOplayer AdScript connector.
      * @param player a THEOplayer instance reference
      * @param configuration a configuration object for the AdScript connector
-     * @param initialMetadata the MainVideoContentMetadata
      * @returns
      */
-    constructor(
-        player: ChromelessPlayer,
-        configuration: AdScriptConfiguration,
-        initialMetadata: MainVideoContentMetadata
-    ) {
+    constructor(player: ChromelessPlayer, configuration: AdScriptConfiguration) {
         this.player = player;
         this.configuration = configuration;
-        this.metadata = initialMetadata;
+        this.metadata = configuration.metadata;
+        this.i12n = configuration.i12n;
 
         // This loads the external AdScript SDK script. This is not immediately available, so we start a timer.
         this.initialLoadTime = new Date().getTime();
@@ -47,7 +45,12 @@ export class AdScriptConnector {
             return;
         }
         if (typeof window.JHMTApi === 'object') {
-            this.adScriptIntegration = new AdScriptTHEOIntegration(this.player, this.configuration, this.metadata);
+            this.adScriptIntegration = new AdScriptTHEOIntegration(this.player, this.configuration);
+            if (this.i12n) {
+                this.adScriptIntegration.updateUser(this.i12n);
+            }
+            this.adScriptIntegration.updateMetadata(this.metadata);
+            this.adScriptIntegration.start();
             return;
         }
         setTimeout(this.createAdScriptIntegrationWhenApiIsAvailable, 20);
@@ -60,6 +63,7 @@ export class AdScriptConnector {
      * @param metadata The MainVideoContentMetadata.
      */
     updateMetadata(metadata: MainVideoContentMetadata): void {
+        this.metadata = metadata;
         this.adScriptIntegration?.updateMetadata(metadata);
     }
 
@@ -69,6 +73,7 @@ export class AdScriptConnector {
      * @param i12n The Additional Information
      */
     updateUser(i12n: { [key: string]: string }): void {
+        this.i12n = i12n;
         this.adScriptIntegration?.updateUser(i12n);
     }
 
