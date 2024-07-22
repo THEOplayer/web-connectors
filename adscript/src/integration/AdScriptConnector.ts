@@ -54,8 +54,9 @@ export class AdScriptConnector {
     };
 
     /**
-     * Update the medata.
-     * For more information, see the [main content information settings](https://adscript.admosphere.cz/en_adScript_browser.html) section.
+     * Update the main content information settings.
+     * This method must be called every time the main video content on the currently displayed page changes.
+     * For more information, see the [main content information settings](https://adscript.admosphere.cz/en_adScript_browser.html) section in the AdScript documentation.
      * @param metadata The MainVideoContentMetadata.
      */
     updateMetadata(metadata: MainVideoContentMetadata): void {

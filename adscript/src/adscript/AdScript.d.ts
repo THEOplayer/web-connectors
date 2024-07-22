@@ -11,6 +11,10 @@ export type MainVideoContentType = 'content';
 export type EmbeddedContentType = 'preroll' | 'midroll' | 'postroll';
 export type StaticContentType = 'static';
 
+/**
+ * The main content information settings.
+ * For more information, see the [main content information settings](https://adscript.admosphere.cz/en_adScript_browser.html) section in the AdScript documentation.
+ */
 export interface MainVideoContentMetadata {
     assetid: string;
     type: MainVideoContentType;
@@ -23,7 +27,10 @@ export interface MainVideoContentMetadata {
     attributes: string;
 }
 
-interface EmbeddedContentMetadata {
+/**
+ * The embedded content metadata, about the currently playing ad.
+ */
+export interface EmbeddedContentMetadata {
     assetid: string;
     type: EmbeddedContentType;
     length: string;
