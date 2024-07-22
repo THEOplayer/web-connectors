@@ -44,21 +44,23 @@ export class AdScriptTHEOIntegration {
     private JHMTApi = window.JHMTApi;
     private JHMT = window.JHMT;
 
-    constructor(player: ChromelessPlayer, configuration: AdScriptConfiguration, metadata: MainVideoContentMetadata) {
+    constructor(
+        player: ChromelessPlayer,
+        configuration: AdScriptConfiguration,
+        initialMetadata: MainVideoContentMetadata
+    ) {
         this.player = player;
         this.logger = new Logger(Boolean(configuration.debug));
         this.adProcessor = configuration?.adProcessor;
-        this.mainContentMetadata = metadata;
+        this.mainContentMetadata = initialMetadata;
 
         // Set the additional information about the logged user.
-        for (const id in configuration.i12n) {
-            this.logger.onSetI12N(id, configuration.i12n[id]);
-            this.JHMTApi.setI12n(id, configuration.i12n[id]);
+        if (configuration.i12n) {
+            this.updateUser(configuration.i12n);
         }
 
         // Set the metadata before attaching event listeners.
-        this.logger.onSetMainVideoContentMetadata(this.mainContentMetadata);
-        this.JHMTApi.setContentMetadata(this.mainContentMetadata);
+        this.updateMetadata(initialMetadata);
 
         this.reportPlayerState();
         this.addListeners();
@@ -68,6 +70,14 @@ export class AdScriptTHEOIntegration {
         this.mainContentMetadata = metadata;
         this.logger.onSetMainVideoContentMetadata(this.mainContentMetadata);
         this.JHMTApi.setContentMetadata(this.mainContentMetadata);
+    }
+
+    public updateUser(i12n: { [key: string]: string }): void {
+        // Set the additional information about the logged user.
+        for (const id in i12n) {
+            this.logger.onSetI12N(id, i12n[id]);
+            this.JHMTApi.setI12n(id, i12n[id]);
+        }
     }
 
     public destroy() {

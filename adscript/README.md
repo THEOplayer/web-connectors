@@ -18,18 +18,6 @@ npm install @theoplayer/adscript-connector-web
 yarn add @theoplayer/adscript-connector-web
 ```
 
-## Prerequisites
-
-First you need to initialize the AdScript Measurement by including the script in your app's html.
-
-```html
-
-<script>
-    // The script is available on the official AdScript documentation:
-    // https://adscript.admosphere.cz/en_adScript_browser.html
-</script>
-```
-
 ## Usage
 
 First you need to add the AdScript connector to your app :

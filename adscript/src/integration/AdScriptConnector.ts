@@ -2,6 +2,7 @@ import type { ChromelessPlayer } from 'theoplayer';
 import { AdScriptTHEOIntegration } from './AdScriptTHEOIntegration';
 import { AdScriptConfiguration } from './AdScriptConfiguration';
 import { MainVideoContentMetadata } from '../adscript/AdScript';
+import { loadAdScriptSDK } from './LoadAdScriptSDK';
 
 export class AdScriptConnector {
     private readonly player: ChromelessPlayer;
@@ -16,14 +17,21 @@ export class AdScriptConnector {
      * Constructor for the THEOplayer AdScript connector.
      * @param player a THEOplayer instance reference
      * @param configuration a configuration object for the AdScript connector
-     * @param metadata the MainVideoContentMetadata
+     * @param initialMetadata the MainVideoContentMetadata
      * @returns
      */
-    constructor(player: ChromelessPlayer, configuration: AdScriptConfiguration, metadata: MainVideoContentMetadata) {
+    constructor(
+        player: ChromelessPlayer,
+        configuration: AdScriptConfiguration,
+        initialMetadata: MainVideoContentMetadata
+    ) {
         this.player = player;
         this.configuration = configuration;
-        this.metadata = metadata;
+        this.metadata = initialMetadata;
+
+        // This loads the external AdScript SDK script. This is not immediately available, so we start a timer.
         this.initialLoadTime = new Date().getTime();
+        loadAdScriptSDK(configuration.implementationId);
 
         this.createAdScriptIntegrationWhenApiIsAvailable();
     }
@@ -47,6 +55,7 @@ export class AdScriptConnector {
 
     /**
      * Update the medata.
+     * For more information, see the [main content information settings](https://adscript.admosphere.cz/en_adScript_browser.html) section.
      * @param metadata The MainVideoContentMetadata.
      */
     updateMetadata(metadata: MainVideoContentMetadata): void {
@@ -54,7 +63,7 @@ export class AdScriptConnector {
     }
 
     /**
-     * Destroy
+     * Destroy the connector.
      */
     destroy(): void {
         this.destroyed = true;
