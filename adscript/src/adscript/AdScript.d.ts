@@ -34,7 +34,7 @@ interface EmbeddedContentMetadata {
 
 interface StaticContentMetadata {
     assetid: string;
-    type: MainVideoContentType;
+    type: StaticContentType;
     sec1: string;
     sec2: string;
     sec3: string;
