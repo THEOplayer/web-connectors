@@ -92,3 +92,11 @@ If the metadata has changed during playback, you can update it with:
 ```javascript
 adScriptConnector.updateMetadata(newMetadata);
 ```
+
+## Updating userInfo
+
+If the user info has changed during playback, you can update it with:
+
+```javascript
+adScriptConnector.updateUser(i12n);
+```

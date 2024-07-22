@@ -63,6 +63,15 @@ export class AdScriptConnector {
     }
 
     /**
+     * Updates the additional information about logged user (customerID, deviceID, profileID, ...) from client´s database.
+     * For more information, see the [Additional Information Settings](https://adscript.admosphere.cz/en_adScript_browser.html) section.
+     * @param i12n The Additional Information
+     */
+    updateUser(i12n: { [key: string]: string }): void {
+        this.adScriptIntegration?.updateUser(i12n);
+    }
+
+    /**
      * Destroy the connector.
      */
     destroy(): void {
