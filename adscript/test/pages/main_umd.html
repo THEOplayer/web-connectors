@@ -9,48 +9,6 @@
         <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
         <script src="./../../dist/adscript-connector.umd.js"></script>
         <script src="/node_modules/theoplayer/THEOplayer.js"></script>
-        <script>
-            !function(j,h,m,t,c,z){
-                c = c || "JHMT";
-                j[c] = j[c] || [];
-                j["JHMTApiProtocol"] = "https:";
-                z = z || 3;
-        
-                var i = z%3 + 1,
-                    a = arguments.callee,
-                    b = h.createElement("script");
-        
-                b.async = !0, b.readyState ? b.onreadystatechange = function() {
-                    "loaded" !== b.readyState && "complete" !== b.readyState || (
-                        b.onreadystataechange = null, j.JHMTApi.init(c,m,t)
-                    )
-                } : b.onload = function() {
-                    j.JHMTApi.init(c,m,t);
-                },
-                    b.src = j["JHMTApiProtocol"] + "//cm" + i + ".jhmt.cz/api.js",
-                    b.onerror = function() {
-                        b.parentNode.removeChild(b);
-                        z++; i = z%3 + 1; a(j,h,m,t,c,i);
-                    },
-                    h.getElementsByTagName("head")[0].appendChild(b)
-        
-                try {
-                    var it = setInterval(function () {
-                        if (typeof j.JHMTApi !== "undefined") {
-                            clearInterval(it);
-                        }
-                        else {
-                            b.parentNode.removeChild(b);
-                            z++; i = z%3 + 1; a(j,h,m,t,c,i);
-                        }
-                    }, 1e3);
-                }
-                catch (e) {
-                    console.log('JHMT: ' + e);
-                }
-            } (window, document, "ImplementationId");
-        </script>
-        <!-- <script src="./../../dist/adscript-connector.umd.js"></script> -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
         <style>
@@ -83,10 +41,6 @@
 
             let testAssets
             let adscriptConnector
-            const adscriptConfig = {
-                implementationId: "<your implementationId>",
-                debug: true
-            };
 
             const loadSource = () => {
                 setSourceWithAdScriptMetadata(testAssets[selector.value])
@@ -124,8 +78,11 @@
                     const adscriptMetadata = jsonResponse[0].metadata
                     adscriptConnector = new THEOplayerAdScriptConnector.AdScriptConnector(
                         player,
-                        adscriptConfig,
-                        adscriptMetadata,
+                        {
+                            implementationId: 'your-implementation-id',
+                            metadata: adscriptMetadata,
+                            debug: true,
+                        }
                     )
                     populateSourceSelector(jsonResponse)
                     selector.value = 0
