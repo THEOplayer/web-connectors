@@ -32,24 +32,23 @@ First you need to add the AdScript connector to your app :
 
     // Define your configuration for the connector:
     const adScriptConfig = {
-        // TODO
-    }
-
-    // Define the metadata for reporting:
-    const videoMetadata = {
-        "assetid": "v0000001",
-        "type": "content",
-        "program": "Big Buck Bunny",
-        "title": "Sample Video - Extended",
-        "length": "635",
-        "crossId": "000 111 22222",
-        "livestream": "0",
-        "channelId": "",
-        "attribute": "1"
+        implementationId: 'your-implementation-id', // Replace this!
+        metadata: {
+            "assetid": "v0000001",
+            "type": "content",
+            "program": "Big Buck Bunny",
+            "title": "Sample Video - Extended",
+            "length": "635",
+            "crossId": "000 111 22222",
+            "livestream": "0",
+            "channelId": "",
+            "attribute": "1"
+        },
+        debug: false
     }
 
     // Create the AdScriptConnector:
-    const adScriptConnector = new THEOplayerAdScriptConnector.AdScriptConnector(player, adScriptConfig, videoMetadata);
+    const adScriptConnector = new THEOplayerAdScriptConnector.AdScriptConnector(player, adScriptConfig);
 </script>
 ```
 
@@ -64,24 +63,23 @@ First you need to add the AdScript connector to your app :
 
     // Define your configuration for the connector:
     const adScriptConfig = {
-        // TODO
-    }
-
-    // Define the metadata for reporting:
-    const videoMetadata = {
-        "assetid": "v0000001",
-        "type": "content",
-        "program": "Big Buck Bunny",
-        "title": "Sample Video - Extended",
-        "length": "635",
-        "crossId": "000 111 22222",
-        "livestream": "0",
-        "channelId": "",
-        "attribute": "1"
+        implementationId: 'your-implementation-id', // Replace this!
+        metadata: {
+            "assetid": "v0000001",
+            "type": "content",
+            "program": "Big Buck Bunny",
+            "title": "Sample Video - Extended",
+            "length": "635",
+            "crossId": "000 111 22222",
+            "livestream": "0",
+            "channelId": "",
+            "attribute": "1"
+        },
+        debug: false
     }
 
     // Create the AdScriptConnector:
-    const adScriptConnector = new AdScriptConnector(player, adScriptConfig, videoMetadata);
+    const adScriptConnector = new AdScriptConnector(player, adScriptConfig);
 </script>
 ```
 
