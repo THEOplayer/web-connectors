@@ -34,6 +34,13 @@
     "url": "https://github.com/THEOplayer/web-connectors/issues"
   },
   "homepage": "https://github.com/THEOplayer/web-connectors/tree/main/gemius#readme",
+  "files": [
+    "dist/",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE.md",
+    "package.json"
+  ],
   "peerDependencies": {
     "theoplayer": "^7.0.0"
   }
