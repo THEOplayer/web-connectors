@@ -112,7 +112,7 @@ export class ConvivaHandler {
             this.initializeSession();
         }
         this.customMetadata = { ...this.customMetadata, ...metadata };
-        this.convivaVideoAnalytics!.setContentInfo(metadata);
+        this.convivaVideoAnalytics!.setContentInfo(this.customMetadata);
     }
 
     setAdInfo(metadata: ConvivaMetadata): void {
