@@ -333,6 +333,7 @@ export class ConvivaHandler {
     private readonly onSourceChange = () => {
         this.maybeReportPlaybackEnded();
         this.currentSource = this.player.source;
+        this.customMetadata = {};
     };
 
     private readonly onEnded = () => {
@@ -371,13 +372,12 @@ export class ConvivaHandler {
         this.convivaVideoAnalytics?.release();
         this.convivaAdAnalytics = undefined;
         this.convivaVideoAnalytics = undefined;
-
-        this.customMetadata = {};
     }
 
     destroy(): void {
         this.maybeReportPlaybackEnded();
         this.removeEventListeners();
+        this.customMetadata = {};
         Analytics.release();
     }
 }
