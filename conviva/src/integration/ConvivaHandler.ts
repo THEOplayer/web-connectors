@@ -306,7 +306,7 @@ export class ConvivaHandler {
     private readonly onSegmentNotFound = () => {
         this.convivaVideoAnalytics?.reportPlaybackError(
             'A Video Playback Failure has occurred: Segment not found',
-            Constants.ErrorSeverity.FATAL
+            Constants.ErrorSeverity.WARNING
         );
     };
 
