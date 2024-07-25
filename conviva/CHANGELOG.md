@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 2.1.2
+
+### 🐛 Issues
+
+- Fixed an issue where the `segmentnotfound` event was reported as a fatal error.
+
 ## 2.1.1
 
 ### 🐛 Issues
