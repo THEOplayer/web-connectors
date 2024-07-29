@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 2.1.3
+
+### 🐛 Issues
+
+- Fixed an issue where the metadata is not passed correctly after a replay.
+
 ## 2.1.2
 
 ### 🐛 Issues
