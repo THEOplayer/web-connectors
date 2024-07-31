@@ -1,5 +1,12 @@
 # @theoplayer/yospace-connector-web
 
+## 2.3.0
+
+### ✨ Features
+
+- Added `YospaceServerSideAdInsertionConfiguration` type definition to the connector,
+  superseding the type defined by the THEOplayer Web SDK.
+
 ## 2.2.0
 
 ### ✨ Features
