@@ -1,4 +1,3 @@
-import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
 import { Creative, LinearCreative, NonLinearCreative } from '../yospace/AdBreak';
 
 export function stretchToParent(element: HTMLElement): void {

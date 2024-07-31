@@ -1,13 +1,16 @@
+import type { SourceDescription, TypedSource } from 'theoplayer';
 import type {
-    SourceDescription,
     YospaceServerSideAdInsertionConfiguration,
-    YospaceSSAIIntegrationID,
-    YospaceTypedSource
-} from 'theoplayer';
+    YospaceSSAIIntegrationID
+} from '../integration/YospaceConfiguration';
 import { implementsInterface, isTypedSource, toSources } from './SourceUtils';
 import { YospaceWindow } from '../yospace/YospaceWindow';
 
 export const YOSPACE_SSAI_INTEGRATION_ID: YospaceSSAIIntegrationID = 'yospace';
+
+export interface YospaceTypedSource extends TypedSource {
+    ssai: YospaceServerSideAdInsertionConfiguration;
+}
 
 export function isYoSpaceServerSideAdInsertionConfiguration(
     ssai: any
