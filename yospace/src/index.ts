@@ -1,4 +1,5 @@
 export * from './integration/YospaceConnector';
+export * from './integration/YospaceConfiguration';
 export { AnalyticEventObserver, SessionErrorCode } from './yospace/AnalyticEventObserver';
 export * from './yospace/AdBreak';
 export { SessionProperties } from './yospace/SessionProperties';
