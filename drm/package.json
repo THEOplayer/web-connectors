@@ -1,43 +1,47 @@
 {
-  "name": "drm-api-plugins",
+  "name": "@theoplayer/drm-connectors-web",
   "version": "1.0.0",
-  "description": "THEOplayer samples for DRM integrations",
-  "main": "index.js",
-  "scripts": {
-    "server": "http-server",
-    "build": "rollup -c ./rollup.config.js",
-    "eslint": "eslint 'src/**/*.ts'"
-  },
+  "description": "External DRM connectors for the THEOplayer Web SDK",
+  "main": "dist/drm-connectors.umd.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/r8szq0vy/drm-api-plugin.git"
+    "url": "git+https://github.com/THEOplayer/web-connectors.git",
+    "directory": "drm"
   },
-  "author": "",
-  "license": "ISC",
-  "homepage": "https://bitbucket.org/r8szq0vy/drm-api-plugin#readme",
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^15.0.0",
-    "@rollup/plugin-node-resolve": "^9.0.0",
-    "@rollup/plugin-typescript": "^5.0.2",
-    "@types/lodash": "^4.14.161",
-    "@types/node": "^14.6.3",
-    "@typescript-eslint/eslint-plugin": "^4.0.1",
-    "@typescript-eslint/parser": "^4.0.1",
-    "eslint": "^7.8.1",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.0",
-    "http-server": "^0.12.3",
-    "rollup": "^2.26.9",
-    "rollup-plugin-copy": "^3.4.0",
-    "theoplayer": "latest",
-    "ts-node": "^9.0.0",
-    "tslib": "^2.0.1",
-    "typescript": "^4.0.2"
+  "bugs": {
+    "url": "https://github.com/THEOplayer/web-connectors/issues"
   },
-  "dependencies": {
-    "@types/long": "^4.0.1",
-    "conditional-type-checks": "^1.0.5",
-    "lodash": "^4.17.20",
-    "long": "^4.0.0"
+  "homepage": "https://github.com/THEOplayer/web-connectors/tree/main/drm#readme",
+  "module": "dist/drm-connectors.esm.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/drm-connectors.esm.js",
+      "require": "./dist/drm-connectors.umd.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package": "./package.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "bundle": "rollup -c rollup.config.mjs",
+    "build": "npm run clean && npm run bundle",
+    "watch": "npm run bundle -- --watch",
+    "serve": "http-server",
+    "test": "jest"
+  },
+  "author": "THEO Technologies NV",
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE.md",
+    "package.json"
+  ],
+  "peerDependencies": {
+    "theoplayer": "^7.0.0"
   }
 }
