@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Yospace Connector Test page</title>
+        <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css" />
+        <script src="/node_modules/theoplayer/THEOplayer.js"></script>
+        <script src="/dist/yospace-connector.umd.js"></script>
+        <script type="application/javascript" src="YOUR_YOSPACE_AD_MANAGEMENT_SDK"></script>
+    </head>
+    <body>
+        <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+        <script type="text/javascript">
+            const element = document.querySelector('#THEOplayer');
+            const player = new THEOplayer.Player(element, {
+                ui: {
+                    fluid: true
+                },
+                libraryLocation: '/node_modules/theoplayer',
+                license: 'YOUR_LICENSE'
+            });
+
+            async function setupYospaceConnector(player) {
+                const yospace = new THEOplayerYospaceConnector.YospaceConnector(player);
+                const source = {
+                    sources: [
+                        {
+                            src: 'https://csm-e-sdk-validation.bln1.yospace.com/csm/extlive/yospace02,hlssample42.m3u8?yo.br=true&yo.av=4',
+                            ssai: {
+                                integration: 'yospace'
+                            }
+                        }
+                    ]
+                };
+
+                await yospace.setupYospaceSession(source);
+            }
+
+            setupYospaceConnector(player);
+
+            player.ads.addEventListener(
+                [
+                    'adbegin',
+                    'adend',
+                    'adskip',
+                    'updatead',
+                    'adbreakbegin',
+                    'adbreakend',
+                    'updateadbreak',
+                    'addad',
+                    'removead',
+                    'addadbreak',
+                    'removeadbreak',
+                    'adfirstquartile',
+                    'admidpoint',
+                    'adthirdquartile',
+                ],
+                (event) => {
+                    console.log(event.type, event, player.ads.currentAds, player.ads.currentAdBreak);
+                }
+            );
+        </script>
+    </body>
+</html>
