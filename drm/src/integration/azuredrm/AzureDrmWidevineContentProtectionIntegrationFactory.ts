@@ -1,7 +1,4 @@
-import {
-    ContentProtectionIntegration,
-    ContentProtectionIntegrationFactory
-} from 'THEOplayer';
+import { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'THEOplayer';
 import { AzureDrmConfiguration } from './AzureDrmConfiguration';
 import { AzureDrmWidevineContentProtectionIntegration } from './AzureDrmWidevineContentProtectionIntegration';
 

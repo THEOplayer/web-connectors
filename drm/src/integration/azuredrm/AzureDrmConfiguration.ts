@@ -9,7 +9,6 @@ export type AzureIntegrationID = 'azure';
  * Describes the configuration of the Azure Media Services DRM integration.
  */
 export interface AzureDrmConfiguration extends DRMConfiguration {
-
     /**
      * The identifier of the DRM integration.
      */
@@ -26,5 +25,5 @@ export interface AzureDrmConfiguration extends DRMConfiguration {
          * <br/> - This token will be used for the license request.
          */
         token: string;
-    }
+    };
 }

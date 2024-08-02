@@ -20,10 +20,10 @@ export type VerimatrixCoreDrmIntegrationID = 'verimatrixcoredrmCustom';
  * ```
  */
 export interface VerimatrixCoreDrmConfiguration extends DRMConfiguration {
-  /**
-   * The identifier of the DRM integration.
-   */
-  integration: VerimatrixCoreDrmIntegrationID;
+    /**
+     * The identifier of the DRM integration.
+     */
+    integration: VerimatrixCoreDrmIntegrationID;
 
-  integrationParameters: VerimatrixCoreIntegrationParameters;
+    integrationParameters: VerimatrixCoreIntegrationParameters;
 }

@@ -1,69 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Titanium DRM Fairplay Test Using AuthToken or device parameters</title>
-    <link rel="stylesheet" type="text/css" href="/THEOplayer/ui.css">
-    <script src="/THEOplayer/THEOplayer.js"></script>
-    <script src="/dist/bundle.js"></script>
-</head>
-<body>
-<div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
-<script type="text/javascript">
-    const element = document.querySelector('#THEOplayer');
-    const player = new THEOplayer.Player(element, {
-        ui: {
-            fluid: true
-        },
-        license: ContentProtectionIntegrations.THEOPLAYER_LICENSE,
-        libraryLocation: '/THEOplayer/'
-    });
-
-    THEOplayer.registerContentProtectionIntegration(
-        'titaniumdrm',
-        'fairplay',
-        new ContentProtectionIntegrations.TitaniumFairplayContentProtectionIntegrationFactory()
-    );
-
-    player.source = {
-        sources: {
-            src: 'insert manifest url here',
-            contentProtection: {
-                fairplay: {
-                    certificate: 'insert raw certificate',
-                    certificateUrl: 'or optional certificateUrl',
-                    licenseAcquisitionURL: 'insert license url here'
+    <head>
+        <meta charset="UTF-8" />
+        <title>Titanium DRM Fairplay Test Using AuthToken or device parameters</title>
+        <link rel="stylesheet" type="text/css" href="/THEOplayer/ui.css" />
+        <script src="/THEOplayer/THEOplayer.js"></script>
+        <script src="/dist/bundle.js"></script>
+    </head>
+    <body>
+        <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+        <script type="text/javascript">
+            const element = document.querySelector('#THEOplayer');
+            const player = new THEOplayer.Player(element, {
+                ui: {
+                    fluid: true
                 },
-                integration: 'titaniumdrm',
-                integrationParameters: {
-                    authToken: 'insert auth token'
-                }
-            }
-        }
-    };
+                license: ContentProtectionIntegrations.THEOPLAYER_LICENSE,
+                libraryLocation: '/THEOplayer/'
+            });
 
-    // // Alternatively, use device parameters instead of an authToken
-    // player.source = {
-    //     sources: [
-    //         {
-    //             src: 'insert manifest url here',
-    //             contentProtection: {
-    //                 fairplay: {
-    //                     certificate: 'insert raw certificate',
-    //                         certificateUrl: 'or optional certificateUrl',
-    //                         licenseAcquisitionURL: 'insert license url here'
-    //                 },
-    //                 integration: 'titaniumdrm',
-    //                 integrationParameters: {
-    //                     accountName: 'replace with accountName',
-    //                     customerName: 'replace with customerName',
-    //                     friendlyName: 'replace with friendlyName',
-    //                     portalId: 'replace with portalId'
-    //                 }
-    //             }
-    //         }
-    //     ],
-    // };
-</script>
-</body>
+            THEOplayer.registerContentProtectionIntegration(
+                'titaniumdrm',
+                'fairplay',
+                new ContentProtectionIntegrations.TitaniumFairplayContentProtectionIntegrationFactory()
+            );
+
+            player.source = {
+                sources: {
+                    src: 'insert manifest url here',
+                    contentProtection: {
+                        fairplay: {
+                            certificate: 'insert raw certificate',
+                            certificateUrl: 'or optional certificateUrl',
+                            licenseAcquisitionURL: 'insert license url here'
+                        },
+                        integration: 'titaniumdrm',
+                        integrationParameters: {
+                            authToken: 'insert auth token'
+                        }
+                    }
+                }
+            };
+
+            // // Alternatively, use device parameters instead of an authToken
+            // player.source = {
+            //     sources: [
+            //         {
+            //             src: 'insert manifest url here',
+            //             contentProtection: {
+            //                 fairplay: {
+            //                     certificate: 'insert raw certificate',
+            //                         certificateUrl: 'or optional certificateUrl',
+            //                         licenseAcquisitionURL: 'insert license url here'
+            //                 },
+            //                 integration: 'titaniumdrm',
+            //                 integrationParameters: {
+            //                     accountName: 'replace with accountName',
+            //                     customerName: 'replace with customerName',
+            //                     friendlyName: 'replace with friendlyName',
+            //                     portalId: 'replace with portalId'
+            //                 }
+            //             }
+            //         }
+            //     ],
+            // };
+        </script>
+    </body>
 </html>

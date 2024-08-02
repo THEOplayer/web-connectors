@@ -1,4 +1,4 @@
-import { DRMConfiguration } from "THEOplayer";
+import { DRMConfiguration } from 'THEOplayer';
 
 /**
  * The identifier of the Ezdrm integration.
@@ -19,7 +19,6 @@ export type EzdrmIntegrationID = 'ezdrm';
  * ```
  */
 export interface EzdrmDrmConfiguration extends DRMConfiguration {
-
     /**
      * The identifier of the DRM integration.
      */

@@ -1,14 +1,8 @@
-import {
-    ContentProtectionIntegration,
-    LicenseRequest,
-    MaybeAsync,
-    BufferSource
-} from 'THEOplayer';
+import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource } from 'THEOplayer';
 import { KeyOSDrmConfiguration } from './KeyOSDrmConfiguration';
-import { isKeyOSDrmDRMConfiguration } from "./KeyOSDrmUtils";
+import { isKeyOSDrmDRMConfiguration } from './KeyOSDrmUtils';
 
 export class KeyOSDrmPlayReadyContentProtectionIntegration implements ContentProtectionIntegration {
-
     private readonly contentProtectionConfiguration: KeyOSDrmConfiguration;
 
     constructor(configuration: KeyOSDrmConfiguration) {

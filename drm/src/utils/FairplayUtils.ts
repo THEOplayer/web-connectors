@@ -1,4 +1,4 @@
-import { fromBase64StringToUint8Array, fromUint8ArrayToString } from "./TypeUtils";
+import { fromBase64StringToUint8Array, fromUint8ArrayToString } from './TypeUtils';
 
 export function extractContentId(skdUrl: string): string {
     const questionMarkIndex = skdUrl.indexOf('?');

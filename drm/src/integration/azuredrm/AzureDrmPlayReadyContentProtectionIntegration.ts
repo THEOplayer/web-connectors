@@ -1,14 +1,8 @@
-import {
-    ContentProtectionIntegration,
-    LicenseRequest,
-    MaybeAsync,
-    BufferSource
-} from 'THEOplayer';
+import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource } from 'THEOplayer';
 import { AzureDrmConfiguration } from './AzureDrmConfiguration';
 import { isAzureDrmDRMConfiguration } from './AzureDrmUtils';
 
 export class AzureDrmPlayReadyContentProtectionIntegration implements ContentProtectionIntegration {
-
     private readonly contentProtectionConfiguration: AzureDrmConfiguration;
 
     constructor(configuration: AzureDrmConfiguration) {

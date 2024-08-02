@@ -9,7 +9,6 @@ export type KeyOSIntegrationId = 'keyos_buydrm';
  * Describes the configuration of the KeyOS BuyDRM DRM integration.
  */
 export interface KeyOSDrmConfiguration extends DRMConfiguration {
-
     /**
      * The identifier of the DRM integration.
      */
@@ -26,5 +25,5 @@ export interface KeyOSDrmConfiguration extends DRMConfiguration {
          * <br/> - Token that will be added to the headers of the license request.
          */
         'x-keyos-authorization': string;
-    }
+    };
 }

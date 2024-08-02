@@ -9,7 +9,6 @@ export type AxinomIntegrationId = 'axinom';
  * Describes the configuration of the Axinom DRM integration.
  */
 export interface AxinomDrmConfiguration extends DRMConfiguration {
-
     /**
      * The identifier of the DRM integration.
      */
@@ -26,5 +25,5 @@ export interface AxinomDrmConfiguration extends DRMConfiguration {
          * <br/> - Token that will be added to the headers of the license request.
          */
         token: string;
-    }
+    };
 }

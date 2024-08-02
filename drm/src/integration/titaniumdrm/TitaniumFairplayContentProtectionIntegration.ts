@@ -16,7 +16,7 @@ export class TitaniumFairplayContentProtectionIntegration implements ContentProt
     onLicenseRequest(request: LicenseRequest): MaybeAsync<Partial<LicenseRequest> | BufferSource> {
         request.headers = {
             ...request.headers,
-            ...createTitaniumHeaders(this.contentProtectionConfiguration, TitaniumCDMType.FAIRPLAY),
+            ...createTitaniumHeaders(this.contentProtectionConfiguration, TitaniumCDMType.FAIRPLAY)
         };
         return request;
     }

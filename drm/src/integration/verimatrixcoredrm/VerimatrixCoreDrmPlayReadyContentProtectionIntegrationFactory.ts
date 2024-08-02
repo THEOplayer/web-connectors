@@ -2,8 +2,10 @@ import type { ContentProtectionIntegration, ContentProtectionIntegrationFactory 
 import type { VerimatrixCoreDrmConfiguration } from './VerimatrixCoreDrmConfiguration';
 import { VerimatrixCoreDrmPlayReadyContentProtectionIntegration } from './VerimatrixCoreDrmPlayReadyContentProtectionIntegration';
 
-export class VerimatrixCoreDrmPlayReadyContentProtectionIntegrationFactory implements ContentProtectionIntegrationFactory {
-  build(configuration: VerimatrixCoreDrmConfiguration): ContentProtectionIntegration {
-    return new VerimatrixCoreDrmPlayReadyContentProtectionIntegration(configuration);
-  }
+export class VerimatrixCoreDrmPlayReadyContentProtectionIntegrationFactory
+    implements ContentProtectionIntegrationFactory
+{
+    build(configuration: VerimatrixCoreDrmConfiguration): ContentProtectionIntegration {
+        return new VerimatrixCoreDrmPlayReadyContentProtectionIntegration(configuration);
+    }
 }

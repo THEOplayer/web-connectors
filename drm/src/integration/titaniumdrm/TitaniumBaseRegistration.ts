@@ -4,7 +4,7 @@ import type { DeviceBasedTitaniumIntegrationParameters } from './TitaniumIntegra
 import type { TitaniumDrmConfiguration } from './TitaniumDrmConfiguration';
 import type { ContentProtectionError } from 'THEOplayer';
 import { ErrorCode } from 'THEOplayer';
-import { fromObjectToBase64String } from "../../utils/TypeUtils";
+import { fromObjectToBase64String } from '../../utils/TypeUtils';
 
 export interface TitaniumDeviceAuthorizationData {
     LatensRegistration: TitaniumLatensRegistration;
@@ -62,12 +62,12 @@ export const TITANIUM_CDM_DESCRIPTIONS: { [cdmType: string /* TitaniumCDMType_*/
         DRMProvider: 'Apple',
         DRMType: 'FairPlay',
         DRMVersion: '1.0'
-    },
+    }
 };
 
 export function getTitaniumDeviceAuthorizationData(
     integrationParameters: DeviceBasedTitaniumIntegrationParameters,
-    cdmType: TitaniumCDMType,
+    cdmType: TitaniumCDMType
 ): TitaniumDeviceAuthorizationData {
     const cdmDescription: TitaniumCDMDescription = TITANIUM_CDM_DESCRIPTIONS[cdmType];
     const accountName = integrationParameters.accountName;
@@ -92,14 +92,14 @@ export function getTitaniumDeviceAuthorizationData(
                 DRMType: cdmDescription.DRMType,
                 DeviceVendor: navigator.vendor,
                 DeviceModel: navigator.vendorSub
-            },
-        },
+            }
+        }
     };
 }
 
 export function createErrorForMalformedDeviceInfoConfiguration(
     configuration: TitaniumDrmConfiguration,
-    cdmType: TitaniumCDMType,
+    cdmType: TitaniumCDMType
 ): ContentProtectionError {
     let message = `Invalid Titanium ${cdmType} DRM configuration.`;
     if (!configuration.integrationParameters.accountName) {
@@ -111,18 +111,21 @@ export function createErrorForMalformedDeviceInfoConfiguration(
     }
     throw {
         code: ErrorCode.CONTENT_PROTECTION_CONFIGURATION_INVALID,
-        message: message,
+        message: message
     } as ContentProtectionError;
 }
 
-export function createErrorForMalformedTokenConfiguration(configuration: TitaniumDrmConfiguration, cdmType: TitaniumCDMType): ContentProtectionError {
+export function createErrorForMalformedTokenConfiguration(
+    configuration: TitaniumDrmConfiguration,
+    cdmType: TitaniumCDMType
+): ContentProtectionError {
     let message = `Invalid Titanium ${cdmType} DRM configuration.`;
     if (!configuration.integrationParameters.authToken) {
         message = `Invalid Titanium ${cdmType} DRM configuration, authToken is not set.`;
     }
     throw {
         code: ErrorCode.CONTENT_PROTECTION_CONFIGURATION_INVALID,
-        message: message,
+        message: message
     } as ContentProtectionError;
 }
 
@@ -144,17 +147,20 @@ export function createTitaniumDeviceHeader(configuration: TitaniumDrmConfigurati
     }
 }
 
-export function createTitaniumHeaders(configuration: TitaniumDrmConfiguration, cdmType: TitaniumCDMType): { [key: string]: string } {
+export function createTitaniumHeaders(
+    configuration: TitaniumDrmConfiguration,
+    cdmType: TitaniumCDMType
+): { [key: string]: string } {
     const hasAuthToken = isTokenBasedTitaniumDRMConfiguration(configuration.integrationParameters);
     if (hasAuthToken) {
         return {
             'content-type': 'application/octet-stream',
-            Authorization: createTitaniumAuthHeader(configuration, cdmType),
+            Authorization: createTitaniumAuthHeader(configuration, cdmType)
         };
     } else {
         return {
             'content-type': 'application/octet-stream',
-            'X-TITANIUM-DRM-CDATA': createTitaniumDeviceHeader(configuration, cdmType),
+            'X-TITANIUM-DRM-CDATA': createTitaniumDeviceHeader(configuration, cdmType)
         };
     }
 }

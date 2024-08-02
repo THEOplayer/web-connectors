@@ -9,7 +9,6 @@ export type ComcastIntegrationID = 'comcast';
  * Describes the configuration of the Comcast DRM integration.
  */
 export interface ComcastDrmConfiguration extends DRMConfiguration {
-
     /**
      * The identifier of the DRM integration.
      */
@@ -20,7 +19,6 @@ export interface ComcastDrmConfiguration extends DRMConfiguration {
      * ContentProtectionIntegration.
      */
     integrationParameters: {
-
         /**
          * The Comcast Release Pid.
          *
@@ -41,5 +39,5 @@ export interface ComcastDrmConfiguration extends DRMConfiguration {
          * <br/> - This token will be used for the license request.
          */
         token: string;
-    }
+    };
 }

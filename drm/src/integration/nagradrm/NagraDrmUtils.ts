@@ -1,7 +1,5 @@
-import { NagraDrmConfiguration } from "./NagraDrmConfiguration";
+import { NagraDrmConfiguration } from './NagraDrmConfiguration';
 
-export function isNagraDrmDRMConfiguration(
-    configuration: NagraDrmConfiguration
-): boolean {
+export function isNagraDrmDRMConfiguration(configuration: NagraDrmConfiguration): boolean {
     return configuration.integrationParameters.token !== undefined;
 }

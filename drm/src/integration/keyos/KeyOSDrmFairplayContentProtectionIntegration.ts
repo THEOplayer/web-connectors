@@ -3,19 +3,19 @@ import {
     LicenseRequest,
     MaybeAsync,
     BufferSource,
-    CertificateRequest, LicenseResponse
+    CertificateRequest,
+    LicenseResponse
 } from 'THEOplayer';
 import { KeyOSDrmConfiguration } from './KeyOSDrmConfiguration';
-import { isKeyOSDrmDRMConfiguration, extractContentId } from "./KeyOSDrmUtils";
+import { isKeyOSDrmDRMConfiguration, extractContentId } from './KeyOSDrmUtils';
 import {
-    fromBase64StringToUint8Array, fromStringToUint8Array,
+    fromBase64StringToUint8Array,
+    fromStringToUint8Array,
     fromUint8ArrayToBase64String,
     fromUint8ArrayToUtf8String
-} from "../../utils/TypeUtils";
-
+} from '../../utils/TypeUtils';
 
 export class KeyOSDrmFairplayContentProtectionIntegration implements ContentProtectionIntegration {
-
     private readonly contentProtectionConfiguration: KeyOSDrmConfiguration;
     private contentId: string | undefined = undefined;
 
@@ -54,12 +54,12 @@ export class KeyOSDrmFairplayContentProtectionIntegration implements ContentProt
     }
 
     onLicenseResponse?(response: LicenseResponse): MaybeAsync<BufferSource> {
-        const bodyAsString = fromUint8ArrayToUtf8String(response.body)
-        let keyText = bodyAsString.trim()
+        const bodyAsString = fromUint8ArrayToUtf8String(response.body);
+        let keyText = bodyAsString.trim();
         if (keyText.substr(0, 5) === '<ckc>' && keyText.substr(-6) === '</ckc>') {
-            keyText = keyText.slice(5, -6)
+            keyText = keyText.slice(5, -6);
         }
-        return fromBase64StringToUint8Array(keyText)
+        return fromBase64StringToUint8Array(keyText);
     }
 
     extractFairplayContentId(skdUrl: string): string {

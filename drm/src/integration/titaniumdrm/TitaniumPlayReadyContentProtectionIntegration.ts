@@ -17,7 +17,7 @@ export class TitaniumPlayReadyContentProtectionIntegration implements ContentPro
     onCertificateRequest(request: CertificateRequest): MaybeAsync<Partial<CertificateRequest> | BufferSource> {
         request.headers = {
             ...request.headers,
-            ...createTitaniumHeaders(this.contentProtectionConfiguration, TitaniumCDMType.WIDEVINE),
+            ...createTitaniumHeaders(this.contentProtectionConfiguration, TitaniumCDMType.WIDEVINE)
         };
         return request;
     }
@@ -25,7 +25,7 @@ export class TitaniumPlayReadyContentProtectionIntegration implements ContentPro
     onLicenseRequest(request: LicenseRequest): MaybeAsync<Partial<LicenseRequest> | BufferSource> {
         request.headers = {
             ...request.headers,
-            ...createTitaniumHeaders(this.contentProtectionConfiguration, TitaniumCDMType.WIDEVINE),
+            ...createTitaniumHeaders(this.contentProtectionConfiguration, TitaniumCDMType.WIDEVINE)
         };
         return request;
     }

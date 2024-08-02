@@ -1,15 +1,8 @@
-import {
-    ContentProtectionIntegration,
-    LicenseRequest,
-    MaybeAsync,
-    BufferSource,
-    CertificateRequest
-} from 'THEOplayer';
+import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource, CertificateRequest } from 'THEOplayer';
 import { AxinomDrmConfiguration } from './AxinomDrmConfiguration';
-import { isAxinomDrmDRMConfiguration } from "./AxinomDrmUtils";
+import { isAxinomDrmDRMConfiguration } from './AxinomDrmUtils';
 
 export class AxinomDrmFairplayContentProtectionIntegration implements ContentProtectionIntegration {
-
     private readonly contentProtectionConfiguration: AxinomDrmConfiguration;
 
     constructor(configuration: AxinomDrmConfiguration) {

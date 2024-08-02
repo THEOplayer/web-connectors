@@ -9,7 +9,6 @@ export type DRMTodayIntegrationID = 'castlabs';
  * Describes the configuration of the Comcast DRM integration.
  */
 export interface CastLabsDrmConfiguration extends DRMConfiguration {
-
     /**
      * The identifier of the DRM integration.
      */
@@ -20,7 +19,6 @@ export interface CastLabsDrmConfiguration extends DRMConfiguration {
      * ContentProtectionIntegration.
      */
     integrationParameters: {
-
         /**
          * The Comcast Release Pid.
          *
@@ -41,5 +39,5 @@ export interface CastLabsDrmConfiguration extends DRMConfiguration {
          * <br/> - This token will be used for the license request.
          */
         userId: string;
-    }
+    };
 }

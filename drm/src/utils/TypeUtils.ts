@@ -1,10 +1,10 @@
 import { utils } from 'THEOplayer';
 
-export function fromObjectToUint8Array(obj: {[key: string]: any}): Uint8Array {
+export function fromObjectToUint8Array(obj: { [key: string]: any }): Uint8Array {
     return new TextEncoder().encode(JSON.stringify(obj));
 }
 
-export function fromObjectToBase64String(obj: {[key: string]: any}): string {
+export function fromObjectToBase64String(obj: { [key: string]: any }): string {
     return fromStringToBase64String(JSON.stringify(obj));
 }
 
@@ -21,7 +21,7 @@ export function fromBase64StringToString(str: string): string {
 }
 
 export function fromBase64StringToArrayBuffer(str: string): ArrayBuffer {
-    return Uint8Array.from(fromBase64StringToString(str), c => c.charCodeAt(0)).buffer;
+    return Uint8Array.from(fromBase64StringToString(str), (c) => c.charCodeAt(0)).buffer;
 }
 
 export function fromUint8ArrayToNumberArray(array: Uint8Array): number[] {
@@ -40,7 +40,7 @@ export function fromUint8ArrayToString(array: Uint8Array): string {
     return new TextDecoder().decode(array);
 }
 
-export function fromUint8ArrayToObject(array: Uint8Array): {[key: string]: any} {
+export function fromUint8ArrayToObject(array: Uint8Array): { [key: string]: any } {
     return JSON.parse(new TextDecoder().decode(array));
 }
 

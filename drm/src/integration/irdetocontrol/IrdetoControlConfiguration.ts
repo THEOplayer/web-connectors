@@ -9,7 +9,6 @@ export type IrdetoControlIntegrationID = 'irdetocontrol';
  * Describes the configuration of the Irdeto Control DRM integration.
  */
 export interface IrdetoControlConfiguration extends DRMConfiguration {
-
     /**
      * The identifier of the DRM integration.
      */
@@ -34,5 +33,5 @@ export interface IrdetoControlConfiguration extends DRMConfiguration {
          * <br/> - This Application ID will be used for the certificate request.
          */
         applicationId?: string;
-    }
+    };
 }

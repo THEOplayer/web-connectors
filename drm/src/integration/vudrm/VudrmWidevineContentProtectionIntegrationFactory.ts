@@ -1,7 +1,4 @@
-import {
-    ContentProtectionIntegration,
-    ContentProtectionIntegrationFactory
-} from 'THEOplayer';
+import { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'THEOplayer';
 import { VudrmWidevineContentProtectionIntegration } from './VudrmWidevineContentProtectionIntegration';
 import { VudrmDrmConfiguration } from './VudrmDrmConfiguration';
 
