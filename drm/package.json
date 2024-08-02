@@ -1,6 +1,6 @@
 {
   "name": "@theoplayer/drm-connectors-web",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "External DRM connectors for the THEOplayer Web SDK",
   "main": "dist/drm-connectors.umd.js",
   "repository": {
