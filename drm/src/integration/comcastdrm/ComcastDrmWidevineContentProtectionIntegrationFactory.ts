@@ -1,4 +1,4 @@
-import { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'THEOplayer';
+import { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'theoplayer';
 import { ComcastDrmConfiguration } from './ComcastDrmConfiguration';
 import { ComcastDrmWidevineContentProtectionIntegration } from './ComcastDrmWidevineContentProtectionIntegration';
 

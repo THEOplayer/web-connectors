@@ -1,4 +1,4 @@
-import { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'THEOplayer';
+import { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'theoplayer';
 import { CastLabsDrmConfiguration } from './CastLabsDrmConfiguration';
 import { CastLabsDrmFairPlayContentProtectionIntegration } from './CastLabsDrmFairPlayContentProtectionIntegration';
 

@@ -1,4 +1,4 @@
-import type { ContentProtectionIntegration, LicenseRequest, MaybeAsync } from 'THEOplayer';
+import type { ContentProtectionIntegration, LicenseRequest, MaybeAsync } from 'theoplayer';
 import type { VerimatrixCoreDrmConfiguration } from './VerimatrixCoreDrmConfiguration';
 
 export class VerimatrixCoreDrmPlayReadyContentProtectionIntegration implements ContentProtectionIntegration {

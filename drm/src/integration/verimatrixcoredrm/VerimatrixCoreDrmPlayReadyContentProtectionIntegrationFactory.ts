@@ -1,4 +1,4 @@
-import type { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'THEOplayer';
+import type { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'theoplayer';
 import type { VerimatrixCoreDrmConfiguration } from './VerimatrixCoreDrmConfiguration';
 import { VerimatrixCoreDrmPlayReadyContentProtectionIntegration } from './VerimatrixCoreDrmPlayReadyContentProtectionIntegration';
 

@@ -1,4 +1,4 @@
-import { BufferSource, ContentProtectionIntegration, LicenseRequest, LicenseResponse, MaybeAsync } from 'THEOplayer';
+import { BufferSource, ContentProtectionIntegration, LicenseRequest, LicenseResponse, MaybeAsync } from 'theoplayer';
 import { ComcastDrmConfiguration } from './ComcastDrmConfiguration';
 import { isComcastDrmDRMConfiguration } from './ComcastDrmUtils';
 import { extractContentId } from '../../utils/FairplayUtils';

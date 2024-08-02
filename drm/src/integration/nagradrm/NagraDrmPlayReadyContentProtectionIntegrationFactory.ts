@@ -1,4 +1,4 @@
-import { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'THEOplayer';
+import { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'theoplayer';
 import { NagraDrmConfiguration } from './NagraDrmConfiguration';
 import { NagraDrmPlayReadyContentProtectionIntegration } from './NagraDrmPlayReadyContentProtectionIntegration';
 

@@ -1,4 +1,4 @@
-import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource } from 'THEOplayer';
+import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource } from 'theoplayer';
 import { AzureDrmConfiguration } from './AzureDrmConfiguration';
 import { isAzureDrmDRMConfiguration } from './AzureDrmUtils';
 

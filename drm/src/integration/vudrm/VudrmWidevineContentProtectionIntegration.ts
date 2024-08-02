@@ -1,4 +1,4 @@
-import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource, CertificateRequest } from 'THEOplayer';
+import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource, CertificateRequest } from 'theoplayer';
 import { VudrmDrmConfiguration } from './VudrmDrmConfiguration';
 import { isVudrmDRMConfiguration } from './VudrmUtil';
 import { fromObjectToUint8Array, fromUint8ArrayToNumberArray } from '../../utils/TypeUtils';

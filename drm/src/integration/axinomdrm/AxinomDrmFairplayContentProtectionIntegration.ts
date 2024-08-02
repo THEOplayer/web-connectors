@@ -1,4 +1,4 @@
-import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource, CertificateRequest } from 'THEOplayer';
+import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource, CertificateRequest } from 'theoplayer';
 import { AxinomDrmConfiguration } from './AxinomDrmConfiguration';
 import { isAxinomDrmDRMConfiguration } from './AxinomDrmUtils';
 

@@ -5,7 +5,7 @@ import {
     BufferSource,
     CertificateRequest,
     LicenseResponse
-} from 'THEOplayer';
+} from 'theoplayer';
 import { KeyOSDrmConfiguration } from './KeyOSDrmConfiguration';
 import { isKeyOSDrmDRMConfiguration, extractContentId } from './KeyOSDrmUtils';
 import {

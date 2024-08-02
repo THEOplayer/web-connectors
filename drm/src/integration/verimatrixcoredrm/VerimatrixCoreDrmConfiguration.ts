@@ -1,4 +1,4 @@
-import type { DRMConfiguration } from 'THEOplayer';
+import type { DRMConfiguration } from 'theoplayer';
 import type { VerimatrixCoreIntegrationParameters } from './VerimatrixCoreIntegrationParameters';
 
 /**

@@ -1,4 +1,4 @@
-import type { ContentProtectionIntegration, LicenseRequest, LicenseResponse, MaybeAsync } from 'THEOplayer';
+import type { ContentProtectionIntegration, LicenseRequest, LicenseResponse, MaybeAsync } from 'theoplayer';
 import type { VerimatrixCoreDrmConfiguration } from './VerimatrixCoreDrmConfiguration';
 import {
     fromBase64StringToUint8Array,

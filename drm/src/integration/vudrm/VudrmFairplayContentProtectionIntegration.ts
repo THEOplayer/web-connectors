@@ -4,7 +4,7 @@ import {
     MaybeAsync,
     BufferSource,
     CertificateRequest
-} from 'THEOplayer';
+} from 'theoplayer';
 import { VudrmDrmConfiguration } from './VudrmDrmConfiguration';
 import { isVudrmDRMConfiguration } from './VudrmUtil';
 import { extractContentId } from '../../utils/FairplayUtils';

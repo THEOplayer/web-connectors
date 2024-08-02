@@ -1,4 +1,4 @@
-import type { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'THEOplayer';
+import type { ContentProtectionIntegration, ContentProtectionIntegrationFactory } from 'theoplayer';
 import { TitaniumFairplayContentProtectionIntegration } from './TitaniumFairplayContentProtectionIntegration';
 import type { TitaniumDrmConfiguration } from './TitaniumDrmConfiguration';
 

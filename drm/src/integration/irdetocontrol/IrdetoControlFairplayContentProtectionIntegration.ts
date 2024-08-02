@@ -5,7 +5,7 @@ import {
     LicenseRequest,
     LicenseResponse,
     MaybeAsync
-} from 'THEOplayer';
+} from 'theoplayer';
 import { IrdetoControlConfiguration } from './IrdetoControlConfiguration';
 
 export class IrdetoControlFairplayContentProtectionIntegration implements ContentProtectionIntegration {

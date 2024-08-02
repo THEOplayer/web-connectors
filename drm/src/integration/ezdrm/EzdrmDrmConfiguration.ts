@@ -1,4 +1,4 @@
-import { DRMConfiguration } from 'THEOplayer';
+import { DRMConfiguration } from 'theoplayer';
 
 /**
  * The identifier of the Ezdrm integration.

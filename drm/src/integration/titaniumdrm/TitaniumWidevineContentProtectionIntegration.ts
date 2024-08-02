@@ -1,8 +1,8 @@
 import { isTitaniumDRMConfiguration } from './TitaniumUtils';
 import { createTitaniumHeaders, TitaniumCDMType } from './TitaniumBaseRegistration';
-import type { BufferSource, ContentProtectionIntegration, LicenseRequest, MaybeAsync } from 'THEOplayer';
+import type { BufferSource, ContentProtectionIntegration, LicenseRequest, MaybeAsync } from 'theoplayer';
 import type { TitaniumDrmConfiguration } from './TitaniumDrmConfiguration';
-import type { CertificateRequest } from 'THEOplayer';
+import type { CertificateRequest } from 'theoplayer';
 
 export class TitaniumWidevineContentProtectionIntegration implements ContentProtectionIntegration {
     private readonly contentProtectionConfiguration: TitaniumDrmConfiguration;

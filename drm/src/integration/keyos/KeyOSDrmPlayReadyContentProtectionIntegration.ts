@@ -1,4 +1,4 @@
-import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource } from 'THEOplayer';
+import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource } from 'theoplayer';
 import { KeyOSDrmConfiguration } from './KeyOSDrmConfiguration';
 import { isKeyOSDrmDRMConfiguration } from './KeyOSDrmUtils';
 

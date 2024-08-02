@@ -45,7 +45,7 @@ import {
     CertificateResponse,
     LicenseRequest,
     LicenseResponse
-} from 'THEOplayer';
+} from 'theoplayer';
 import { CustomDRMConfiguration } from './CustomDRMConfiguration';
 
 export class CustomContentProtectionIntegration implements ContentProtectionIntegration {
@@ -84,7 +84,7 @@ Optional parameters needed for certificate or license requests, such as tokens, 
 object that is passed when creating instances of the `CustomContentProtectionIntegration` class.
 
 ```ts
-import { DRMConfiguration } from 'THEOplayer';
+import { DRMConfiguration } from 'theoplayer';
 
 export interface CustomDRMConfiguration extends DRMConfiguration {
     integrationParameters: {
@@ -108,7 +108,7 @@ import {
     ContentProtectionIntegration,
     ContentProtectionIntegrationFactory,
     DRMConfiguration
-} from 'THEOplayer';
+} from 'theoplayer';
 import { CustomContentProtectionIntegration } from './CustomContentProtectionIntegration';
 
 export class CustomContentProtectionIntegrationFactory implements ContentProtectionIntegrationFactory {

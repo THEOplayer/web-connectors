@@ -5,7 +5,7 @@ import {
     LicenseRequest,
     LicenseResponse,
     MaybeAsync
-} from 'THEOplayer';
+} from 'theoplayer';
 import { AzureDrmConfiguration } from './AzureDrmConfiguration';
 import { isAzureDrmDRMConfiguration } from './AzureDrmUtils';
 import { extractContentId, unwrapCkc } from '../../utils/FairplayUtils';

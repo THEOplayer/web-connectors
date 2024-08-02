@@ -1,4 +1,4 @@
-import { ContentProtectionIntegration, LicenseRequest, CertificateRequest, MaybeAsync, BufferSource } from 'THEOplayer';
+import { ContentProtectionIntegration, LicenseRequest, CertificateRequest, MaybeAsync, BufferSource } from 'theoplayer';
 import { NagraDrmConfiguration } from './NagraDrmConfiguration';
 import { isNagraDrmDRMConfiguration } from './NagraDrmUtils';
 

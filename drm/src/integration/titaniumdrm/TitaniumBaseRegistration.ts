@@ -2,8 +2,8 @@
 import { isDeviceBasedTitaniumDRMConfiguration, isTokenBasedTitaniumDRMConfiguration } from './TitaniumUtils';
 import type { DeviceBasedTitaniumIntegrationParameters } from './TitaniumIntegrationParameters';
 import type { TitaniumDrmConfiguration } from './TitaniumDrmConfiguration';
-import type { ContentProtectionError } from 'THEOplayer';
-import { ErrorCode } from 'THEOplayer';
+import type { ContentProtectionError } from 'theoplayer';
+import { ErrorCode } from 'theoplayer';
 import { fromObjectToBase64String } from '../../utils/TypeUtils';
 
 export interface TitaniumDeviceAuthorizationData {

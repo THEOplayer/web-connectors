@@ -1,4 +1,4 @@
-import { utils } from 'THEOplayer';
+import { utils } from 'theoplayer';
 
 export function fromObjectToUint8Array(obj: { [key: string]: any }): Uint8Array {
     return new TextEncoder().encode(JSON.stringify(obj));

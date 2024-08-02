@@ -1,6 +1,6 @@
 import { isTitaniumDRMConfiguration } from './TitaniumUtils';
 import { createTitaniumHeaders, TitaniumCDMType } from './TitaniumBaseRegistration';
-import type { ContentProtectionIntegration, LicenseRequest, MaybeAsync } from 'THEOplayer';
+import type { ContentProtectionIntegration, LicenseRequest, MaybeAsync } from 'theoplayer';
 import type { TitaniumDrmConfiguration } from './TitaniumDrmConfiguration';
 
 export class TitaniumFairplayContentProtectionIntegration implements ContentProtectionIntegration {

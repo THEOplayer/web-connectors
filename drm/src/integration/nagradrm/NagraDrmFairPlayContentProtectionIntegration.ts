@@ -5,7 +5,7 @@ import {
     MaybeAsync,
     BufferSource,
     CertificateRequest
-} from 'THEOplayer';
+} from 'theoplayer';
 import { NagraDrmConfiguration } from './NagraDrmConfiguration';
 import { isNagraDrmDRMConfiguration } from './NagraDrmUtils';
 import { fromBase64StringToArrayBuffer, fromBase64StringToString, fromUint8ArrayToObject } from '../../utils/TypeUtils';
