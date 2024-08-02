@@ -37,7 +37,7 @@ export interface TitaniumCDMDescription {
 export enum TitaniumCDMType {
     WIDEVINE = 'Widevine',
     PLAYREADY = 'PlayreadyV2',
-    PLAYREADY_v2 = 'PlayreadyV2',
+    PLAYREADY_v2 = TitaniumCDMType.PLAYREADY,
     PLAYREADY_v3 = 'PlayreadyV3',
     FAIRPLAY = 'Fairplay'
 }

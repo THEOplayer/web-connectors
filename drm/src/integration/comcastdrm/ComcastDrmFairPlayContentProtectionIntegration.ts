@@ -4,7 +4,6 @@ import { isComcastDrmDRMConfiguration } from './ComcastDrmUtils';
 import { extractContentId } from '../../utils/FairplayUtils';
 import {
     fromBase64StringToArrayBuffer,
-    fromBase64StringToString,
     fromObjectToUint8Array,
     fromUint8ArrayToBase64String,
     fromUint8ArrayToObject

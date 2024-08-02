@@ -3,8 +3,7 @@ import {
     LicenseRequest,
     MaybeAsync,
     BufferSource,
-    CertificateRequest,
-    utils
+    CertificateRequest
 } from 'THEOplayer';
 import { VudrmDrmConfiguration } from './VudrmDrmConfiguration';
 import { isVudrmDRMConfiguration } from './VudrmUtil';
