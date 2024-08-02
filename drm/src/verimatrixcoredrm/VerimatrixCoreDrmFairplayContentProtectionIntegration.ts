@@ -5,7 +5,7 @@ import {
     fromObjectToUint8Array,
     fromUint8ArrayToBase64String,
     fromUint8ArrayToObject
-} from '../../utils/TypeUtils';
+} from '../utils/TypeUtils';
 
 export class VerimatrixCoreDrmFairplayContentProtectionIntegration implements ContentProtectionIntegration {
     static readonly DEFAULT_LICENSE_URL = 'insert default license url here';

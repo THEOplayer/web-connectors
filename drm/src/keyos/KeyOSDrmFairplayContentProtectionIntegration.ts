@@ -13,7 +13,7 @@ import {
     fromStringToUint8Array,
     fromUint8ArrayToBase64String,
     fromUint8ArrayToUtf8String
-} from '../../utils/TypeUtils';
+} from '../utils/TypeUtils';
 
 export class KeyOSDrmFairplayContentProtectionIntegration implements ContentProtectionIntegration {
     private readonly contentProtectionConfiguration: KeyOSDrmConfiguration;

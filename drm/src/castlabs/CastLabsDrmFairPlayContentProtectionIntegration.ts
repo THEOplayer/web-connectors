@@ -7,8 +7,8 @@ import {
     MaybeAsync
 } from 'theoplayer';
 import { CastLabsDrmConfiguration } from './CastLabsDrmConfiguration';
-import { unwrapCkc } from '../../utils/FairplayUtils';
-import { fromObjectToBase64String, fromStringToUint8Array, fromUint8ArrayToBase64String } from '../../utils/TypeUtils';
+import { unwrapCkc } from '../utils/FairplayUtils';
+import { fromObjectToBase64String, fromStringToUint8Array, fromUint8ArrayToBase64String } from '../utils/TypeUtils';
 
 export class CastLabsDrmFairPlayContentProtectionIntegration implements ContentProtectionIntegration {
     private readonly contentProtectionConfiguration: CastLabsDrmConfiguration;

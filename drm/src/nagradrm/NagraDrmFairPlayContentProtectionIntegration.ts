@@ -8,7 +8,7 @@ import {
 } from 'theoplayer';
 import { NagraDrmConfiguration } from './NagraDrmConfiguration';
 import { isNagraDrmDRMConfiguration } from './NagraDrmUtils';
-import { fromBase64StringToArrayBuffer, fromBase64StringToString, fromUint8ArrayToObject } from '../../utils/TypeUtils';
+import { fromBase64StringToArrayBuffer, fromBase64StringToString, fromUint8ArrayToObject } from '../utils/TypeUtils';
 
 export class NagraDrmFairPlayContentProtectionIntegration implements ContentProtectionIntegration {
     private readonly contentProtectionConfiguration: NagraDrmConfiguration;

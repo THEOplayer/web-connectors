@@ -1,7 +1,7 @@
 import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource, CertificateRequest } from 'theoplayer';
 import { VudrmDrmConfiguration } from './VudrmDrmConfiguration';
 import { isVudrmDRMConfiguration } from './VudrmUtil';
-import { fromObjectToUint8Array, fromUint8ArrayToNumberArray } from '../../utils/TypeUtils';
+import { fromObjectToUint8Array, fromUint8ArrayToNumberArray } from '../utils/TypeUtils';
 
 export class VudrmWidevineContentProtectionIntegration implements ContentProtectionIntegration {
     static readonly DEFAULT_LICENSE_URL = 'https://widevine-proxy.drm.technology/proxy';

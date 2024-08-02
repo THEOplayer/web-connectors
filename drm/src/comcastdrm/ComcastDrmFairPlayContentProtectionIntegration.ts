@@ -1,13 +1,13 @@
 import { BufferSource, ContentProtectionIntegration, LicenseRequest, LicenseResponse, MaybeAsync } from 'theoplayer';
 import { ComcastDrmConfiguration } from './ComcastDrmConfiguration';
 import { isComcastDrmDRMConfiguration } from './ComcastDrmUtils';
-import { extractContentId } from '../../utils/FairplayUtils';
+import { extractContentId } from '../utils/FairplayUtils';
 import {
     fromBase64StringToArrayBuffer,
     fromObjectToUint8Array,
     fromUint8ArrayToBase64String,
     fromUint8ArrayToObject
-} from '../../utils/TypeUtils';
+} from '../utils/TypeUtils';
 
 export class ComcastDrmFairPlayContentProtectionIntegration implements ContentProtectionIntegration {
     private readonly contentProtectionConfiguration: ComcastDrmConfiguration;

@@ -1,10 +1,9 @@
-/* eslint-disable no-unused-vars */
 import { isDeviceBasedTitaniumDRMConfiguration, isTokenBasedTitaniumDRMConfiguration } from './TitaniumUtils';
 import type { DeviceBasedTitaniumIntegrationParameters } from './TitaniumIntegrationParameters';
 import type { TitaniumDrmConfiguration } from './TitaniumDrmConfiguration';
 import type { ContentProtectionError } from 'theoplayer';
 import { ErrorCode } from 'theoplayer';
-import { fromObjectToBase64String } from '../../utils/TypeUtils';
+import { fromObjectToBase64String } from '../utils/TypeUtils';
 
 export interface TitaniumDeviceAuthorizationData {
     LatensRegistration: TitaniumLatensRegistration;

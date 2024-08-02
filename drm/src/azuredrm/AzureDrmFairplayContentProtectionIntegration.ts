@@ -8,8 +8,8 @@ import {
 } from 'theoplayer';
 import { AzureDrmConfiguration } from './AzureDrmConfiguration';
 import { isAzureDrmDRMConfiguration } from './AzureDrmUtils';
-import { extractContentId, unwrapCkc } from '../../utils/FairplayUtils';
-import { fromStringToUint8Array, fromUint8ArrayToBase64String } from '../../utils/TypeUtils';
+import { extractContentId, unwrapCkc } from '../utils/FairplayUtils';
+import { fromStringToUint8Array, fromUint8ArrayToBase64String } from '../utils/TypeUtils';
 
 export class AzureDrmFairplayContentProtectionIntegration implements ContentProtectionIntegration {
     private readonly contentProtectionConfiguration: AzureDrmConfiguration;

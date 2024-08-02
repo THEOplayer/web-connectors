@@ -7,8 +7,8 @@ import {
 } from 'theoplayer';
 import { VudrmDrmConfiguration } from './VudrmDrmConfiguration';
 import { isVudrmDRMConfiguration } from './VudrmUtil';
-import { extractContentId } from '../../utils/FairplayUtils';
-import { fromObjectToUint8Array, fromUint8ArrayToBase64String } from '../../utils/TypeUtils';
+import { extractContentId } from '../utils/FairplayUtils';
+import { fromObjectToUint8Array, fromUint8ArrayToBase64String } from '../utils/TypeUtils';
 
 export class VudrmFairplayContentProtectionIntegration implements ContentProtectionIntegration {
     static readonly DEFAULT_CERTIFICATE_URL = 'https://fairplay-license.drm.technology/certificate';

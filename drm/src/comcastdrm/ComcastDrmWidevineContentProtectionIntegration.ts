@@ -9,7 +9,7 @@ import {
 } from 'theoplayer';
 import { ComcastDrmConfiguration } from './ComcastDrmConfiguration';
 import { isComcastDrmDRMConfiguration } from './ComcastDrmUtils';
-import { fromObjectToUint8Array, fromUint8ArrayToBase64String, fromUint8ArrayToString } from '../../utils/TypeUtils';
+import { fromObjectToUint8Array, fromUint8ArrayToBase64String, fromUint8ArrayToString } from '../utils/TypeUtils';
 
 export class ComcastDrmWidevineContentProtectionIntegration implements ContentProtectionIntegration {
     private readonly contentProtectionConfiguration: ComcastDrmConfiguration;

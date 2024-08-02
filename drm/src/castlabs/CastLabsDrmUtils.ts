@@ -1,6 +1,6 @@
 import { CastLabsDrmConfiguration } from './CastLabsDrmConfiguration';
 
-export function isDCastLabsDrmDRMConfiguration(configuration: CastLabsDrmConfiguration): boolean {
+export function isCastLabsDrmDRMConfiguration(configuration: CastLabsDrmConfiguration): boolean {
     return (
         configuration.integrationParameters.merchant !== undefined &&
         configuration.integrationParameters.sessionId !== undefined &&

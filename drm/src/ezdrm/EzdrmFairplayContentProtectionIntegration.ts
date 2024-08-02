@@ -1,6 +1,6 @@
 import { ContentProtectionIntegration, LicenseRequest, MaybeAsync, BufferSource, CertificateRequest } from 'theoplayer';
 import { EzdrmDrmConfiguration } from './EzdrmDrmConfiguration';
-import { extractContentId } from '../../utils/FairplayUtils';
+import { extractContentId } from '../utils/FairplayUtils';
 
 export class EzdrmFairplayContentProtectionIntegration implements ContentProtectionIntegration {
     static readonly DEFAULT_CERTIFICATE_URL = 'insert default certificate url here';
