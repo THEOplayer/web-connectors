@@ -3,10 +3,9 @@
     <head>
         <meta charset="UTF-8" />
         <title>Comcast DRM FairPlay Test</title>
-        <link rel="stylesheet" type="text/css" href="//cdn.theoplayer.com/dash/theoplayer/ui.css" />
         <link rel="stylesheet" type="text/css" href="style.css" />
-        <script src="//cdn.theoplayer.com/dash/theoplayer/THEOplayer.js"></script>
-        <script src="/dist/bundle.js"></script>
+        <link rel="stylesheet" type="text/css" href="//cdn.theoplayer.com/dash/theoplayer/ui.css" />
+
     </head>
     <body>
         <div class="row">
@@ -41,14 +40,14 @@
                     fluid: true
                 },
                 mutedAutoplay: true,
-                license: ContentProtectionIntegrations.THEOPLAYER_LICENSE,
+                license: 'insert-your-license-here',
                 libraryLocation: '/THEOplayer/'
             });
 
             THEOplayer.registerContentProtectionIntegration(
                 'comcast',
                 'fairplay',
-                new ContentProtectionIntegrations.ComcastDrmFairPlayContentProtectionIntegrationFactory()
+                new THEOplayerDrmConnector.ComcastDrmFairPlayContentProtectionIntegrationFactory()
             );
 
             let configureStream = function (src, token, releasePid, account, region, certificateURL) {

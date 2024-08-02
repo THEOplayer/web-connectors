@@ -139,7 +139,7 @@ with THEOplayer by specifying a unique `integrationId`, such as `'custom_wv'` in
 THEOplayer.registerContentProtectionIntegration(
     'custom_wv',
     'widevine',
-    new ContentProtectionIntegrations.CustomContentProtectionIntegrationFactory()
+    new THEOplayerDrmConnector.CustomContentProtectionIntegrationFactory()
 );
 ``` 
 The object `ContentProtectionIntegrations` is provided by the library `dist/bundle.js` and gives access to all exports from `src/index.ts`.
@@ -172,7 +172,7 @@ passed during registration, an instance of `CustomContentProtectionIntegration` 
     THEOplayer.registerContentProtectionIntegration(
         'custom_wv',
         'widevine',
-        new ContentProtectionIntegrations.CustomContentProtectionIntegrationFactory()
+        new THEOplayerDrmConnector.CustomContentProtectionIntegrationFactory()
     );
 
     player.source = {

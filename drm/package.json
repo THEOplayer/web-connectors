@@ -29,7 +29,7 @@
     "bundle": "rollup -c rollup.config.mjs",
     "build": "npm run clean && npm run bundle",
     "watch": "npm run bundle -- --watch",
-    "serve": "http-server",
+    "serve": "http-server ../",
     "test": "echo \"No tests yet\""
   },
   "author": "THEO Technologies NV",

@@ -3,9 +3,9 @@
     <head>
         <meta charset="UTF-8" />
         <title>Verimatrix Core DRM PlayReady Test</title>
-        <link rel="stylesheet" type="text/css" href="/THEOplayer/ui.css" />
-        <script src="/THEOplayer/THEOplayer.js"></script>
-        <script src="/dist/bundle.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../../node_modules/theoplayer/ui.css" />
+        <script src="../../../node_modules/theoplayer/THEOplayer.js"></script>
+        <script src="../../dist/drm-connectors.umd.js"></script>
     </head>
     <body>
         <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
@@ -15,14 +15,14 @@
                 ui: {
                     fluid: true
                 },
-                license: ContentProtectionIntegrations.THEOPLAYER_LICENSE,
+                license: 'insert-your-license-here',
                 libraryLocation: '/THEOplayer/'
             });
 
             THEOplayer.registerContentProtectionIntegration(
                 'verimatrixcore',
                 'playready',
-                new ContentProtectionIntegrations.VerimatrixCoreDrmPlayReadyContentProtectionIntegrationFactory()
+                new THEOplayerDrmConnector.VerimatrixCoreDrmPlayReadyContentProtectionIntegrationFactory()
             );
 
             const src = '<src>';

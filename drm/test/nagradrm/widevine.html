@@ -2,10 +2,10 @@
     <head>
         <title>THEOplayer Web SDK Nagra Widevine</title>
         <meta charset="UTF-8" />
-        <link rel="stylesheet" type="text/css" href="/THEOplayer/ui.css" />
         <link rel="stylesheet" type="text/css" href="style.css" />
-        <script src="/THEOplayer/THEOplayer.js"></script>
-        <script src="/dist/bundle.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../../node_modules/theoplayer/ui.css" />
+        <script src="../../../node_modules/theoplayer/THEOplayer.js"></script>
+        <script src="../../dist/drm-connectors.umd.js"></script>
     </head>
 
     <body>
@@ -33,7 +33,7 @@
                 ui: {
                     fluid: true
                 },
-                license: ContentProtectionIntegrations.THEOPLAYER_LICENSE,
+                license: 'insert-your-license-here',
                 libraryLocation: '/THEOplayer/'
             });
 
@@ -64,7 +64,7 @@
                     window.THEOplayer.registerContentProtectionIntegration(
                         contentProtectionIdentifier,
                         'widevine',
-                        new ContentProtectionIntegrations.NagraDrmWidevineContentProtectionIntegrationFactory()
+                        new THEOplayerDrmConnector.NagraDrmWidevineContentProtectionIntegrationFactory()
                     );
                     player.source = {
                         sources: [
