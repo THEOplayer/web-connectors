@@ -121,6 +121,7 @@ export class AdScriptTHEOIntegration {
     private onDurationChange = (event: DurationChangeEvent) => {
         if (this.player.ads?.playing || this.mainContentLogPoints.length) return;
         const { duration } = event;
+        if (isNaN(duration)) return;
         const firstSecondOfMainContent = this.player.ads?.dai?.streamTimeForContentTime(1);
         const useDAITimeline = firstSecondOfMainContent && firstSecondOfMainContent !== 1;
         this.mainContentDuration = duration;
