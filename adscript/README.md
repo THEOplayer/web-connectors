@@ -1,6 +1,6 @@
 # adscript-connector-web
 
-The AdScript connector provides a AdScript integration for THEOplayer.
+The AdScript connector provides an AdScript integration for THEOplayer.
 
 ## Installation
 
