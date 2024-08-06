@@ -33,7 +33,7 @@ export interface EmbeddedContentMetadata {
  */
 export interface AdScriptConfiguration {
     /**
-     * Integration ID you received from Nielsen representative.
+     * Integration ID you received from your Nielsen representative.
      */
     implementationId: string;
 
