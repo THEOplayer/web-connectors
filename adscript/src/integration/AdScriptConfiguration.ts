@@ -45,7 +45,7 @@ export interface AdScriptConfiguration {
     metadata: MainVideoContentMetadata;
 
     /**
-     * Additional information about logged user (customerID, deviceID, profileID) from client´s database.
+     * Additional information about the logged-in user (customerID, deviceID, profileID) from the client´s database.
      * For more information, see the [Additional Information Settings](https://adscript.admosphere.cz/en_adScript_browser.html) section.
      */
     i12n?: { [key: string]: string };
