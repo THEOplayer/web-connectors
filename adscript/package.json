@@ -1,0 +1,47 @@
+{
+  "name": "@theoplayer/adscript-connector-web",
+  "version": "0.0.1",
+  "description": "A connector implementing AdScript with THEOplayer",
+  "main": "dist/adscript-connector.umd.js",
+  "module": "dist/adscript-connector.esm.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/adscript-connector.esm.js",
+      "require": "./dist/adscript-connector.umd.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package": "./package.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "bundle": "rollup -c rollup.config.mjs",
+    "watch": "npm run bundle -- --watch",
+    "build": "npm run clean && npm run bundle",
+    "serve": "http-server ./.. -o /adscript/test/pages/main_esm.html",
+    "test": "echo \"No tests yet\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/THEOplayer/web-connectors.git",
+    "directory": "adscript"
+  },
+  "author": "THEO Technologies NV",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/THEOplayer/web-connectors/issues"
+  },
+  "homepage": "https://github.com/THEOplayer/web-connectors/tree/main/adscript#readme",
+  "files": [
+    "dist/",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE.md",
+    "package.json"
+  ],
+  "peerDependencies": {
+    "theoplayer": "^7.0.0"
+  }
+}

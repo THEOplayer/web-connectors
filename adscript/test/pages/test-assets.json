@@ -1,0 +1,225 @@
+[
+    {
+        "label": "VOD (DASH) - VAST (IMA)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd",
+                    "useCredentials": false
+                }
+            ],
+            "ads": [
+                {
+                    "integration": "google-ima",
+                    "timeOffset": "start",
+                    "sources": "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_preroll_skippable&sz=640x480&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator="
+                }
+            ]
+        },
+        "metadata": { 
+            "assetid": "v0000001", 
+            "type": "content", 
+            "program": "Big Buck Bunny", 
+            "title": "Sample Video - Extended", 
+            "length": "635", 
+            "crossId": "000 111 22222", 
+            "livestream": "0", 
+            "channelId": "", 
+            "attribute": "1"
+        }
+    },
+    {
+        "label": "VOD (HLS)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
+                    "type": "application/x-mpegurl"
+                }
+            ]
+        },
+        "metadata": { 
+            "assetid": "v0000002", 
+            "type": "content", 
+            "program": "Big Buck Bunny", 
+            "title": "Sample Video", 
+            "length": "596", 
+            "crossId": "000 111 22222", 
+            "livestream": "0", 
+            "channelId": "", 
+            "attribute": "1"
+        }
+    },
+    {
+        "label": "VOD (HLS) - VMAP (IMA)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
+                    "type": "application/x-mpegurl"
+                }
+            ],
+            "ads": [
+                {
+                    "integration": "google-ima",
+                    "sources": "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpremidpostpod&ciu_szs=300x250&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&cmsid=496&vid=short_onecue&correlator="
+                }
+            ]
+        },
+        "metadata": { 
+            "assetid": "v0000002", 
+            "type": "content", 
+            "program": "Big Buck Bunny", 
+            "title": "Sample Video", 
+            "length": "596", 
+            "crossId": "000 111 22222", 
+            "livestream": "0", 
+            "channelId": "", 
+            "attribute": "1"
+        }
+    },
+    {
+        "label": "VOD (HLS) - VMAP (THEOAds)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8",
+                    "type": "application/x-mpegurl"
+                }
+            ],
+            "ads": [
+                {
+                    "integration": "theo",
+                    "sources": "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpremidpostpod&ciu_szs=300x250&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&cmsid=496&vid=short_onecue&correlator="
+                }
+            ]
+        },
+        "metadata": { 
+            "assetid": "v0000002", 
+            "type": "content", 
+            "program": "Big Buck Bunny", 
+            "title": "Sample Video", 
+            "length": "596", 
+            "crossId": "000 111 22222", 
+            "livestream": "0", 
+            "channelId": "", 
+            "attribute": "1"
+        }
+    },
+    {
+        "label": "LIVE (DASH) - VAST pre-roll (IMA)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://livesim2.dashif.org/livesim2/testpic_2s/Manifest.mpd",
+                    "useCredentials": false
+                }
+            ],
+            "ads": [
+                {
+                    "integration": "google-ima",
+                    "timeOffset": "start",
+                    "sources": "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_preroll_skippable&sz=640x480&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator="
+                }
+            ]
+        },
+        "metadata": { 
+            "assetid": "v0000003", 
+            "type": "content", 
+            "program": "DASHIF Test Assets", 
+            "title": "Livesim", 
+            "length": "86400", 
+            "crossId": "000 111 333333", 
+            "livestream": "1", 
+            "channelId": "DASHIF1", 
+            "attribute": "1"
+        }
+    },
+    {
+        "label": "LIVE (DASH) - empty VAST pre-roll (IMA)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://livesim2.dashif.org/livesim2/testpic_2s/Manifest.mpd",
+                    "useCredentials": false
+                }
+            ],
+            "ads": [
+                {
+                    "integration": "google-ima",
+                    "timeOffset": "start",
+                    "sources": "http://localhost:8081/adscript/test/pages/preroll-empty.xml"
+                }
+            ]
+        },
+        "metadata": { 
+            "assetid": "v0000003", 
+            "type": "content", 
+            "program": "DASHIF Test Assets", 
+            "title": "Livesim", 
+            "length": "86400", 
+            "crossId": "000 111 333333", 
+            "livestream": "1", 
+            "channelId": "DASHIF1", 
+            "attribute": "1"
+        }
+    },
+    {
+        "label": "LIVE (DASH) - VAST pre-roll (THEOAds)",
+        "source": {
+            "sources": [
+                {
+                    "src": "https://livesim2.dashif.org/livesim2/testpic_2s/Manifest.mpd",
+                    "useCredentials": false
+                }
+            ],
+            "ads": [
+                {
+                    "integration": "theo",
+                    "timeOffset": "start",
+                    "sources": "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_preroll_skippable&sz=640x480&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator="
+                }
+            ]
+        },
+        "metadata": { 
+            "assetid": "v0000003", 
+            "type": "content", 
+            "program": "DASHIF Test Assets", 
+            "title": "Livesim", 
+            "length": "86400", 
+            "crossId": "000 111 333333", 
+            "livestream": "1", 
+            "channelId": "DASHIF1", 
+            "attribute": "1"
+        }
+    },
+    {
+        "label": "VOD - Google DAI",
+        "source": {
+            "sources": [
+                {
+                    "type": "application/x-mpegurl",
+                    "ssai": {
+                        "integration": "google-dai",
+                        "availabilityType": "vod",
+                        "contentSourceID": "2548831",
+                        "videoID": "tears-of-steel",
+                        "assetKey": "",
+                        "apiKey": ""
+                    }
+                }
+            ]
+        },
+        "metadata": { 
+            "assetid": "v0000004", 
+            "type": "content", 
+            "program": "DAI VOD Samples", 
+            "title": "Tears Of Steel", 
+            "length": "784", 
+            "crossId": "000 111 333333", 
+            "livestream": "0", 
+            "channelId": "", 
+            "attribute": "1"
+        }
+    }
+]
