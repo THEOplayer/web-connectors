@@ -1,11 +1,11 @@
 export enum ProgramType {
-    AUDIO = "audio",
-    VIDEO = "video"
+    AUDIO = 'audio',
+    VIDEO = 'video'
 }
 
 export enum TransmissionType {
     ON_DEMAND = 1,
-    BROADCAST_LIVE_TIMESHIFT = 2 
+    BROADCAST_LIVE_TIMESHIFT = 2
 }
 
 export enum ProgramGenre {
@@ -18,10 +18,10 @@ export enum ProgramGenre {
 }
 
 export enum AdType {
-    BREAK = "break",
-    PROMO = "promo",
-    SPOT = "spot",
-    SPONSOR = "sponsor"
+    BREAK = 'break',
+    PROMO = 'promo',
+    SPOT = 'spot',
+    SPONSOR = 'sponsor'
 }
 
 export enum AdFormat {
@@ -49,10 +49,10 @@ export interface NewProgramAdditionalParameters {
     programPartialName?: string;
     programProducer?: string;
     typology?: string;
-    premiereDate?: string; 
+    premiereDate?: string;
     externalPremiereDate?: string;
-    quality?: string
-    resolution?: string
+    quality?: string;
+    resolution?: string;
     volume?: number;
     customAttributes?: {
         [key: string]: string;
@@ -62,7 +62,7 @@ export interface NewProgramAdditionalParameters {
 export interface NewAdAdditionalParameters {
     adName?: string;
     adDuration?: number;
-    adType?: AdType
+    adType?: AdType;
     campaignClassification?: string;
     adFormat?: AdFormat;
     quality?: string;
@@ -70,7 +70,7 @@ export interface NewAdAdditionalParameters {
     volume?: number;
     customAttributes?: {
         [key: string]: string;
-    }
+    };
 }
 
 export interface PlayAdEventAdditionalParameters {
@@ -82,7 +82,7 @@ export interface PlayAdEventAdditionalParameters {
     adDuration?: number;
     customAttributes?: {
         [key: string]: string;
-    }
+    };
 }
 
 export interface PlayProgramEventAdditionalParameters {
@@ -93,11 +93,11 @@ export interface PlayProgramEventAdditionalParameters {
     programDuration?: number;
     customAttributes?: {
         [key: string]: string;
-    }
+    };
 }
 
 export interface ListEventAdditionalParameters {
-    listID?: number
+    listID?: number;
 }
 
 export interface ChangeResolutionEventAddtionalParameters {
