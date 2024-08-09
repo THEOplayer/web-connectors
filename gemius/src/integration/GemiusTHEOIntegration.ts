@@ -27,7 +27,7 @@ import { Logger } from '../utils/Logger';
 import { BasicEvent } from './GemiusEvents';
 
 const THEOPLAYER_ID = 'THEOplayer';
-const DEFAULT_AD_ID = 'PLACEHOLDER ID';
+const DEFAULT_AD_ID = 'PLACEHOLDER_ID';
 
 export class GemiusTHEOIntegration {
     // References for constructor arguments
