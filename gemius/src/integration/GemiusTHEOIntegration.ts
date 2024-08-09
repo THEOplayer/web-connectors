@@ -108,12 +108,11 @@ export class GemiusTHEOIntegration {
             console.log(`[GEMIUS] No program parameters were provdided`);
             return;
         }
+        this.reportBasicEvent(BasicEvent.CLOSE);
         if (!event.source) {
             // TODO handle some clear source flow
-            this.reportBasicEvent(BasicEvent.CLOSE);
             return;
         }
-        this.reportBasicEvent(BasicEvent.CLOSE);
         this.partCount = 1;
         this.currentAd = undefined;
 
