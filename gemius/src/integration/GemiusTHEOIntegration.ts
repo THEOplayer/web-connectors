@@ -31,7 +31,7 @@ const DEFAULT_AD_ID = 'PLACEHOLDER_ID';
 
 export class GemiusTHEOIntegration {
     private player: ChromelessPlayer;
-    private debug: boolean;
+    private logger: Logger;
     private gemiusPlayer: GemiusPlayer;
     private programParameters: GemiusProgramParameters;
 
@@ -45,7 +45,7 @@ export class GemiusTHEOIntegration {
         programParameters: GemiusProgramParameters
     ) {
         this.player = player;
-        this.debug = configuration.debug ?? false;
+        this.logger = new Logger(Boolean(configuration.debug));
         this.gemiusPlayer = new window.GemiusPlayer(THEOPLAYER_ID, configuration.gemiusID, {});
         this.programParameters = programParameters;
         this.addListeners();
@@ -101,7 +101,7 @@ export class GemiusTHEOIntegration {
     }
 
     private onSourceChange = (event: SourceChangeEvent) => {
-        Logger.log(event);
+        this.logger.log(event);
         if (!this.programParameters) {
             console.log(`[GEMIUS] No program parameters were provdided`);
             return;
@@ -119,7 +119,7 @@ export class GemiusTHEOIntegration {
     };
 
     private onFirstPlaying = (event: PlayingEvent) => {
-        Logger.log(event);
+        this.logger.log(event);
         const { programID } = this.programParameters;
         const computedVolume = this.player.muted ? -1 : this.player.volume * 100;
         if (this.currentAd) {
@@ -149,12 +149,12 @@ export class GemiusTHEOIntegration {
     };
 
     private onPause = (event: PauseEvent) => {
-        Logger.log(event);
+        this.logger.log(event);
         this.reportBasicEvent(BasicEvent.PAUSE);
     };
 
     private onPlay = (event: PlayEvent) => {
-        Logger.log(event);
+        this.logger.log(event);
         const { programID } = this.programParameters;
         const computedVolume = this.player.muted ? -1 : this.player.volume * 100;
         if (this.currentAd) {
@@ -183,22 +183,22 @@ export class GemiusTHEOIntegration {
     };
 
     private onWaiting = (event: WaitingEvent) => {
-        Logger.log(event);
+        this.logger.log(event);
         this.reportBasicEvent(BasicEvent.BUFFER);
     };
 
     private onSeeking = (event: SeekingEvent) => {
-        Logger.log(event);
+        this.logger.log(event);
         this.reportBasicEvent(BasicEvent.SEEK);
     };
 
     private onEnded = (event: EndedEvent) => {
-        Logger.log(event);
+        this.logger.log(event);
         this.reportBasicEvent(BasicEvent.COMPLETE);
     };
 
     private onVolumeChange = (event: VolumeChangeEvent) => {
-        Logger.log(event);
+        this.logger.log(event);
         const { volume } = event;
         const { programID } = this.programParameters;
         const computedVolume = this.player.muted ? -1 : volume * 100;
@@ -226,7 +226,7 @@ export class GemiusTHEOIntegration {
     };
 
     private onActiveQualityChanged = (event: QualityEvent<'activequalitychanged'>) => {
-        Logger.log(event);
+        this.logger.log(event);
         const { quality } = event;
         const videoQuality = quality as VideoQuality;
         const { width, height } = videoQuality;
@@ -236,7 +236,7 @@ export class GemiusTHEOIntegration {
     };
 
     private onAdBreakBegin = (event: AdBreakEvent<'adbreakbegin'>) => {
-        Logger.log(event);
+        this.logger.log(event);
         const { programID } = this.programParameters;
         const { adBreak } = event;
         const { timeOffset } = adBreak;
@@ -247,7 +247,7 @@ export class GemiusTHEOIntegration {
     };
 
     private onAdBreakEnd = (event: AdBreakEvent<'adbreakend'>) => {
-        Logger.log(event);
+        this.logger.log(event);
         this.adCount = 1;
         const { adBreak } = event;
         const { timeOffset } = adBreak;
@@ -259,7 +259,7 @@ export class GemiusTHEOIntegration {
     };
 
     private onAdBegin = (event: AdEvent<'adbegin'>) => {
-        Logger.log(event);
+        this.logger.log(event);
         const { ad } = event;
         this.currentAd = ad;
         const { id, duration, width, height } = ad;
@@ -277,7 +277,7 @@ export class GemiusTHEOIntegration {
     };
 
     private onAdEnd = (event: AdEvent<'adend'>) => {
-        Logger.log(event);
+        this.logger.log(event);
         const { programID } = this.programParameters;
         const { ad } = event;
         const { adBreak } = ad;
@@ -292,7 +292,7 @@ export class GemiusTHEOIntegration {
     };
 
     private onAdSkip = (event: AdSkipEvent) => {
-        Logger.log(event);
+        this.logger.log(event);
         const { programID } = this.programParameters;
         const { ad } = event;
         const { adBreak } = ad;
