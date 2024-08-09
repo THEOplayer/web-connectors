@@ -30,7 +30,6 @@ const THEOPLAYER_ID = 'THEOplayer';
 const DEFAULT_AD_ID = 'PLACEHOLDER_ID';
 
 export class GemiusTHEOIntegration {
-    // References for constructor arguments
     private player: ChromelessPlayer;
     private debug: boolean;
     private gemiusPlayer: GemiusPlayer;
@@ -101,7 +100,6 @@ export class GemiusTHEOIntegration {
         }
     }
 
-    // EVENT HANDLERS
     private onSourceChange = (event: SourceChangeEvent) => {
         Logger.log(event);
         if (!this.programParameters) {
