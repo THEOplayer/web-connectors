@@ -94,7 +94,7 @@ export class GemiusTHEOIntegration {
         this.player.videoTracks.removeEventListener('removetrack', this.onRemoveTrack);
         if (this.player.ads) {
             this.player.ads.removeEventListener('adbreakbegin', this.onAdBreakBegin);
-            this.player.ads.addEventListener('adbreakend', this.onAdBreakEnd);
+            this.player.ads.removeEventListener('adbreakend', this.onAdBreakEnd);
             this.player.ads.removeEventListener('adbegin', this.onAdBegin);
             this.player.ads.removeEventListener('adend', this.onAdEnd);
             this.player.ads.removeEventListener('adskip', this.onAdSkip);
