@@ -11,6 +11,7 @@ npm install @theoplayer/gemius-connector-web
 Load the gplayer.js library from Gemius. There are two options to to this: either you do it synchronously:
 
 ```html
+
 <script type="text/javascript" src="https://PREFIX.hit.gemius.pl/gplayer.js"></script>
 ```
 
@@ -45,13 +46,88 @@ Department.
 
 ## Usage
 
-### Configuring the connector
+First you need to add the Gemius connector to your app :
 
-```js
-import { GemiusConnector } from '../../dist/gemius-connector.esm.js';
-// TODO
+* Add as a regular script
+
+```html
+
+<script type="text/javascript" src="path/to/gemius-connector.umd.js"></script>
+<script type="text/javascript">
+    const player = new THEOplayer.Player(element, configuration);
+
+    // Define your configuration for the connector:
+    const gemiusConfig = {
+        gemiusID: '<your-publisher-id>',
+        debug: true
+    };
+
+    // Define the initial program parameters:
+    const programParameters = {
+        "programID": "000001",
+        "programName": "Big Buck Bunny (DASH)",
+        "programDuration": 635,
+        "programType": "video",
+        "transmissionType": 1,
+        "programGenre": 4,
+        "series": "Test Content",
+        "programSeason": "season 1",
+        "programProducer": "Blender",
+        "customAttributes": {
+            "intCategory": "Comedy",
+            "intType": "vod",
+            "intStatus": "public"
+        }
+    };
+
+    // Create the GemiusConnector:
+    const gemiusConnector = new THEOplayerGemiusConnector.GemiusConnector(player, gemiusConfig, programParameters);
+</script>
 ```
 
-## Documentation
+* Add as an ES2015 module
 
-Documentation can be acquired through Gemius Prism.
+```html
+<script type="module">
+    import {GemiusConnector} from "path/to/gemius-connector.esm.js";
+
+    const player = new THEOplayer.Player(element, configuration);
+
+    // Define your configuration for the connector:
+    const gemiusConfig = {
+        gemiusID: '<your-publisher-id>',
+        debug: true
+    };
+
+    // Define the initial program parameters:
+    const programParameters = {
+        "programID": "000001",
+        "programName": "Big Buck Bunny (DASH)",
+        "programDuration": 635,
+        "programType": "video",
+        "transmissionType": 1,
+        "programGenre": 4,
+        "series": "Test Content",
+        "programSeason": "season 1",
+        "programProducer": "Blender",
+        "customAttributes": {
+            "intCategory": "Comedy",
+            "intType": "vod",
+            "intStatus": "public"
+        }
+    };
+
+    // Create the GemiusConnector:
+    const gemiusConnector = new GemiusConnector(player, gemiusConfig, programParameters);
+</script>
+```
+
+## Updating program parameters
+
+If the program parameters changed during playback, you can update it with:
+
+```javascript
+const newProgramParameters = { ... };
+
+gemiusConnector.update(newProgramParameters);
+```

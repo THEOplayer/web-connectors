@@ -8,7 +8,7 @@
         <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css" />
         <script src="/node_modules/theoplayer/THEOplayer.js"></script>
         <script src="https://PREFIX.hit.gemius.pl/gplayer.js"></script>
-        <!-- <script src="./../../dist/gemius-connector.umd.js"></script> -->
+         <script src="./../../dist/gemius-connector.umd.js"></script>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
         <style>
@@ -39,15 +39,12 @@
             const selector = document.querySelector('select')
             const loadButton = document.querySelector('#loadbutton')
 
-            let testAssets
-            // let gemiusConnector
-            // const gemiusConfig = {
-            //     publisherId: '<your publisher id>',
-            //     applicationName: 'Test App',
-            //     userConsent: "1",
-            //     adIdProcessor: (ad) => ad.id,
-            //     debug: true
-            // };
+            let testAssets;
+            let gemiusConnector;
+            const gemiusConfig = {
+                gemiusID: '<your-publisher-id>',
+                debug: true
+            };
 
             const loadSource = () => {
                 setSourceWithGemiusMetadata(testAssets[selector.value])

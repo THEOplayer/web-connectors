@@ -41,20 +41,18 @@
         </script>
         <script type="module">
             import * as THEOplayer  from 'theoplayer'
-            // import { GemiusConnector } from "../../dist/gemius-connector.esm.js"
+            import { GemiusConnector } from "../../dist/gemius-connector.esm.js"
             const element = document.querySelector("#THEOplayer");
             const selector = document.querySelector('select')
             const loadButton = document.querySelector('#loadbutton')
 
             let testAssets
-            // let gemiusConnector
-            // const gemiusConfig = {
-            //     publisherId: '<your publisher id>',
-            //     applicationName: 'Test App',
-            //     userConsent: "1",
-            //     adIdProcessor: (ad) => ad.id,
-            //     debug: true
-            // };
+            let gemiusConnector
+
+            const gemiusConfig = {
+                gemiusID: '<your-publisher-id>',
+                debug: true
+            };
 
             const loadSource = () => {
                 setSourceWithGemiusMetadata(testAssets[selector.value])
