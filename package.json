@@ -12,6 +12,8 @@
     "nielsen",
     "cmcd",
     "comscore",
+    "adscript",
+    "gemius",
     "drm"
   ],
   "scripts": {
