@@ -11,6 +11,98 @@ export type NielsenOptions = {
     optout?: boolean;
 };
 
+export type DCRContentMetadata = {
+    /*
+     * A fixed dial specifying the type of measured content
+     */
+    type: 'content';
+    /*
+     * Unique identifier for the video content (video file). Any label according to the needs of the TV company, which will ensure the identification of the same content across platforms. It can also be used for chaining several pieces of information from internal systems. At the beginning, the possibility of adding a client ID (to ensure uniqueness across clients)
+     */
+    assetid: string;
+    /*
+     * Content description (name of the show, channel name, etc.)
+     */
+    program: string;
+    /*
+     * Detailed description of content.
+     * [VOD] episode title
+     * [LIVE] name of the program (if it is available and can be dynamically changed along with the change of the program. Otherwise, fill in only the name of the channel))
+     */
+    title: string;
+    /*
+     * The length of the broadcast video content. It is also used to uniquely distinguish VOD and live broadcasts. This is the length of the currently playing content/file. If the content is, for example, only a part of the program, the length of this played part of the program is indicated. Use 86400 for live content.
+     */
+    length: string;
+    /*
+     * Broadcast date, if you cannot fill in the correct value, please use the constant "19700101 00:00:01".
+     * [VOD] The date and time the video content was exposed online YYYYMMDD HH24:MI:SS.
+     * [LIVE] Midnight of the current day in YYYYMMDD 00:00:00 format
+     */
+    airdate: string;
+    /*
+     * Indication of whether the video content being played is the entire episode or only part of it. Always use 'y' for live.
+     */
+    isfullepisode: 'y' | 'n';
+    /*
+     * CMS tag helper item. The method of recording ads insertion: 1. Linear – corresponds to TV insertion of ads 2. Dynamic – Dynamic Ad Insertion (DAI)
+     */
+    adloadtype: '1' | '2';
+};
+
+export type DCRContentMetadataCZ = DCRContentMetadata & {
+    /*
+     * IDEC type identifier
+     */
+    crossId1: string;
+    /*
+     * More detailed categorization of video content.
+     * [VOD] Program type (codes according to the TV code list).
+     * [LIVE] The program type of the content being played, if available and can be changed dynamically with the program change. Otherwise, send an empty string.
+     */
+    segB: string;
+    /*
+     * More detailed categorization of video content. Should always be an empty string.
+     */
+    segC: '';
+    /*
+     * Live TV station code
+     * [VOD] Keep this empty and pass "nol_c1":"p1,".
+     * [LIVE] implementation : "nol_c1":"p1,value" where value = Live station code used in the output data of the TV audience measurement project. see current appendix of the reference manual "Appendix RP 13 - List of stations.xlsx" If the live broadcast does not correspond to any TV station, use the code 9999.
+     */
+    c1: string;
+    /*
+     * TV Identity for VOD.
+     * [VOD] Pass "nol_c2" : "p2,value" where value = To ensure the best possible harmonization of PEM D online measurement data with the data of the TV meter project, it is recommended to use TV IDENT as another online content identifier. If TVIDENT is not available at the time the content is brought online, c2 remains blank (and can be filled in later). TVIdent - same as in broadcast protocols of TV stations.
+     * [LIVE] Keep empty : "nol_c2":"p2,"
+     */
+    c2?: string;
+    /*
+     * CMS tag helper item. Indication of whether the content being played supports the insertion of advertisements. “0” – No ads “1” – Supports ads “2” – Don't know (default).
+     */
+    hasAds: '0' | '1' | '2';
+};
+
+export type DCRContentMetadataUS = DCRContentMetadata & {
+    /*
+     * Gracenote TMS ID (If available) should be passed for all telecasted content for clients using the Gracenote solution for proper matching purposes
+     * Note: The TMS ID will be a 14 character string. Normally leading with 2 alpha characters ('EP', 'MV', 'SH' or 'SP'), followed by 12 numbers. This should be provided to you by Nielsen
+     */
+    crossId1?: string;
+    /*
+     * Populated by content distributor to contribute viewing from that distributor to the given content originator. For a full list of acceptable values, please contact your Nielsen representative.
+     */
+    crossId2?: string;
+    /*
+     * One of two custom segments for clients' granular reporting within a brand. (Examples: Genre - horror, comedy, etc. ; Timeslot - primetime, daytime, etc. ; News type - breakingnews, weather, etc.)
+     */
+    segB?: string;
+    /*
+     * One of two custom segments for clients' granular reporting within a brand. (Examples: Genre - horror, comedy, etc. ; Timeslot - primetime, daytime, etc. ; News type - breakingnews, weather, etc.)
+     */
+    segC?: string;
+};
+
 /**
  * adModel: 1) - Linear – matches TV ad load * 2) Dynamic – Dynamic Ad Insertion (DAI)
  */
