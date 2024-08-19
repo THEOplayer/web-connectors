@@ -7,7 +7,7 @@ import type {
     VolumeChangeEvent
 } from 'theoplayer';
 import { loadNielsenLibrary } from '../nielsen/NOLBUNDLE';
-import { AdMetadata, ContentMetadata, NielsenOptions } from '../nielsen/Types';
+import { AdMetadata, DTVRContentMetadata, NielsenOptions } from '../nielsen/Types';
 import { getAdType } from '../utils/Util';
 
 const EMSG_PRIV_SUFFIX = 'PRIV{';
@@ -93,7 +93,7 @@ export class NielsenHandler {
     };
 
     private onLoadMetadata = () => {
-        const data: ContentMetadata = {
+        const data: DTVRContentMetadata = {
             type: 'content',
             adModel: '1' // Always '1' for DTVR
         };

@@ -14,7 +14,7 @@ export type NielsenOptions = {
 /**
  * adModel: 1) - Linear – matches TV ad load * 2) Dynamic – Dynamic Ad Insertion (DAI)
  */
-export type ContentMetadata = {
+export type DTVRContentMetadata = {
     type: 'content';
     adModel: '1' | '2';
 } & { [key: string]: string };
