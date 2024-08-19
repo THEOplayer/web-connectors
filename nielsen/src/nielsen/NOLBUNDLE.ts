@@ -8,6 +8,8 @@ export function loadNielsenLibrary(
     country?: NielsenCountry
 ) {
     if (country == NielsenCountry.CZ) {
+        // https://engineeringportal.nielsen.com/wiki/DCR_Czech_Video_Browser_SDK
+        // Step 1: Configure SDK
         // @ts-ignore
         !(function (e: any, n: any) {
             function t(e: any) {
