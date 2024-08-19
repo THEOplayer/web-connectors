@@ -23,3 +23,11 @@ export type AdMetadata = {
     type: AdType;
     assetid: any; // TODO string? or can be anything?
 } & { [key: string]: string };
+
+/*
+ * Countries for which (1) Nielsen provides DCR Browser SDKs and (2) the corresponding SDK was tested with this integration.
+ */
+export enum NielsenCountry {
+    US = 'US',
+    CZ = 'CZ'
+}
