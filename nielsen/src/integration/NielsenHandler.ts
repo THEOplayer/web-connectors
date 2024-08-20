@@ -7,7 +7,7 @@ import type {
     VolumeChangeEvent
 } from 'theoplayer';
 import { loadNielsenLibrary } from '../nielsen/NOLBUNDLE';
-import { AdMetadata, DTVRContentMetadata, NielsenOptions } from '../nielsen/Types';
+import { AdMetadata, DTVRContentMetadata, NielsenConfiguration, NielsenOptions } from '../nielsen/Types';
 import { getAdType } from '../utils/Util';
 
 const EMSG_PRIV_SUFFIX = 'PRIV{';
@@ -24,9 +24,15 @@ export class NielsenHandler {
 
     private decoder = new TextDecoder('utf-8');
 
-    constructor(player: ChromelessPlayer, appId: string, instanceName: string, options?: NielsenOptions) {
+    constructor(
+        player: ChromelessPlayer,
+        appId: string,
+        instanceName: string,
+        configuration: NielsenConfiguration,
+        options?: NielsenOptions
+    ) {
         this.player = player;
-        this.nSdkInstance = loadNielsenLibrary(appId, instanceName, options);
+        this.nSdkInstance = loadNielsenLibrary(appId, instanceName, options, configuration.country);
 
         this.addEventListeners();
     }
