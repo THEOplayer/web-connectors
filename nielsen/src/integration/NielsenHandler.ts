@@ -7,7 +7,13 @@ import type {
     VolumeChangeEvent
 } from 'theoplayer';
 import { loadNielsenLibrary } from '../nielsen/NOLBUNDLE';
-import { AdMetadata, DTVRContentMetadata, NielsenConfiguration, NielsenOptions } from '../nielsen/Types';
+import {
+    AdMetadata,
+    DTVRContentMetadata,
+    NielsenConfiguration,
+    NielsenCountry,
+    NielsenOptions
+} from '../nielsen/Types';
 import { getAdType } from '../utils/Util';
 
 const EMSG_PRIV_SUFFIX = 'PRIV{';
@@ -15,6 +21,10 @@ const EMSG_PAYLOAD_SUFFIX = 'payload=';
 
 export class NielsenHandler {
     private player: ChromelessPlayer;
+
+    private dcrEnabled: boolean;
+    private dtvrEnabled: boolean;
+    private country: NielsenCountry = NielsenCountry.US;
 
     private nSdkInstance: any;
 
@@ -28,11 +38,14 @@ export class NielsenHandler {
         player: ChromelessPlayer,
         appId: string,
         instanceName: string,
-        configuration: NielsenConfiguration,
-        options?: NielsenOptions
+        options?: NielsenOptions,
+        configuration?: NielsenConfiguration
     ) {
         this.player = player;
-        this.nSdkInstance = loadNielsenLibrary(appId, instanceName, options, configuration.country);
+        this.dcrEnabled = configuration?.enableDCR ?? false;
+        this.dtvrEnabled = configuration?.enableDTVR ?? true;
+        this.country = configuration?.country ?? NielsenCountry.US;
+        this.nSdkInstance = loadNielsenLibrary(appId, instanceName, options, this.country);
 
         this.addEventListeners();
     }
