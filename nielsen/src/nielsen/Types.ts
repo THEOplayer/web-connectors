@@ -1,5 +1,11 @@
 export type AdType = 'preroll' | 'midroll' | 'postroll' | 'ad';
 
+export type NielsenConfiguration = {
+    country: NielsenCountry;
+    enableDTVR: boolean;
+    enableDCR: boolean;
+};
+
 export type NielsenOptions = {
     // HTML DOM element id of the player container
     containerId?: string;
