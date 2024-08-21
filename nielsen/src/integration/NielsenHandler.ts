@@ -222,6 +222,9 @@ export class NielsenHandler {
             };
             this.nSdkInstance.ggPM('play', metadataObject);
         }
+        if (this.dcrEnabled) {
+            this.nSdkInstance.ggPM('loadMetadata', this.metadata);
+        }
     }
 
     private endSession(): void {
