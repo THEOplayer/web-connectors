@@ -3,7 +3,7 @@ import {getSharedBuildConfiguration} from "../tools/build.mjs";
 
 const {version} = JSON.parse(fs.readFileSync("./package.json", "utf8"));
 
-const fileName = "drm-connectors";
+const fileName = "drm-connector";
 const globalName = "THEOplayerDrmConnector";
 const banner = `
 /**

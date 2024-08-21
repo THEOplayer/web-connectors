@@ -1,5 +1,5 @@
 ---
-"@theoplayer/drm-connectors-web": major
+"@theoplayer/drm-connector-web": major
 ---
 
 Initial Release.

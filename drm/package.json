@@ -2,7 +2,7 @@
   "name": "@theoplayer/drm-connector-web",
   "version": "0.0.0",
   "description": "External DRM connectors for the THEOplayer Web SDK",
-  "main": "dist/drm-connectors.umd.js",
+  "main": "dist/drm-connector.umd.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/THEOplayer/web-connectors.git",
@@ -12,13 +12,13 @@
     "url": "https://github.com/THEOplayer/web-connectors/issues"
   },
   "homepage": "https://github.com/THEOplayer/web-connectors/tree/main/drm#readme",
-  "module": "dist/drm-connectors.esm.js",
+  "module": "dist/drm-connector.esm.js",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/drm-connectors.esm.js",
-      "require": "./dist/drm-connectors.umd.js"
+      "import": "./dist/drm-connector.esm.js",
+      "require": "./dist/drm-connector.umd.js"
     },
     "./dist/*": "./dist/*",
     "./package": "./package.json",

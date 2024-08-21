@@ -1,4 +1,4 @@
-# drm-connectors-web
+# drm-connector-web
 
 A collection of DRM connectors for the THEOplayer Web SDK:
 - Axinom DRM
@@ -20,13 +20,13 @@ Install using your favorite package manager for Node (such as `npm` or `yarn`):
 ### Install via npm
 
 ```bash
-npm install @theoplayer/drm-connectors-web
+npm install @theoplayer/drm-connector-web
 ```
 
 ### Install via yarn
 
 ```bash
-yarn add @theoplayer/drm-connectors-web
+yarn add @theoplayer/drm-connector-web
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ This example uses Axinom DRM but this equivalent with all connectors:
 * Add as a regular script
 
 ```html
-<script type="text/javascript" src="path/to/drm-connectors.umd.js"></script>
+<script type="text/javascript" src="path/to/drm-connector.umd.js"></script>
 <script type="text/javascript">
     // This registers the Widevine connector for Axinom DRM.
     THEOplayer.registerContentProtectionIntegration(
@@ -51,7 +51,7 @@ This example uses Axinom DRM but this equivalent with all connectors:
 
 ```html
 <script type="module">
-    import { AxinomDrmWidevineContentProtectionIntegrationFactory } from "path/to/drm-connectors.esm.js";
+    import { AxinomDrmWidevineContentProtectionIntegrationFactory } from "path/to/drm-connector.esm.js";
     THEOplayer.registerContentProtectionIntegration(
         'axinom',
         'widevine',
