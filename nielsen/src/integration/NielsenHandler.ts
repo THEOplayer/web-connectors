@@ -130,6 +130,7 @@ export class NielsenHandler {
     };
 
     private onLoadMetadata = () => {
+        if (!this.dtvrEnabled) return;
         const data: DTVRContentMetadata = {
             type: 'content',
             adModel: '1' // Always '1' for DTVR
