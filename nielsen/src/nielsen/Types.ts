@@ -126,15 +126,15 @@ export type DCRAdMetadataCZ = AdMetadata & {
     /*
      * An item in the CMS tag reserved for an identifier enabling the connection of an advertisement description from the RTVK system, similarly to PEM TV data.
      */
-    c4: string;
+    nol_c4: string;
     /*
      * More detailed categorization of video content
      */
-    c5: string;
+    nol_c5: string;
     /*
      * Ad type (same value as in the "type" item)
      */
-    c6: string;
+    nol_c6: string;
     /*
      * Ad description. Possible use for cases where the AKA code is not available. RTB - designation of the advertising supplier (e.g. if there is no AKA code or more detailed description of the advertisement).
      */
@@ -142,7 +142,7 @@ export type DCRAdMetadataCZ = AdMetadata & {
     /*
      * Length of broadcast ad in seconds. (So that the length indicator is available even in cases where the AKA code is not available.)
      */
-    length: number;
+    length: string;
 };
 
 /*
