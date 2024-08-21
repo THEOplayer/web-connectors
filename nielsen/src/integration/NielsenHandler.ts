@@ -51,7 +51,22 @@ export class NielsenHandler {
     }
 
     updateMetadata(metadata: { [key: string]: string }): void {
-        this.nSdkInstance.ggPM('updateMetadata', metadata);
+        switch (this.country) {
+            case NielsenCountry.US: {
+                const { type, vidtype, assetid, ...updateableParameters } = metadata;
+                console.log(`[NIELSEN] updateMetadata: ${{ type, vidtype, assetid }} will not be updated`);
+                this.nSdkInstance.ggPM('updateMetadata', updateableParameters);
+                // ex
+                break;
+            }
+            case NielsenCountry.CZ:
+            default:
+            //
+        }
+    }
+
+    updateDCRContentMetadata(metadata: DCRContentMetadata): void {
+        if (this.dcrEnabled) this.metadata = metadata;
     }
 
     private addEventListeners(): void {
