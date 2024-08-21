@@ -205,11 +205,17 @@ export class NielsenHandler {
     private onAdBegin = () => {
         const currentAd = this.player.ads!.currentAds.filter((ad: Ad) => ad.type === 'linear');
         const type = getAdType(this.player.ads!.currentAdBreak!);
-        const adMetadata: AdMetadata = {
-            type,
-            assetid: currentAd[0].id!
-        };
-        this.nSdkInstance.ggPM('loadMetadata', adMetadata);
+        if (this.dtvrEnabled) {
+            const dtvrAdMetadata: AdMetadata = {
+                type,
+                assetid: currentAd[0].id!
+            };
+            this.nSdkInstance.ggPM('loadMetadata', dtvrAdMetadata);
+        }
+        if (this.dcrEnabled) {
+            const dcrAdMetadata = buildDCRAdMetadata(currentAd);
+            this.nSdkInstance.ggPM('loadMetadata', dcrAdMetadata);
+        }
     };
 
     private maybeSendPlayEvent(): void {
