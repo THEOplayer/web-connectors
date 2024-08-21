@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 2.1.4
+
+### 🐛 Issues
+
+- Fixed an issue where we could throw an error for non Google-IMA ads.
+
 ## 2.1.3
 
 ### 🐛 Issues
