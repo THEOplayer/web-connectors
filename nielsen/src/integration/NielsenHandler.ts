@@ -9,6 +9,7 @@ import type {
 import { loadNielsenLibrary } from '../nielsen/NOLBUNDLE';
 import {
     AdMetadata,
+    DCRContentMetadata,
     DTVRContentMetadata,
     NielsenConfiguration,
     NielsenCountry,
@@ -25,6 +26,8 @@ export class NielsenHandler {
     private dcrEnabled: boolean;
     private dtvrEnabled: boolean;
     private country: NielsenCountry = NielsenCountry.US;
+
+    private metadata: DCRContentMetadata | undefined;
 
     private nSdkInstance: any;
 
