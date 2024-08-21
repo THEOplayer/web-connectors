@@ -214,12 +214,14 @@ export class NielsenHandler {
 
     private maybeSendPlayEvent(): void {
         if (this.sessionInProgress || Number.isNaN(this.duration)) return;
-        this.sessionInProgress = true;
-        const metadataObject = {
-            channelName: this.player.src,
-            length: this.duration
-        };
-        this.nSdkInstance.ggPM('play', metadataObject);
+        if (this.dtvrEnabled) {
+            this.sessionInProgress = true;
+            const metadataObject = {
+                channelName: this.player.src,
+                length: this.duration
+            };
+            this.nSdkInstance.ggPM('play', metadataObject);
+        }
     }
 
     private endSession(): void {
