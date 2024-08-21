@@ -120,15 +120,39 @@ export function collectVerizonAdMetadata(ad: VerizonMediaAd): ConvivaMetadata {
     return adMetadata;
 }
 
+export function updateAdMetadataForGoogleIma(ad: GoogleImaAd, metadata: ConvivaMetadata): ConvivaMetadata {
+    const adMetadata = metadata;
+    const streamUrl = ad.mediaUrl;
+    if (streamUrl) {
+        adMetadata[Constants.STREAM_URL] = streamUrl;
+    }
+    const assetName = ad.title;
+    if (assetName) {
+        adMetadata[Constants.ASSET_NAME] = assetName;
+        adMetadata['c3.ad.creativeName'] = assetName;
+    }
+    if (ad.wrapperAdIds[0]) {
+        adMetadata['c3.ad.firstAdId'] = ad.wrapperAdIds[0];
+    }
+    if (ad.wrapperCreativeIds[0]) {
+        adMetadata['c3.ad.firstCreativeId'] = ad.wrapperCreativeIds[0];
+    }
+    if (ad.wrapperAdSystems[0]) {
+        adMetadata['c3.ad.firstAdSystem'] = ad.wrapperAdSystems[0];
+    }
+
+    return adMetadata;
+}
+
 export function collectAdMetadata(ad: Ad): ConvivaMetadata {
     const adMetadata: ConvivaMetadata = {
         [Constants.DURATION]: ad.duration as any
     };
-    const streamUrl = (ad as GoogleImaAd).mediaUrl || ad.resourceURI;
+    const streamUrl = ad.resourceURI;
     if (streamUrl) {
         adMetadata[Constants.STREAM_URL] = streamUrl;
     }
-    const assetName = (ad as GoogleImaAd).title || ad.id;
+    const assetName = ad.id;
     if (assetName) {
         adMetadata[Constants.ASSET_NAME] = assetName;
     }
@@ -160,19 +184,19 @@ export function collectAdMetadata(ad: Ad): ConvivaMetadata {
     // This tag must capture the "first" Ad Id in the wrapper chain when a Linear creative is available or there is
     // an error at the end of the wrapper chain. Set to "NA" if not available. If there is no wrapper VAST response
     // then the Ad Id and First Ad Id should be the same.
-    adMetadata['c3.ad.firstAdId'] = (ad as GoogleImaAd).wrapperAdIds[0] || ad.id || 'NA';
+    adMetadata['c3.ad.firstAdId'] = ad.id || 'NA';
 
     // [Preferred] Only valid for wrapper VAST responses.
     // This tag must capture the "first" Creative Id in the wrapper chain when a Linear creative is available or
     // there is an error at the end of the wrapper chain. Set to "NA" if not available. If there is no wrapper
     // VAST response then the Ad Creative Id and First Ad Creative Id should be the same.
-    adMetadata['c3.ad.firstCreativeId'] = (ad as GoogleImaAd).wrapperCreativeIds[0] || ad.creativeId || 'NA';
+    adMetadata['c3.ad.firstCreativeId'] = ad.creativeId || 'NA';
 
     // [Preferred] Only valid for wrapper VAST responses. This tag must capture the "first" Ad System in the wrapper
     // chain when a Linear creative is available or there is an error at the end of the wrapper chain. Set to "NA" if
     // not available. If there is no wrapper VAST response then the Ad System and First Ad System should be the same.
     // Examples: "GDFP", "NA".
-    adMetadata['c3.ad.firstAdSystem'] = (ad as GoogleImaAd).wrapperAdSystems[0] || ad.adSystem || 'NA';
+    adMetadata['c3.ad.firstAdSystem'] = ad.adSystem || 'NA';
 
     // The name of the Ad Stitcher. If not using an Ad Stitcher, set to "NA"
     adMetadata['c3.ad.adStitcher'] = 'NA';

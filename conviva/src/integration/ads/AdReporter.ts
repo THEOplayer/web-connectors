@@ -1,6 +1,12 @@
 import type { Ad, AdBreak, ChromelessPlayer, GoogleImaAd } from 'theoplayer';
 import { type AdAnalytics, Constants, type ConvivaMetadata, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
-import { calculateAdType, calculateCurrentAdBreakInfo, collectAdMetadata, collectPlayerInfo } from '../../utils/Utils';
+import {
+    calculateAdType,
+    calculateCurrentAdBreakInfo,
+    collectAdMetadata,
+    collectPlayerInfo,
+    updateAdMetadataForGoogleIma
+} from '../../utils/Utils';
 
 export class AdReporter {
     private readonly player: ChromelessPlayer;
@@ -47,6 +53,9 @@ export class AdReporter {
             return;
         }
         const adMetadata = collectAdMetadata(currentAd);
+        if (currentAd.integration === 'google-ima') {
+            updateAdMetadataForGoogleIma(currentAd as GoogleImaAd, adMetadata);
+        }
 
         // Every session ad or content has its session ID. In order to “attach” an ad to its respective content session,
         // there are two tags that are critical:
