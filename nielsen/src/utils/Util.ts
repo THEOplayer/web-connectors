@@ -45,12 +45,12 @@ export function buildDCRContentMetadata(
         const dcrContentMetadataCZ: DCRContentMetadataCZ = {
             ...dcrContentMetadata,
             ['crossId1']: crossId1,
+            ['nol_c2']: `p2,${c2 ?? ''}`,
             segB: segB,
             segC: segC ?? '',
             hasAds: hasAds
         };
         if (c1) dcrContentMetadataCZ['nol_c1'] = `p1,${c1}`;
-        if (c2) dcrContentMetadataCZ['nol_c2'] = `p2,${c2}`;
         return dcrContentMetadataCZ;
     }
     if (country === NielsenCountry.US) {
