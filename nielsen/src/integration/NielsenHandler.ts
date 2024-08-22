@@ -235,7 +235,7 @@ export class NielsenHandler {
     };
 
     private onAdBegin = ({ ad }: AdEvent<'adbegin'>) => {
-        const currentAd = this.player.ads!.currentAds.filter((ad: Ad) => ad.type === 'linear'); // TODO check why we chose to not use the ad from the event payload
+        if (ad.type !== 'linear') return;
         const { adBreak } = ad;
         const { timeOffset } = adBreak;
         const offset = this.player.ads?.dai?.contentTimeForStreamTime(timeOffset) ?? timeOffset;
@@ -249,7 +249,7 @@ export class NielsenHandler {
             this.nSdkInstance.ggPM('loadMetadata', dtvrAdMetadata);
         }
         if (this.dcrEnabled) {
-            const dcrAdMetadata = buildDCRAdMetadata(currentAd[0], this.country, this.duration);
+            const dcrAdMetadata = buildDCRAdMetadata(ad, this.country, this.duration);
             this.nSdkInstance.ggPM('loadMetadata', dcrAdMetadata);
         }
     };
