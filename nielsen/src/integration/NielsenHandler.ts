@@ -151,6 +151,7 @@ export class NielsenHandler {
     };
 
     private onAddTrack = (event: AddTrackEvent) => {
+        if (!this.dtvrEnabled) return;
         if (event.track.kind === 'metadata') {
             const track = event.track as TextTrack;
             if (track.type === 'id3' || track.type === 'emsg') {
