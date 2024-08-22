@@ -130,6 +130,7 @@ export class NielsenHandler {
     };
 
     private onVolumeChange = (event: VolumeChangeEvent) => {
+        if (!this.dtvrEnabled) return;
         const volumeLevel = this.player.muted ? 0 : event.volume * 100;
         this.nSdkInstance.ggPM('setVolume', volumeLevel);
     };
