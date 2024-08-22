@@ -78,7 +78,7 @@ const metadata: NielsenDCRContentMetadataCZ = {
     airdate: '20230620 20:00:00',
     isfullepisode: true,
     crossId1: '915 954 39504',
-    c2: 'p2, 651678089925925',
+    c2: '651678089925925',
     segB: '011',
     adloadtype: AdLoadType.linear,
     hasAds: HasAds.supports_ads
