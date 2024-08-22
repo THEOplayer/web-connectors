@@ -15,7 +15,7 @@ import {
     NielsenCountry,
     NielsenOptions
 } from '../nielsen/Types';
-import { getAdType } from '../utils/Util';
+import { buildDCRAdMetadata, getAdType } from '../utils/Util';
 
 const EMSG_PRIV_SUFFIX = 'PRIV{';
 const EMSG_PAYLOAD_SUFFIX = 'payload=';
