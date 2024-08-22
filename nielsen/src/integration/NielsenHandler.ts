@@ -62,12 +62,10 @@ export class NielsenHandler {
                 const { type, vidtype, assetid, ...updateableParameters } = metadata;
                 console.log(`[NIELSEN] updateMetadata: ${{ type, vidtype, assetid }} will not be updated`);
                 this.nSdkInstance.ggPM('updateMetadata', updateableParameters);
-                // ex
                 break;
             }
             case NielsenCountry.CZ:
             default:
-            //
         }
     }
 
