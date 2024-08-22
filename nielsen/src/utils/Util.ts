@@ -33,9 +33,6 @@ export function buildDCRAdMetadata(ad: Ad, country: NielsenCountry): AdMetadata 
         };
         return dcrAdMetadataCZ;
     }
-    console.error('[NIELSEN - Error] Failed to extract Ad Metadata - sending placeholders instead');
-    return {
-        type: 'ad',
-        assetid: '0000'
-    };
+    console.error('[NIELSEN - Error] No NielsenCountry was provided - sending only assetid and type');
+    return adMetadata;
 }
