@@ -1,5 +1,6 @@
 import type {
     Ad,
+    AdBreakEvent,
     AddTrackEvent,
     ChromelessPlayer,
     TextTrack,
@@ -236,6 +237,13 @@ export class NielsenHandler {
     private onAdEnd = () => {
         if (!this.dcrEnabled) return;
         this.nSdkInstance.ggPM('stop', this.getPlayHeadPosition());
+    };
+
+    private onAdBreakBegin = ({ adBreak }: AdBreakEvent<'begin'>) => {
+        if (!this.dcrEnabled) return;
+        const isPostroll = getAdType(adBreak) === 'postroll';
+        if (!isPostroll) return;
+        this.endSession();
     };
 
     private maybeSendPlayEvent(): void {
