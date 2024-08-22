@@ -87,6 +87,7 @@ export class NielsenHandler {
 
         if (this.player.ads) {
             this.player.ads.addEventListener('adbegin', this.onAdBegin);
+            this.player.ads.addEventListener('adend', this.onAdEnd);
         }
 
         window.addEventListener('beforeunload', this.onEnd);
@@ -105,6 +106,7 @@ export class NielsenHandler {
 
         if (this.player.ads) {
             this.player.ads.removeEventListener('adbegin', this.onAdBegin);
+            this.player.ads.removeEventListener('adend', this.onAdEnd);
         }
 
         window.removeEventListener('beforeunload', this.onEnd);
@@ -229,6 +231,11 @@ export class NielsenHandler {
             const dcrAdMetadata = buildDCRAdMetadata(currentAd[0], this.country);
             this.nSdkInstance.ggPM('loadMetadata', dcrAdMetadata);
         }
+    };
+
+    private onAdEnd = () => {
+        if (!this.dcrEnabled) return;
+        this.nSdkInstance.ggPM('stop', this.getPlayHeadPosition());
     };
 
     private maybeSendPlayEvent(): void {
