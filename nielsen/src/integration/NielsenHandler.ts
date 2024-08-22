@@ -121,6 +121,7 @@ export class NielsenHandler {
     };
 
     private onEnd = () => {
+        if (this.dcrEnabled && this.player.ads?.playing) this.nSdkInstance.ggPM('stop', this.getPlayHeadPosition());
         this.endSession();
     };
 
