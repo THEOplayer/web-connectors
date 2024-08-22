@@ -239,7 +239,7 @@ export class NielsenHandler {
         this.nSdkInstance.ggPM('stop', this.getPlayHeadPosition());
     };
 
-    private onAdBreakBegin = ({ adBreak }: AdBreakEvent<'begin'>) => {
+    private onAdBreakBegin = ({ adBreak }: AdBreakEvent<'adbreakbegin'>) => {
         if (!this.dcrEnabled) return;
         const isPostroll = getAdType(adBreak) === 'postroll';
         if (!isPostroll) return;
