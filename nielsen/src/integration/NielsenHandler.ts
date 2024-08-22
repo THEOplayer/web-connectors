@@ -1,6 +1,7 @@
 import type {
     Ad,
     AdBreakEvent,
+    AdEvent,
     AddTrackEvent,
     ChromelessPlayer,
     DurationChangeEvent,
@@ -222,13 +223,17 @@ export class NielsenHandler {
         }
     };
 
-    private onAdBegin = () => {
+    private onAdBegin = ({ ad }: AdEvent<'adbegin'>) => {
         const currentAd = this.player.ads!.currentAds.filter((ad: Ad) => ad.type === 'linear'); // TODO check why we chose to not use the ad from the event payload
-        const type = getAdType(this.player.ads!.currentAdBreak!);
+        const { adBreak } = ad;
+        const { timeOffset } = adBreak;
+        const offset = this.player.ads?.dai?.contentTimeForStreamTime(timeOffset) ?? timeOffset;
+        const duration = this.player.ads?.dai?.contentTimeForStreamTime(this.duration) ?? this.duration;
+        const type = getAdType(offset, duration);
         if (this.dtvrEnabled) {
             const dtvrAdMetadata: AdMetadata = {
                 type,
-                assetid: currentAd[0].id!
+                assetid: ad.id!
             };
             this.nSdkInstance.ggPM('loadMetadata', dtvrAdMetadata);
         }
@@ -245,7 +250,10 @@ export class NielsenHandler {
 
     private onAdBreakBegin = ({ adBreak }: AdBreakEvent<'adbreakbegin'>) => {
         if (!this.dcrEnabled) return;
-        const isPostroll = getAdType(adBreak) === 'postroll';
+        const { timeOffset } = adBreak;
+        const offset = this.player.ads?.dai?.contentTimeForStreamTime(timeOffset) ?? timeOffset;
+        const duration = this.player.ads?.dai?.contentTimeForStreamTime(this.duration) ?? this.duration;
+        const isPostroll = getAdType(offset, duration) === 'postroll';
         if (!isPostroll) return;
         this.endSession();
     };

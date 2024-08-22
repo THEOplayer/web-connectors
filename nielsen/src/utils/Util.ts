@@ -1,14 +1,15 @@
 import type { Ad, AdBreak, GoogleImaAd } from 'theoplayer';
 import { AdMetadata, AdType, DCRAdMetadataCZ, NielsenCountry } from '../nielsen/Types';
 
-export function getAdType(adBreak: AdBreak): AdType {
-    const currentAdBreakTimeOffset = adBreak.timeOffset;
+export function getAdType(offset: number, duration: number): AdType {
     let currentAdBreakPosition: AdType = 'ad';
-    if (currentAdBreakTimeOffset === 0) {
+    if (offset === 0) {
         currentAdBreakPosition = 'preroll';
-    } else if (currentAdBreakTimeOffset < 0) {
+    } else if (offset < 0) {
         currentAdBreakPosition = 'postroll';
-    } else if (currentAdBreakTimeOffset > 0) {
+    } else if (duration - offset < 1) {
+        currentAdBreakPosition = 'postroll'; // For DAI ads, the offset and duration will be converted from stream time to content time and coincide more or less
+    } else if (offset > 0) {
         currentAdBreakPosition = 'midroll';
     }
     return currentAdBreakPosition;
