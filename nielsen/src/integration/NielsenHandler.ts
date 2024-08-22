@@ -89,6 +89,7 @@ export class NielsenHandler {
         if (this.player.ads) {
             this.player.ads.addEventListener('adbegin', this.onAdBegin);
             this.player.ads.addEventListener('adend', this.onAdEnd);
+            this.player.ads.addEventListener('adbreakbegin', this.onAdBreakBegin);
         }
 
         window.addEventListener('beforeunload', this.onEnd);
@@ -108,6 +109,7 @@ export class NielsenHandler {
         if (this.player.ads) {
             this.player.ads.removeEventListener('adbegin', this.onAdBegin);
             this.player.ads.removeEventListener('adend', this.onAdEnd);
+            this.player.ads.removeEventListener('adbreakbegin', this.onAdBreakBegin);
         }
 
         window.removeEventListener('beforeunload', this.onEnd);
