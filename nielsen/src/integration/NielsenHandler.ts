@@ -134,6 +134,7 @@ export class NielsenHandler {
     };
 
     private onTimeUpdate = ({ currentTime }: TimeUpdateEvent) => {
+        if (!this.dcrEnabled) return;
         const currentTimeFloor = Math.floor(currentTime);
         if (currentTimeFloor === this.lastReportedPlayheadPosition) return;
         this.lastReportedPlayheadPosition = currentTimeFloor;
