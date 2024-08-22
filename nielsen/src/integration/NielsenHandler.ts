@@ -17,9 +17,10 @@ import {
     DTVRContentMetadata,
     NielsenConfiguration,
     NielsenCountry,
+    NielsenDCRContentMetadata,
     NielsenOptions
 } from '../nielsen/Types';
-import { buildDCRAdMetadata, getAdType } from '../utils/Util';
+import { buildDCRAdMetadata, buildDCRContentMetadata, getAdType } from '../utils/Util';
 
 const EMSG_PRIV_SUFFIX = 'PRIV{';
 const EMSG_PAYLOAD_SUFFIX = 'payload=';
@@ -71,9 +72,9 @@ export class NielsenHandler {
         }
     }
 
-    updateDCRContentMetadata(metadata: DCRContentMetadata): void {
+    updateDCRContentMetadata(metadata: NielsenDCRContentMetadata): void {
         if (!this.dcrEnabled) return;
-        this.metadata = metadata;
+        this.metadata = buildDCRContentMetadata(metadata, this.country);
     }
 
     private addEventListeners(): void {

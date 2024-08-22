@@ -21,7 +21,7 @@ export type DCRContentMetadata = {
     /*
      * A fixed dial specifying the type of measured content
      */
-    type: 'content';
+    type: string;
     /*
      * Unique identifier for the video content (video file). Any label according to the needs of the TV company, which will ensure the identification of the same content across platforms. It can also be used for chaining several pieces of information from internal systems. At the beginning, the possibility of adding a client ID (to ensure uniqueness across clients)
      */
@@ -49,11 +49,11 @@ export type DCRContentMetadata = {
     /*
      * Indication of whether the video content being played is the entire episode or only part of it. Always use 'y' for live.
      */
-    isfullepisode: 'y' | 'n';
+    isfullepisode: string;
     /*
      * CMS tag helper item. The method of recording ads insertion: 1. Linear – corresponds to TV insertion of ads 2. Dynamic – Dynamic Ad Insertion (DAI)
      */
-    adloadtype: '1' | '2';
+    adloadtype: string;
 };
 
 export enum AdLoadType {
@@ -166,6 +166,26 @@ export type DCRContentMetadataCZ = DCRContentMetadata & {
      * CMS tag helper item. Indication of whether the content being played supports the insertion of advertisements. “0” – No ads “1” – Supports ads “2” – Don't know (default).
      */
     hasAds: '0' | '1' | '2';
+};
+
+export type NielsenDCRContentMetadataUS = NielsenDCRContentMetadata & {
+    /*
+     * Gracenote TMS ID (If available) should be passed for all telecasted content for clients using the Gracenote solution for proper matching purposes
+     * Note: The TMS ID will be a 14 character string. Normally leading with 2 alpha characters ('EP', 'MV', 'SH' or 'SP'), followed by 12 numbers. This should be provided to you by Nielsen
+     */
+    crossId1?: string;
+    /*
+     * Populated by content distributor to contribute viewing from that distributor to the given content originator. For a full list of acceptable values, please contact your Nielsen representative.
+     */
+    crossId2?: string;
+    /*
+     * One of two custom segments for clients' granular reporting within a brand. (Examples: Genre - horror, comedy, etc. ; Timeslot - primetime, daytime, etc. ; News type - breakingnews, weather, etc.)
+     */
+    segB?: string;
+    /*
+     * One of two custom segments for clients' granular reporting within a brand. (Examples: Genre - horror, comedy, etc. ; Timeslot - primetime, daytime, etc. ; News type - breakingnews, weather, etc.)
+     */
+    segC?: string;
 };
 
 export type DCRContentMetadataUS = DCRContentMetadata & {

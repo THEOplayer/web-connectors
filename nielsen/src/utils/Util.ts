@@ -1,5 +1,16 @@
 import type { Ad, AdBreak, GoogleImaAd } from 'theoplayer';
-import { AdMetadata, AdType, DCRAdMetadataCZ, NielsenCountry } from '../nielsen/Types';
+import {
+    AdMetadata,
+    AdType,
+    DCRAdMetadataCZ,
+    DCRContentMetadata,
+    DCRContentMetadataCZ,
+    DCRContentMetadataUS,
+    NielsenCountry,
+    NielsenDCRContentMetadata,
+    NielsenDCRContentMetadataCZ,
+    NielsenDCRContentMetadataUS
+} from '../nielsen/Types';
 
 export function getAdType(offset: number, duration: number): AdType {
     let currentAdBreakPosition: AdType = 'ad';
@@ -13,6 +24,47 @@ export function getAdType(offset: number, duration: number): AdType {
         currentAdBreakPosition = 'midroll';
     }
     return currentAdBreakPosition;
+}
+
+export function buildDCRContentMetadata(
+    metadata: NielsenDCRContentMetadata,
+    country: NielsenCountry
+): DCRContentMetadata | DCRContentMetadataUS | DCRContentMetadataCZ {
+    const dcrContentMetadata = {
+        type: 'content',
+        assetid: metadata.assetid,
+        program: metadata.program,
+        title: metadata.title,
+        length: metadata.length,
+        airdate: metadata?.airdate ?? '19700101 00:00:01',
+        isfullepisode: metadata.isfullepisode ? 'y' : 'n',
+        adloadtype: metadata.adloadtype
+    };
+    if (country === NielsenCountry.CZ) {
+        const { crossId1, segB, segC, c1, c2, hasAds } = metadata as NielsenDCRContentMetadataCZ;
+        const dcrContentMetadataCZ: DCRContentMetadataCZ = {
+            ...dcrContentMetadata,
+            ['crossId1']: crossId1,
+            segB: segB,
+            segC: segC ?? '',
+            hasAds: hasAds
+        };
+        if (c1) dcrContentMetadataCZ['nol_c1'] = `p1,${c1}`;
+        if (c2) dcrContentMetadataCZ['nol_c2'] = `p2,${c2}`;
+        return dcrContentMetadataCZ;
+    }
+    if (country === NielsenCountry.US) {
+        const { crossId1, crossId2, segB, segC } = metadata as NielsenDCRContentMetadataUS;
+        const dcrContentMetadataUS: DCRContentMetadataUS = {
+            ...dcrContentMetadata
+        };
+        if (crossId1) dcrContentMetadataUS['crossId1'] = crossId1;
+        if (crossId2) dcrContentMetadataUS['crossId2'] = crossId2;
+        if (segB) dcrContentMetadataUS['segB'] = segB;
+        if (segC) dcrContentMetadataUS['segC'] = segC;
+        return dcrContentMetadataUS;
+    }
+    return dcrContentMetadata;
 }
 
 export function buildDCRAdMetadata(ad: Ad, country: NielsenCountry, duration: number): AdMetadata {
