@@ -1,5 +1,5 @@
 import type { ChromelessPlayer } from 'theoplayer';
-import { NielsenOptions } from '../nielsen/Types';
+import { NielsenConfiguration, NielsenDCRContentMetadata, NielsenOptions } from '../nielsen/Types';
 import { NielsenHandler } from './NielsenHandler';
 
 export class NielsenConnector {
