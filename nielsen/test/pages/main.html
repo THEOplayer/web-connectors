@@ -39,21 +39,33 @@
                 "adloadtype": "2",
                 "hasAds": "1"
                 };
+            const instanceName = "exampleInstanceName";
             const options = {
                 // containerId: 'THEOplayer',
                 nol_sdkDebug: "debug"
             };
+            const configuration = {
+                country: "CZ",
+                enableDTVR: false,
+                enableDCR: true
+            }
             const nielsenConnector = new THEOplayerNielsenConnector.NielsenConnector(
                 player,
                 appId,
                 instanceName,
-                options
+                options,
+                configuration
             );
 
             // Set a source that works with your connector
+            // player.source = {sources: [{ src: "https://www.nielseninternet.com/DTVR/RTVOD_(PC-FD)_C3/prog_index.m3u8" }]}
+
             player.source = {
-                sources: [{ src: "https://www.nielseninternet.com/DTVR/RTVOD_(PC-FD)_C3/prog_index.m3u8" }]
+                sources: [{ src: "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8" }]
             };
+
+            nielsenConnector.updateDCRContentMetadata(contentMetadataObjectCZ)
+
         </script>
     </body>
 </html>
