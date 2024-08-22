@@ -21,6 +21,10 @@ export class NielsenConnector {
         this.nielsenHandler.updateMetadata(metadata);
     }
 
+    updateDCRContentMetadata(metadata: NielsenDCRContentMetadata): void {
+        this.nielsenHandler.updateDCRContentMetadata(metadata);
+    }
+
     destroy() {
         this.nielsenHandler.destroy();
     }
