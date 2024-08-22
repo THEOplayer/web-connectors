@@ -3,6 +3,7 @@ import type {
     AdBreakEvent,
     AddTrackEvent,
     ChromelessPlayer,
+    DurationChangeEvent,
     TextTrack,
     TextTrackEnterCueEvent,
     TimeUpdateEvent,
@@ -133,7 +134,8 @@ export class NielsenHandler {
         this.nSdkInstance.ggPM('setVolume', volumeLevel);
     };
 
-    private onDurationChange = () => {
+    private onDurationChange = ({ duration }: DurationChangeEvent) => {
+        if (isNaN(duration)) return;
         this.duration = this.player.duration;
         this.maybeSendPlayEvent();
     };
