@@ -15,10 +15,10 @@ export function getAdType(offset: number, duration: number): AdType {
     return currentAdBreakPosition;
 }
 
-export function buildDCRAdMetadata(ad: Ad, country: NielsenCountry): AdMetadata {
+export function buildDCRAdMetadata(ad: Ad, country: NielsenCountry, duration: number): AdMetadata {
     const adMetadata = {
         assetid: ad.id ?? '',
-        type: getAdType(ad.adBreak)
+        type: getAdType(ad.adBreak.timeOffset, duration)
     };
     if (country == NielsenCountry.US) {
         return adMetadata;

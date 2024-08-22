@@ -248,7 +248,7 @@ export class NielsenHandler {
             this.nSdkInstance.ggPM('loadMetadata', dtvrAdMetadata);
         }
         if (this.dcrEnabled) {
-            const dcrAdMetadata = buildDCRAdMetadata(currentAd[0], this.country);
+            const dcrAdMetadata = buildDCRAdMetadata(currentAd[0], this.country, this.duration);
             this.nSdkInstance.ggPM('loadMetadata', dcrAdMetadata);
         }
     };
