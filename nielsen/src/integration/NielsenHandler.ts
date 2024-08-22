@@ -4,6 +4,7 @@ import type {
     ChromelessPlayer,
     TextTrack,
     TextTrackEnterCueEvent,
+    TimeUpdateEvent,
     VolumeChangeEvent
 } from 'theoplayer';
 import { loadNielsenLibrary } from '../nielsen/NOLBUNDLE';
@@ -28,6 +29,7 @@ export class NielsenHandler {
     private country: NielsenCountry = NielsenCountry.US;
 
     private metadata: DCRContentMetadata | undefined;
+    private lastReportedPlayheadPosition: number | undefined;
 
     private nSdkInstance: any;
 
@@ -79,6 +81,7 @@ export class NielsenHandler {
         this.player.addEventListener('volumechange', this.onVolumeChange);
         this.player.addEventListener('loadedmetadata', this.onLoadMetadata);
         this.player.addEventListener('durationchange', this.onDurationChange);
+        this.player.addEventListener('timeupdate', this.onTimeUpdate);
 
         this.player.textTracks.addEventListener('addtrack', this.onAddTrack);
 
@@ -96,6 +99,7 @@ export class NielsenHandler {
         this.player.removeEventListener('volumechange', this.onVolumeChange);
         this.player.removeEventListener('loadedmetadata', this.onLoadMetadata);
         this.player.removeEventListener('durationchange', this.onDurationChange);
+        this.player.removeEventListener('timeupdate', this.onTimeUpdate);
 
         this.player.textTracks.removeEventListener('addtrack', this.onAddTrack);
 
@@ -127,6 +131,13 @@ export class NielsenHandler {
     private onDurationChange = () => {
         this.duration = this.player.duration;
         this.maybeSendPlayEvent();
+    };
+
+    private onTimeUpdate = ({ currentTime }: TimeUpdateEvent) => {
+        const currentTimeFloor = Math.floor(currentTime);
+        if (currentTimeFloor === this.lastReportedPlayheadPosition) return;
+        this.lastReportedPlayheadPosition = currentTimeFloor;
+        this.nSdkInstance.ggPM('setPlayheadPosition', currentTimeFloor);
     };
 
     private onLoadMetadata = () => {
