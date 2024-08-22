@@ -78,6 +78,8 @@ export class NielsenHandler {
 
     private addEventListeners(): void {
         this.player.addEventListener('play', this.onPlay);
+        this.player.addEventListener('pause', this.onInterrupt);
+        this.player.addEventListener('waiting', this.onInterrupt);
         this.player.addEventListener('ended', this.onEnd);
         this.player.addEventListener('sourcechange', this.onSourceChange);
         this.player.addEventListener('volumechange', this.onVolumeChange);
@@ -98,6 +100,8 @@ export class NielsenHandler {
 
     private removeEventListeners(): void {
         this.player.removeEventListener('play', this.onPlay);
+        this.player.removeEventListener('pause', this.onInterrupt);
+        this.player.removeEventListener('waiting', this.onInterrupt);
         this.player.removeEventListener('ended', this.onEnd);
         this.player.removeEventListener('sourcechange', this.onSourceChange);
         this.player.removeEventListener('volumechange', this.onVolumeChange);
@@ -118,6 +122,11 @@ export class NielsenHandler {
 
     private onPlay = () => {
         this.maybeSendPlayEvent();
+    };
+
+    private onInterrupt = () => {
+        if (!this.dcrEnabled) return;
+        this.nSdkInstance.ggPM('stop', this.getPlayHeadPosition());
     };
 
     private onEnd = () => {
