@@ -72,7 +72,8 @@ export class NielsenHandler {
     }
 
     updateDCRContentMetadata(metadata: DCRContentMetadata): void {
-        if (this.dcrEnabled) this.metadata = metadata;
+        if (!this.dcrEnabled) return;
+        this.metadata = metadata;
     }
 
     private addEventListeners(): void {
