@@ -13,8 +13,14 @@ export class NielsenConnector {
      * @param instanceName  User-defined string value for describing the player/site.
      * @param options       Additional options.
      */
-    constructor(player: ChromelessPlayer, appId: string, instanceName: string, options?: NielsenOptions) {
-        this.nielsenHandler = new NielsenHandler(player, appId, instanceName, options);
+    constructor(
+        player: ChromelessPlayer,
+        appId: string,
+        instanceName: string,
+        options?: NielsenOptions,
+        configuration?: NielsenConfiguration
+    ) {
+        this.nielsenHandler = new NielsenHandler(player, appId, instanceName, options, configuration);
     }
 
     updateMetadata(metadata: { [key: string]: string }): void {
