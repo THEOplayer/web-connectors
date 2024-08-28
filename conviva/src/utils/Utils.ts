@@ -178,7 +178,7 @@ export function collectAdMetadata(ad: Ad): ConvivaMetadata {
 
     // [Preferred] A boolean value that indicates whether this ad is a Slate or not.
     // Set to "true" for Slate and "false" for a regular ad. By default, set to "false"
-    adMetadata['c3.ad.isSlate'] = 'false';
+    adMetadata['c3.ad.isSlate'] = `${Boolean(ad.isSlate)}`;
 
     // [Preferred] Only valid for wrapper VAST responses.
     // This tag must capture the "first" Ad Id in the wrapper chain when a Linear creative is available or there is
