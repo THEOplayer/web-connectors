@@ -25,8 +25,26 @@ export function collectDeviceMetadata(): ConvivaDeviceMetadata {
     };
 }
 
-export function calculateAdType(player: ChromelessPlayer) {
-    return player.source?.ads?.length ? Constants.AdType.CLIENT_SIDE : Constants.AdType.SERVER_SIDE;
+export function calculateAdType(adOrBreak: Ad | AdBreak) {
+    switch (adOrBreak.integration) {
+        case 'theoads': {
+            // TODO: THEOads is a Server-Guided Ad Insertion (SGAI) solution, which can't be reported to Conviva as such yet.
+            return Constants.AdType.SERVER_SIDE;
+        }
+        case undefined:
+        case '':
+        case 'csai':
+        case 'theo': // Deprecated
+        case 'google-ima':
+        case 'spotx':
+        case 'freewheel': {
+            return Constants.AdType.CLIENT_SIDE;
+        }
+        default: {
+            // CustomAdIntegrationKinds are server side ad connectors.
+            return Constants.AdType.SERVER_SIDE;
+        }
+    }
 }
 
 export function calculateVerizonAdBreakInfo(adBreak: VerizonMediaAdBreak, adBreakIndex: number): ConvivaAdBreakInfo {

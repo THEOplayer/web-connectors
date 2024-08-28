@@ -35,7 +35,7 @@ export class AdReporter {
     private readonly onAdBreakBegin = (event: any) => {
         this.currentAdBreak = event.ad as AdBreak;
         this.convivaVideoAnalytics.reportAdBreakStarted(
-            calculateAdType(this.player),
+            calculateAdType(this.currentAdBreak),
             Constants.AdPlayer.CONTENT,
             calculateCurrentAdBreakInfo(this.currentAdBreak, this.adBreakCounter)
         );
@@ -67,7 +67,7 @@ export class AdReporter {
             this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
 
         // [Required] The ad technology as CLIENT_SIDE/SERVER_SIDE
-        adMetadata['c3.ad.technology'] = calculateAdType(this.player);
+        adMetadata['c3.ad.technology'] = calculateAdType(currentAd);
 
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
@@ -80,7 +80,7 @@ export class AdReporter {
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.BITRATE, (currentAd as GoogleImaAd).bitrate || 0);
 
         // Report playing state in case of SSAI.
-        if (calculateAdType(this.player) === Constants.AdType.SERVER_SIDE) {
+        if (calculateAdType(currentAd) === Constants.AdType.SERVER_SIDE) {
             this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
         }
     };
