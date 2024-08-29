@@ -28,6 +28,8 @@ const EMSG_PAYLOAD_SUFFIX = 'payload=';
 export class NielsenHandler {
     private player: ChromelessPlayer;
 
+    private debug: boolean;
+
     private dcrEnabled: boolean;
     private dtvrEnabled: boolean;
     private country: NielsenCountry = NielsenCountry.US;
@@ -51,6 +53,7 @@ export class NielsenHandler {
         configuration?: NielsenConfiguration
     ) {
         this.player = player;
+        this.debug = options?.nol_sdkDebug === 'debug' ? true : false;
         this.dcrEnabled = configuration?.enableDCR ?? false;
         this.dtvrEnabled = configuration?.enableDTVR ?? true;
         this.country = configuration?.country ?? NielsenCountry.US;
@@ -63,7 +66,8 @@ export class NielsenHandler {
         switch (this.country) {
             case NielsenCountry.US: {
                 const { type, vidtype, assetid, ...updateableParameters } = metadata;
-                console.log(`[NIELSEN] updateMetadata: ${{ type, vidtype, assetid }} will not be updated`);
+                if (this.debug)
+                    console.log(`[NIELSEN] updateMetadata: ${{ type, vidtype, assetid }} will not be updated`);
                 this.nSdkInstance.ggPM('updateMetadata', updateableParameters);
                 break;
             }
