@@ -1,5 +1,11 @@
 # @theoplayer/nielsen-connector-web
 
+## 1.2.0
+
+### ✨ Features
+
+- Add DCR support (CZ and US).
+
 ## 1.1.2
 
 ### 🐛 Issues
