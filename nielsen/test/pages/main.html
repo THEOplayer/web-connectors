@@ -3,9 +3,9 @@
     <head>
         <meta charset="UTF-8" />
         <title>Connector test page</title>
-        <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css" />
-        <script src="/node_modules/theoplayer/THEOplayer.js"></script>
-        <script src="/dist/nielsen-connector.umd.js"></script>
+        <link rel="stylesheet" type="text/css" href="./../../../node_modules/theoplayer/ui.css" />
+        <script src="./../../../node_modules/theoplayer/THEOplayer.js"></script>
+        <script src="./../../dist/nielsen-connector.umd.js"></script>
     </head>
     <body>
         <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
@@ -15,29 +15,54 @@
                 ui: {
                     fluid: true
                 },
-                libraryLocation: "/node_modules/theoplayer/"
+                libraryLocation: "./../../../node_modules/theoplayer/"
             });
 
             //
             // Add your connector setup logic here
             //
-            const appId = "P77E3B909-D4B5-4E5C-9B5F-77B0E8FE27F5";
+            const appId = "XXXXXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXX";
             const instanceName = "instanceName";
+            const contentMetadataObjectCZ = {
+                assetid: 'cz-500358-98731568435405',
+                program: 'Animated Test Content',
+                title: 'Big Buck Bunny',
+                length: '596',
+                airdate: '20230620 20:00:00',
+                isfullepisode: true,
+                crossId1: '915 954 39504',
+                c2: '651678089925925',
+                segB: '011',
+                adloadtype: "2",
+                hasAds: "2"
+            };
+            const instanceName = "exampleInstanceName";
             const options = {
                 // containerId: 'THEOplayer',
                 nol_sdkDebug: "debug"
             };
+            const configuration = {
+                country: "CZ",
+                enableDTVR: false,
+                enableDCR: true
+            }
             const nielsenConnector = new THEOplayerNielsenConnector.NielsenConnector(
                 player,
                 appId,
                 instanceName,
-                options
+                options,
+                configuration
             );
 
             // Set a source that works with your connector
+            // player.source = {sources: [{ src: "https://www.nielseninternet.com/DTVR/RTVOD_(PC-FD)_C3/prog_index.m3u8" }]}
+
             player.source = {
-                sources: [{ src: "https://www.nielseninternet.com/DTVR/RTVOD_(PC-FD)_C3/prog_index.m3u8" }]
+                sources: [{ src: "https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8" }]
             };
+
+            nielsenConnector.updateDCRContentMetadata(contentMetadataObjectCZ)
+
         </script>
     </body>
 </html>
