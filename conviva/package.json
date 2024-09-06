@@ -44,7 +44,7 @@
   "peerDependencies": {
     "@convivainc/conviva-js-coresdk": "^4.7.4",
     "@theoplayer/yospace-connector-web": "^2.1.2",
-    "theoplayer": "^5.0.0 || ^6.0.0 || ^7.0.0"
+    "theoplayer": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
   },
   "peerDependenciesMeta": {
     "@theoplayer/yospace-connector-web": {
