@@ -2,10 +2,9 @@ import type {
     ChromelessPlayer,
     ServerSideAdIntegrationController,
     ServerSideAdIntegrationHandler,
-    SourceDescription,
-    YospaceTypedSource
+    SourceDescription
 } from 'theoplayer';
-import { getFirstYospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
+import { getFirstYospaceTypedSource, type YospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
 import { PlayerEvent } from '../yospace/PlayerEvent';
 import {
     PlaybackMode,
