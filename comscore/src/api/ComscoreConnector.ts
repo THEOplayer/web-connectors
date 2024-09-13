@@ -28,7 +28,10 @@ export class ComscoreConnector {
         // Set platform API
         if (this.configuration.skeleton) {
             this.analytics.PlatformApi.setPlatformAPI(this.analytics.PlatformAPIs.Skeleton, this.configuration.skeleton)
-        } else {
+        } else if (this.configuration.platformApi){
+            this.analytics.PlatformApi.setPlatformAPI(this.configuration.platformApi)
+            if (this.configuration.debug) console.log(`[COMSCORE] Set the Platform API to ${this.configuration.platformApi}`)
+         } else {
             this.analytics.PlatformApi.setPlatformAPI(this.analytics.PlatformAPIs.html5)
         }
 

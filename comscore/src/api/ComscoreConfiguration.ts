@@ -24,6 +24,7 @@ export interface ComscoreConfiguration {
      */
     usagePropertiesAutoUpdateMode?: ComscoreUsagePropertiesAutoUpdateMode;
     skeleton?: any;
+    platformApi?: ns_.analytics.PlatformAPIs;
     adIdProcessor?: (ad: Ad) => string;
     debug?: boolean;
 }
