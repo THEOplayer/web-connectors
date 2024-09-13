@@ -27,6 +27,7 @@ const comscoreConfig = {
     publisherId: '<your publisher id>',
     applicationName: 'Test App',
     userConsent: '1',
+    platformApi: ns_.analytics.PlatformAPIs.WebBrowser,
     debug: true
 };
 
@@ -46,6 +47,43 @@ const comscoreMetadata = {
 
 const comscoreConnector = new ComscoreConnector(player, comscoreConfig, comscoreMetadata);
 ```
+
+### Optional ComscoreConfiguration properties
+
+#### `usagePropertiesAutoUpdateMode`
+
+When omitted this wil default to foregroundOnly.
+
+#### `skeleton`
+
+Pass an interface object with target platform specific implementations for the necessary Platform APIs. E.g.
+
+```js
+analytics.PlatformApi.setPlatformApi(analytics.PlatformApi.PlatformApis.Skeleton, {
+    onDataFetch: function (onSuccessCallback, onErrorCallback) {
+        // Execute a function with platform-specific code to retrieve up-to-date information.
+        runPlatformSpecificCodeToRetrieveValues(onSuccessCallback, onErrorCallback);
+    }
+    //
+    // Other overridden PlatformAPI methods, as needed.
+});
+```
+
+For more information, please consult the [Skeleton PlatformAPI Implementation Guide](https://mymetrix-support.comscore.com/hc/en-us/article_attachments/19635711827867)
+
+Note that if the skeleton property is defined, the connector will always use `setPlatformAPI(ns_.analytics.PlatformAPIs.Skeleton)`.
+
+#### `platformApi`
+
+Pass a valid value from `ns_.analytics.PlatformAPIs`. When omitted, the connector will report `setPlatformAPI(ns_.analytics.PlatformAPIs.html5)`.
+
+#### `adIdProcessor`
+
+Pass a function with the following signature if you require custom ad id handling: `(ad: Ad) => string`. When omitted, the connector will use `(ad) => ad.id`. Consult THEOplayer's types for more info about the `Ad` interface.
+
+#### `debug`
+
+A flag to enable verbose logging.
 
 ### Passing metadata dynamically
 
