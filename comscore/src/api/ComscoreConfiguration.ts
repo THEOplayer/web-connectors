@@ -24,7 +24,10 @@ export interface ComscoreConfiguration {
      */
     usagePropertiesAutoUpdateMode?: ComscoreUsagePropertiesAutoUpdateMode;
     skeleton?: any;
-    platformApi?: ns_.analytics.PlatformAPIs;
+    /**
+     * Defaults to ns_.analytics.PlatformAPIs.html5 if no skeleton is provided or ns_.analytics.PlatformAPIs.Skeleton if a skeleton is provided.
+     */
+    platformApi?: number;
     adIdProcessor?: (ad: Ad) => string;
     debug?: boolean;
 }
