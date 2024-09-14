@@ -130,6 +130,12 @@ export type NielsenDCRContentMetadataCZ = NielsenDCRContentMetadata & {
      */
     c2?: string;
     /*
+     * The actual duration of the live broadcast
+     * [VOD] Keep empty
+     * [LIVE] Pass the duration of the live broadcast in seconds
+     */
+    c4?: string;
+    /*
      * CMS tag helper item. Indication of whether the content being played supports the insertion of advertisements. “0” – No ads “1” – Supports ads “2” – Don't know (default).
      */
     hasAds: HasAds;
@@ -162,6 +168,12 @@ export type DCRContentMetadataCZ = DCRContentMetadata & {
      * [LIVE] Keep empty : "nol_c2":"p2,"
      */
     nol_c2?: string;
+    /*
+     * The actual duration of the live broadcast
+     * [VOD] Keep empty
+     * [LIVE] Pass the value in seconds as follows "nol_c4" : "p4, value_in_seconds"
+     */
+    nol_c4?: string;
     /*
      * CMS tag helper item. Indication of whether the content being played supports the insertion of advertisements. “0” – No ads “1” – Supports ads “2” – Don't know (default).
      */
