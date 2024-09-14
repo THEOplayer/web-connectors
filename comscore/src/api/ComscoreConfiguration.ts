@@ -12,6 +12,24 @@ export enum ComscoreUsagePropertiesAutoUpdateMode {
     disabled = "disabled"
 }
 
+export enum ComscorePlatformAPIs {
+    SmartTV = 0,
+    Netcast = 1,
+    Cordova = 2,
+    Trilithium = 3,
+    AppleTV = 4,
+    Chromecast = 5,
+    Xbox = 6,
+    webOS = 7,
+    tvOS = 8,
+    nodejs = 9,
+    html5 = 10,
+    JSMAF = 11,
+    Skeleton = 12,
+    WebBrowser = 13,
+    SamsungTizenTV = 14
+}
+
 export interface ComscoreConfiguration {
     /**
      * Also known as the c2 value
@@ -27,7 +45,7 @@ export interface ComscoreConfiguration {
     /**
      * Defaults to ns_.analytics.PlatformAPIs.html5 if no skeleton is provided or ns_.analytics.PlatformAPIs.Skeleton if a skeleton is provided.
      */
-    platformApi?: number;
+    platformApi?: ComscorePlatformAPIs;
     adIdProcessor?: (ad: Ad) => string;
     debug?: boolean;
 }

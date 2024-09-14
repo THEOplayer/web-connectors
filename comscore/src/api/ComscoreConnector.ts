@@ -1,5 +1,5 @@
 import { ChromelessPlayer } from 'theoplayer';
-import type { ComscoreConfiguration, ComscoreUserConsent } from './ComscoreConfiguration';
+import { ComscoreConfiguration, ComscorePlatformAPIs, ComscoreUserConsent } from './ComscoreConfiguration';
 import type { ComscoreMetadata } from './ComscoreMetadata';
 import { ComscoreStreamingAnalyticsTHEOIntegration } from '../integration/ComscoreStreamingAnalyticsTHEOIntegration';
 
@@ -29,7 +29,7 @@ export class ComscoreConnector {
         if (this.configuration.skeleton) {
             this.analytics.PlatformApi.setPlatformAPI(this.analytics.PlatformAPIs.Skeleton, this.configuration.skeleton)
         } else if (this.configuration.platformApi){
-            this.analytics.PlatformApi.setPlatformAPI(this.configuration.platformApi)
+            this.analytics.PlatformApi.setPlatformAPI(mapPlatformAPI(this.configuration.platformApi))
             if (this.configuration.debug) console.log(`[COMSCORE] Set the Platform API to ${this.configuration.platformApi}`)
          } else {
             this.analytics.PlatformApi.setPlatformAPI(this.analytics.PlatformAPIs.html5)
@@ -98,5 +98,42 @@ export class ComscoreConnector {
      */
     destroy(): void {
         this.streamingAnalyticsIntegration.destroy();
+    }
+}
+
+function mapPlatformAPI(platformApi: ComscorePlatformAPIs): ns_.analytics.PlatformAPIs {
+    switch (platformApi) {
+        case ComscorePlatformAPIs.SmartTV:
+            return ns_.analytics.PlatformAPIs.SmartTV;
+        case ComscorePlatformAPIs.Netcast:
+            return ns_.analytics.PlatformAPIs.Netcast;
+        case ComscorePlatformAPIs.Cordova:
+            return ns_.analytics.PlatformAPIs.Cordova;
+        case ComscorePlatformAPIs.Trilithium:
+            return ns_.analytics.PlatformAPIs.Trilithium;
+        case ComscorePlatformAPIs.AppleTV:
+            return ns_.analytics.PlatformAPIs.AppleTV;
+        case ComscorePlatformAPIs.Chromecast:
+            return ns_.analytics.PlatformAPIs.Chromecast;
+        case ComscorePlatformAPIs.Xbox:
+            return ns_.analytics.PlatformAPIs.Xbox;
+        case ComscorePlatformAPIs.webOS:
+            return ns_.analytics.PlatformAPIs.webOS;
+        case ComscorePlatformAPIs.tvOS:
+            return ns_.analytics.PlatformAPIs.tvOS;
+        case ComscorePlatformAPIs.nodejs:
+            return ns_.analytics.PlatformAPIs.nodejs;
+        case ComscorePlatformAPIs.html5:
+            return ns_.analytics.PlatformAPIs.html5;
+        case ComscorePlatformAPIs.JSMAF:
+            return ns_.analytics.PlatformAPIs.JSMAF;
+        case ComscorePlatformAPIs.Skeleton:
+            return ns_.analytics.PlatformAPIs.Skeleton;
+        case ComscorePlatformAPIs.WebBrowser:
+            return ns_.analytics.PlatformAPIs.WebBrowser;
+        case ComscorePlatformAPIs.SamsungTizenTV:
+            return ns_.analytics.PlatformAPIs.SamsungTizenTV;
+        default:
+            return ns_.analytics.PlatformAPIs.html5;
     }
 }
