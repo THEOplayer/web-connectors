@@ -58,8 +58,8 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
     private contentMetadata: ns_.analytics.StreamingAnalytics.ContentMetadata | null = null;
 
     // Main content related fields for use outside of event handlers
-    private dvrWindowLengthMs: number | undefined = undefined 
-    private dvrWindowOffsetMs: number | undefined = undefined
+    private dvrWindowLengthMs: number | undefined = undefined;
+    private dvrWindowOffsetMs: number | undefined = undefined;
 
     // Advertisement related fields for use outside of ad event handlers
     private inAd: boolean = false;
@@ -178,10 +178,14 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                 this.state = ComscoreState.VIDEO;
                 this.setContentMetadata();
                 if (this.dvrWindowLengthMs) {
-                    this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs)
-                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] setDvrWindowLength ${this.dvrWindowLengthMs}`);
-                    this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs ?? 0)
-                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`);
+                    this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs);
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS)
+                        console.log(`[COMSCORE - StreamingAnalytics] setDvrWindowLength ${this.dvrWindowLengthMs}`);
+                    this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs ?? 0);
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS)
+                        console.log(
+                            `[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`
+                        );
                 }
                 break;
             case ComscoreState.ADVERTISEMENT:
@@ -193,10 +197,14 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                 this.state = ComscoreState.VIDEO;
                 this.setContentMetadata();
                 if (this.dvrWindowLengthMs) {
-                    this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs)
-                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] setDvrWindowLength ${this.dvrWindowLengthMs}`);
-                    this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs ?? 0)
-                    if (this.configuration.debug && LOG_STREAMINGANALYTICS) console.log(`[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`);
+                    this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs);
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS)
+                        console.log(`[COMSCORE - StreamingAnalytics] setDvrWindowLength ${this.dvrWindowLengthMs}`);
+                    this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs ?? 0);
+                    if (this.configuration.debug && LOG_STREAMINGANALYTICS)
+                        console.log(
+                            `[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`
+                        );
                 }
                 break;
             case ComscoreState.VIDEO_PAUSED:
@@ -388,8 +396,9 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
                     const dvrWindowStart = seekable.start(0);
                     const dvrWindowLengthInSeconds = dvrWindowEnd - dvrWindowStart;
                     if (dvrWindowLengthInSeconds) {
-                        this.dvrWindowLengthMs = toMilliSeconds(dvrWindowLengthInSeconds)
-                    if (this.state === ComscoreState.VIDEO || this.state === ComscoreState.VIDEO_PAUSED) this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs)
+                        this.dvrWindowLengthMs = toMilliSeconds(dvrWindowLengthInSeconds);
+                        if (this.state === ComscoreState.VIDEO || this.state === ComscoreState.VIDEO_PAUSED)
+                            this.streamingAnalytics.setDvrWindowLength(this.dvrWindowLengthMs);
                     } else if (this.configuration.debug) console.log(`[COMSCORE] DVR window length was not > 0`);
                 }
             } catch (error) {
@@ -427,17 +436,15 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
             }
             const dvrWindowEnd = seekable.end(seekable.length - 1);
             const dvrWindowOffsetInSeconds = dvrWindowEnd - currentTime;
-            this.dvrWindowOffsetMs = toMilliSeconds(dvrWindowOffsetInSeconds)
+            this.dvrWindowOffsetMs = toMilliSeconds(dvrWindowOffsetInSeconds);
             if (this.state === ComscoreState.VIDEO || this.state === ComscoreState.VIDEO_PAUSED) {
                 this.streamingAnalytics.startFromDvrWindowOffset(this.dvrWindowOffsetMs);
                 if (this.configuration.debug && LOG_STREAMINGANALYTICS)
-                    console.log(
-                        `[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`
-                    );
+                    console.log(`[COMSCORE - StreamingAnalytics] startFromDvrWindowOffset ${this.dvrWindowOffsetMs}`);
             }
         } else {
             if (this.configuration.debug) console.log(`[COMSCORE] seeked in a VOD stream`);
-            const currentTimeInMilliSeconds = toMilliSeconds(currentTime)
+            const currentTimeInMilliSeconds = toMilliSeconds(currentTime);
             this.streamingAnalytics.startFromPosition(currentTimeInMilliSeconds);
             if (this.configuration.debug && LOG_STREAMINGANALYTICS)
                 console.log(`[COMSCORE - StreamingAnalytics] startFromPosition ${currentTimeInMilliSeconds}`);
@@ -482,7 +489,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
         if (this.configuration.debug && LOG_THEOPLAYER_EVENTS)
             console.log(`[COMSCORE - THEOplayer EVENTS] ${event.type} event`);
         this.transitionToStopped();
-    }
+    };
 
     private onAdBreakEnd = (event: AdBreakEvent<'adbreakend'>) => {
         if (this.configuration.debug && LOG_THEOPLAYER_EVENTS)
