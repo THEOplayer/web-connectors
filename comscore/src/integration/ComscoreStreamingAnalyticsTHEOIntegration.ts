@@ -542,8 +542,15 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
         }
     };
 
-    private isBeforePreRoll = (): boolean =>
-        this.player.ads?.scheduledAdBreaks.length ? this.player.ads?.scheduledAdBreaks[0].timeOffset === 0 : false;
+    private isBeforePreRoll = (): boolean => {
+        const hasScheduledAdBreaks = this.player.ads?.scheduledAdBreaks.length !== 0;
+        const firstScheduledAdBreakIsPreroll =
+            hasScheduledAdBreaks && this.player.ads?.scheduledAdBreaks[0].timeOffset === 0;
+        const hasScheduledPrerollWithAds =
+            firstScheduledAdBreakIsPreroll && this.player.ads?.scheduledAdBreaks[0].ads?.length !== 0;
+        return hasScheduledPrerollWithAds;
+    };
+
     // private isAfterPostRoll = () => this.lastAdBreakOffset && this.lastAdBreakOffset < 0 && this.player.duration - this.player.currentTime < 1
     private isAfterPostRoll = (): boolean =>
         this.lastAdBreakType ? this.lastAdBreakType === AdBreakType.POST_ROLL : false;
