@@ -41,16 +41,17 @@ export function buildDCRContentMetadata(
         adloadtype: metadata.adloadtype
     };
     if (country === NielsenCountry.CZ) {
-        const { crossId1, segB, segC, c1, c2, hasAds } = metadata as NielsenDCRContentMetadataCZ;
+        const { crossId1, segB, segC, c1, c2, c4, hasAds } = metadata as NielsenDCRContentMetadataCZ;
         const dcrContentMetadataCZ: DCRContentMetadataCZ = {
             ...dcrContentMetadata,
             ['crossId1']: crossId1,
+            ['nol_c1']: `p1,${c1 ?? ''}`,
             ['nol_c2']: `p2,${c2 ?? ''}`,
+            ['nol_c4']: `p4,${c4 ?? ''}`,
             segB: segB,
             segC: segC ?? '',
             hasAds: hasAds
         };
-        if (c1) dcrContentMetadataCZ['nol_c1'] = `p1,${c1}`;
         return dcrContentMetadataCZ;
     }
     if (country === NielsenCountry.US) {
