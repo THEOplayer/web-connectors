@@ -171,7 +171,7 @@ export type DCRContentMetadataCZ = DCRContentMetadata & {
     /*
      * The actual duration of the live broadcast
      * [VOD] Keep empty
-     * [LIVE] Pass the value in seconds as follows "nol_c4" : "p4, value_in_seconds"
+     * [LIVE] Pass the value in seconds as follows "nol_c4" : "p4,value_in_seconds"
      */
     nol_c4?: string;
     /*
