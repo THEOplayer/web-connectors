@@ -1,5 +1,11 @@
 # @theoplayer/nielsen-connector-web
 
+## 1.4.0
+
+### ✨ Features
+
+- Added an optional c4 parameter to `NielsenDCRContentMetadataCZ`.
+
 ## 1.3.0
 
 ### ✨ Features
