@@ -1,6 +1,6 @@
 {
   "name": "@theoplayer/nielsen-connector-web",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A connector implementing Nielsen with THEOplayer.",
   "main": "dist/nielsen-connector.umd.js",
   "module": "dist/nielsen-connector.esm.js",
