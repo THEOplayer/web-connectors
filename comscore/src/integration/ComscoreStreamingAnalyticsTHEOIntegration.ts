@@ -550,6 +550,7 @@ export class ComscoreStreamingAnalyticsTHEOIntegration {
     };
 
     private isBeforePreRoll = (): boolean => {
+        if (!this.player.ads) return false;
         const hasScheduledAdBreaks = this.player.ads?.scheduledAdBreaks.length !== 0;
         const firstScheduledAdBreakIsPreroll =
             hasScheduledAdBreaks && this.player.ads?.scheduledAdBreaks[0].timeOffset === 0;
