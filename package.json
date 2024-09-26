@@ -13,7 +13,8 @@
     "cmcd",
     "comscore",
     "adscript",
-    "gemius"
+    "gemius",
+    "drm"
   ],
   "scripts": {
     "changeset:version": "changeset version && node .changeset/post-process.js",

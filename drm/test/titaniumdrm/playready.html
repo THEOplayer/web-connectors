@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Titanium DRM PlayReady Test using AuthToken or device parameters</title>
+        <link rel="stylesheet" type="text/css" href="../../../node_modules/theoplayer/ui.css" />
+        <script src="../../../node_modules/theoplayer/THEOplayer.js"></script>
+        <script src="../../dist/drm-connector.umd.js"></script>
+    </head>
+    <body>
+        <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+        <script type="text/javascript">
+            const element = document.querySelector('#THEOplayer');
+            const player = new THEOplayer.Player(element, {
+                ui: {
+                    fluid: true
+                },
+                license: 'insert-your-license-here',
+                libraryLocation: '../../../node_modules/theoplayer/'
+            });
+
+            THEOplayer.registerContentProtectionIntegration(
+                'titaniumdrm',
+                'playready',
+                new THEOplayerDrmConnector.TitaniumPlayReadyContentProtectionIntegrationFactory()
+            );
+
+            player.source = {
+                sources: [
+                    {
+                        src: 'insert manifest url here',
+                        contentProtection: {
+                            playready: {
+                                licenseAcquisitionURL: 'insert license url here'
+                            },
+                            preferredKeySystems: ['playready'],
+                            integration: 'titaniumdrm',
+                            integrationParameters: {
+                                authToken: 'insert AuthToken here'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            // // Alternatively, use device parameters instead of an authToken
+            // player.source = {
+            //     sources: [
+            //         {
+            //             src: 'insert manifest url here',
+            //             contentProtection: {
+            //                 widevine: {
+            //                     licenseAcquisitionURL: 'insert license url here'
+            //                 },
+            //                 preferredKeySystems: ['playready'],
+            //                 integration: 'titaniumdrm',
+            //                 integrationParameters: {
+            //                     accountName: 'replace with accountName',
+            //                     customerName: 'replace with customerName',
+            //                     friendlyName: 'replace with friendlyName',
+            //                     portalId: 'replace with portalId'
+            //                 }
+            //             }
+            //         }
+            //     ],
+            // };
+        </script>
+    </body>
+</html>

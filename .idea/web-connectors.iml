@@ -11,6 +11,8 @@
       <excludeFolder url="file://$MODULE_DIR$/cmcd/dist" />
       <excludeFolder url="file://$MODULE_DIR$/api" />
       <excludeFolder url="file://$MODULE_DIR$/adscript/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/drm/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/gemius/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
