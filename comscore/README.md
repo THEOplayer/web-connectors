@@ -64,7 +64,7 @@ analytics.PlatformApi.setPlatformApi(analytics.PlatformApi.PlatformApis.Skeleton
         // Execute a function with platform-specific code to retrieve up-to-date information.
         runPlatformSpecificCodeToRetrieveValues(onSuccessCallback, onErrorCallback);
     }
-    //
+
     // Other overridden PlatformAPI methods, as needed.
 });
 ```
