@@ -14,11 +14,12 @@ import {
     collectContentMetadata,
     collectDeviceMetadata,
     collectPlayerInfo,
-    flattenAndStringifyObject
+    flattenErrorObject
 } from '../utils/Utils';
 import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
 import { VerizonAdReporter } from './ads/VerizonAdReporter';
+import { ErrorEvent } from 'theoplayer';
 
 export interface ConvivaConfiguration {
     customerKey: string;
@@ -279,25 +280,18 @@ export class ConvivaHandler {
         this.convivaVideoAnalytics?.reportPlaybackMetric(Constants.Playback.SEEK_ENDED);
     };
 
-    private readonly onError = () => {
+    private readonly onError = (errorEvent: ErrorEvent) => {
         const metadata: ConvivaMetadata = {};
         if (Number.isNaN(this.player.duration)) {
             metadata[Constants.DURATION] = -1;
         }
-        const error = this.player.errorObject;
+        const error = errorEvent.errorObject;
 
         // Optionally report error details, which should be a flat {[key: string]: string} object.
-        if (error?.cause) {
-            try {
-                const errorDetails = flattenAndStringifyObject(error?.cause);
-                if (Object.keys(errorDetails).length > 0) {
-                    this.convivaVideoAnalytics?.reportPlaybackEvent('ErrorDetailsEvent', errorDetails);
-                }
-            } catch (ignore) {
-                // Failed to stringify body
-            }
+        const errorDetails: Record<string, any> = flattenErrorObject(error);
+        if (Object.keys(errorDetails).length > 0) {
+            this.convivaVideoAnalytics?.reportPlaybackEvent('ErrorDetailsEvent', errorDetails);
         }
-
         this.convivaVideoAnalytics?.reportPlaybackFailed(error?.message ?? 'Fatal error occurred', metadata);
 
         this.releaseSession();
