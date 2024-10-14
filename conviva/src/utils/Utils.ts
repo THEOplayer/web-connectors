@@ -224,7 +224,7 @@ export function calculateBufferLength(player: ChromelessPlayer): number {
 }
 
 export function flattenErrorObject(error?: THEOplayerError): { [key: string]: string } {
-    const errorDetails: Record<string, any> = {
+    const errorDetails: { [key: string]: string | undefined } = {
         code: ErrorCode[error?.code ?? -1],
         category: ErrorCategory[error?.category ?? -1],
         name: error?.cause?.name,
@@ -237,5 +237,5 @@ export function flattenErrorObject(error?: THEOplayerError): { [key: string]: st
             delete errorDetails[key];
         }
     }
-    return errorDetails;
+    return errorDetails as { [key: string]: string };
 }
