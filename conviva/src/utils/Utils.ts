@@ -14,6 +14,9 @@ import {
     type GoogleImaAd,
     type VerizonMediaAd,
     type VerizonMediaAdBreak,
+    type THEOplayerError,
+    ErrorCategory,
+    ErrorCode,
     version
 } from 'theoplayer';
 import { ConvivaConfiguration } from '../integration/ConvivaHandler';
@@ -220,18 +223,19 @@ export function calculateBufferLength(player: ChromelessPlayer): number {
     return bufferLength * 1000;
 }
 
-export function flattenAndStringifyObject(obj: any): { [key: string]: string } {
-    const result: Record<string, string> = {};
-    Object.keys(obj).forEach((key) => {
-        try {
-            if (typeof obj[key] === 'object' && obj[key] !== null) {
-                result[key] = JSON.stringify(obj[key]);
-            } else {
-                result[key] = obj[key].toString();
-            }
-        } catch (ignore) {
-            // Failed to stringify value.
+export function flattenErrorObject(error?: THEOplayerError): { [key: string]: string } {
+    const errorDetails: { [key: string]: string | undefined } = {
+        code: ErrorCode[error?.code ?? -1],
+        category: ErrorCategory[error?.category ?? -1],
+        name: error?.cause?.name,
+        message: error?.cause?.message,
+        stack: error?.stack
+    };
+    // Remove undefined values
+    for (const key in errorDetails) {
+        if (errorDetails[key] === undefined) {
+            delete errorDetails[key];
         }
-    });
-    return result;
+    }
+    return errorDetails as { [key: string]: string };
 }
