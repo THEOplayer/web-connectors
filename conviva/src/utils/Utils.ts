@@ -28,8 +28,26 @@ export function collectDeviceMetadata(): ConvivaDeviceMetadata {
     };
 }
 
-export function calculateAdType(player: ChromelessPlayer) {
-    return player.source?.ads?.length ? Constants.AdType.CLIENT_SIDE : Constants.AdType.SERVER_SIDE;
+export function calculateAdType(adOrBreak: Ad | AdBreak) {
+    switch (adOrBreak.integration) {
+        case 'theoads': {
+            // TODO: THEOads is a Server-Guided Ad Insertion (SGAI) solution, which can't be reported to Conviva as such yet.
+            return Constants.AdType.SERVER_SIDE;
+        }
+        case undefined:
+        case '':
+        case 'csai':
+        case 'theo': // Deprecated
+        case 'google-ima':
+        case 'spotx':
+        case 'freewheel': {
+            return Constants.AdType.CLIENT_SIDE;
+        }
+        default: {
+            // CustomAdIntegrationKinds are server side ad connectors.
+            return Constants.AdType.SERVER_SIDE;
+        }
+    }
 }
 
 export function calculateVerizonAdBreakInfo(adBreak: VerizonMediaAdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
@@ -181,7 +199,7 @@ export function collectAdMetadata(ad: Ad): ConvivaMetadata {
 
     // [Preferred] A boolean value that indicates whether this ad is a Slate or not.
     // Set to "true" for Slate and "false" for a regular ad. By default, set to "false"
-    adMetadata['c3.ad.isSlate'] = 'false';
+    adMetadata['c3.ad.isSlate'] = `${Boolean(ad.isSlate)}`;
 
     // [Preferred] Only valid for wrapper VAST responses.
     // This tag must capture the "first" Ad Id in the wrapper chain when a Linear creative is available or there is
