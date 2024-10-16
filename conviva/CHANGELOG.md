@@ -1,5 +1,12 @@
 # @theoplayer/conviva-connector-web
 
+## 2.3.0
+
+### ✨ Features
+
+- Added reporting of slate for THEOads.
+- Added additional error details on playback failure.
+
 ## 2.2.0
 
 ### ✨ Features
