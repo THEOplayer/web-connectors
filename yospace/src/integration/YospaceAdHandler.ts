@@ -144,6 +144,10 @@ export class YospaceAdHandler {
             this.advertStartListener = undefined;
         }
 
+        if (this.currentAdBreak === undefined) {
+            this.currentAdBreak = this.getOrCreateAdBreak(advert.broker.currentAdBreak, true);
+        }
+
         const ad = this.ads.get(advert);
         if (ad !== undefined) {
             this.currentAd = ad;
