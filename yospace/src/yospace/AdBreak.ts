@@ -93,6 +93,7 @@ export interface Advert extends AdvertEventHandler {
     isActive(): boolean;
     isFiller(): boolean;
     isNonLinear(): boolean;
+    broker: any;
 }
 
 export type { Advert as AdVert };
