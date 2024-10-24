@@ -75,6 +75,7 @@ export interface AdvertEventHandler {
 
 export interface Advert extends AdvertEventHandler {
     addMacroSubstitution(key: string, value: string): void;
+    broker: Broker;
     getAdType(): string;
     getAdVerifications(): AdVerification[];
     getCompanionAdsByType(type: ResourceType): CompanionCreative[];
@@ -93,7 +94,10 @@ export interface Advert extends AdvertEventHandler {
     isActive(): boolean;
     isFiller(): boolean;
     isNonLinear(): boolean;
-    broker: any;
+}
+
+export interface Broker {
+    getAdBreakForAdvert(advert: Advert): AdBreak | undefined;
 }
 
 export type { Advert as AdVert };
