@@ -1,3 +1,5 @@
+import { YospaceSessionManager } from "./YospaceSessionManager";
+
 export enum ResourceType {
     STATIC,
     HTML,
@@ -75,7 +77,7 @@ export interface AdvertEventHandler {
 
 export interface Advert extends AdvertEventHandler {
     addMacroSubstitution(key: string, value: string): void;
-    broker: Broker;
+    broker: YospaceSessionManager;
     getAdType(): string;
     getAdVerifications(): AdVerification[];
     getCompanionAdsByType(type: ResourceType): CompanionCreative[];
@@ -94,10 +96,6 @@ export interface Advert extends AdvertEventHandler {
     isActive(): boolean;
     isFiller(): boolean;
     isNonLinear(): boolean;
-}
-
-export interface Broker {
-    getAdBreakForAdvert(advert: Advert): AdBreak | undefined;
 }
 
 export type { Advert as AdVert };

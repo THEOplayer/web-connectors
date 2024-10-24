@@ -1,6 +1,7 @@
 import { PlayerEvent } from './PlayerEvent';
 import { TimedMetadata } from './TimedMetadata';
 import { AnalyticEventObserver } from './AnalyticEventObserver';
+import { AdVert, AdBreak } from './AdBreak';
 
 export enum ResultCode {
     CONNECTION_ERROR = -1,
@@ -28,6 +29,8 @@ export type YospaceSessionManagerCreator = {
 };
 
 export interface YospaceSession {
+    getAdBreakForAdvert(advert: AdVert): AdBreak | undefined;
+
     getPlaybackMode(): PlaybackMode;
 
     getPlaybackUrl(): string;
