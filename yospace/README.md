@@ -12,43 +12,49 @@ For setting up a valid Yospace session, the Yospace Ad Management SDK is require
 
 ## Installation
 
-Install using your favorite package manager for Node (such as `npm` or `yarn`):
+Install using your favorite package manager for Node (such as `npm` or `yarn`).
 
-### Install via npm
+You'll also need to add the `@yospace/admanagement-sdk` package as a dependency of your app.
+Refer to [the Yospace documentation](https://developer.yospace.com/sdk-documentation/javascript/api/yosdk/latest/index.html) on how to connect to the Yospace npm registry.
 
-```bash
-npm install @theoplayer/yospace-connector-web
-```
+-   npm
 
-### Install via yarn
+    ```bash
+    npm install @theoplayer/yospace-connector-web @yospace/admanagement-sdk
+    ```
 
-```bash
-yarn add @theoplayer/yospace-connector-web
-```
+-   yarn
+
+    ```bash
+    yarn add @theoplayer/yospace-connector-web @yospace/admanagement-sdk
+    ```
 
 ## Usage
 
-First you need to add the Yospace connector to your app :
+First you need to add the Yospace connector to your app:
 
 -   Add as a regular script
 
-```html
-<script type="text/javascript" src="path/to/yospace-connector.umd.js"></script>
-<script type="text/javascript">
-    const player = new THEOplayer.Player(element, configuration);
-    const yospaceConnector = new THEOplayerYospaceConnector.YospaceConnector(player);
-</script>
-```
+    ```html
+    <script type="text/javascript" src="path/to/admanagement-sdk.min.js"></script>
+    <script type="text/javascript" src="path/to/yospace-connector.umd.js"></script>
+    <script type="text/javascript">
+        const player = new THEOplayer.Player(element, configuration);
+        const yospaceConnector = new THEOplayerYospaceConnector.YospaceConnector(player);
+    </script>
+    ```
 
 -   Add as an ES2015 module
 
-```html
-<script type="module">
+    ```javascript
     import { YospaceConnector } from 'path/to/yospace-connector.esm.js';
     const player = new THEOplayer.Player(element, configuration);
     const yospaceConnector = new YospaceConnector(player);
-</script>
-```
+    ```
+
+    The connector will load the Yospace library by importing from `@yospace/admanagement-sdk`.
+    You may need to configure your app's bundler in order to point `@yospace/admanagement-sdk`
+    to the correct location (`admanagement-sdk.min.js`).
 
 To make use of the Yospace integration, you need to set up a session for your Yospace source :
 
