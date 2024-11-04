@@ -36,9 +36,9 @@ First you need to add the Yospace connector to your app:
 -   Add as a regular script
 
     ```html
-    <script type="text/javascript" src="path/to/admanagement-sdk.min.js"></script>
-    <script type="text/javascript" src="path/to/yospace-connector.umd.js"></script>
-    <script type="text/javascript">
+    <script src="path/to/admanagement-sdk.min.js"></script>
+    <script src="path/to/yospace-connector.umd.js"></script>
+    <script>
         const player = new THEOplayer.Player(element, configuration);
         const yospaceConnector = new THEOplayerYospaceConnector.YospaceConnector(player);
     </script>
