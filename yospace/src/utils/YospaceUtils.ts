@@ -4,7 +4,7 @@ import type {
     YospaceSSAIIntegrationID
 } from '../integration/YospaceConfiguration';
 import { implementsInterface, isTypedSource, toSources } from './SourceUtils';
-import { YospaceWindow } from '../yospace/YospaceWindow';
+import * as YospaceAdManagement from '@yospace/admanagement-sdk';
 
 export const YOSPACE_SSAI_INTEGRATION_ID: YospaceSSAIIntegrationID = 'yospace';
 
@@ -32,5 +32,5 @@ export function getFirstYospaceTypedSource(sourceDescription: SourceDescription)
 }
 
 export function yoSpaceWebSdkIsAvailable(): boolean {
-    return !!(window as unknown as YospaceWindow).YospaceAdManagement;
+    return YospaceAdManagement?.Session !== undefined;
 }

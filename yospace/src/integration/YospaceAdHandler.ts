@@ -14,7 +14,6 @@ import { YospaceManager } from './YospaceManager';
 import { arrayRemove } from '../utils/DefaultEventDispatcher';
 import { TrackingError } from '../yospace/TrackingError';
 import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
-import { YospaceWindow } from '../yospace/YospaceWindow';
 
 export class YospaceAdHandler {
     private readonly yospaceManager: YospaceManager;
@@ -95,10 +94,9 @@ export class YospaceAdHandler {
     }
 
     private getAdInit(advert: YospaceAdvert): AdInit {
-        const yospace = (window as unknown as YospaceWindow).YospaceAdManagement;
         const isNonLinear = advert.isNonLinear();
         const nonLinearCreative = isNonLinear
-            ? advert.getNonLinearCreativesByType(yospace.ResourceType.STATIC)?.[0]
+            ? advert.getNonLinearCreativesByType(ResourceType.STATIC)?.[0]
             : undefined;
         const linearCreative = !isNonLinear ? advert.getLinearCreative() : undefined;
         const creative = isNonLinear ? nonLinearCreative : linearCreative;

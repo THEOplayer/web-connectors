@@ -6,8 +6,8 @@ import type {
     TextTracksList,
     YospaceId
 } from 'theoplayer';
-import { YospaceWindow } from '../yospace/YospaceWindow';
 import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
+import { TimedMetadata } from '../yospace/TimedMetadata';
 
 export class YospaceReport {
     YMID: string | undefined = undefined;
@@ -69,9 +69,7 @@ export abstract class YospaceMetadataHandler {
 
     protected reportData(report: YospaceReport) {
         if (report.isComplete()) {
-            const timedMetadata = (
-                window as unknown as YospaceWindow
-            ).YospaceAdManagement.TimedMetadata.createFromMetadata(
+            const timedMetadata = TimedMetadata.createFromMetadata(
                 report.YMID!,
                 report.YSEQ!,
                 report.YTYP!,

@@ -8,13 +8,15 @@ import { getFirstYospaceTypedSource, type YospaceTypedSource, yoSpaceWebSdkIsAva
 import { PlayerEvent } from '../yospace/PlayerEvent';
 import {
     PlaybackMode,
-    ResultCode,
+    Session as YospaceSession,
+    SessionDVRLive,
+    SessionDVRLive as YospaceSessionDVRLive,
+    SessionLive,
     SessionState,
-    YospaceSession,
-    YospaceSessionDVRLive,
+    SessionVOD,
     YospaceSessionManager
 } from '../yospace/YospaceSessionManager';
-import { YospaceWindow } from '../yospace/YospaceWindow';
+import { CONNECTION_ERROR, CONNECTION_TIMEOUT, MALFORMED_URL } from '@yospace/admanagement-sdk';
 import { YospaceAdHandler } from './YospaceAdHandler';
 import { YospaceUiHandler } from './YospaceUIHandler';
 import { YospaceID3MetadataHandler } from './YospaceID3MetadataHandler';
@@ -121,21 +123,20 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
     ): Promise<SourceDescription> {
         this.reset();
 
-        const yospaceWindow = (window as unknown as YospaceWindow).YospaceAdManagement;
-        const properties = sessionProperties ?? new yospaceWindow.SessionProperties();
+        const properties = sessionProperties ?? new SessionProperties();
         properties.setUserAgent(navigator.userAgent);
         let session: YospaceSession;
         switch (yospaceTypedSource?.ssai.streamType) {
             case 'vod':
-                session = await yospaceWindow.SessionVOD.create(yospaceTypedSource.src!, properties);
+                session = await SessionVOD.create(yospaceTypedSource.src!, properties);
                 break;
             case 'nonlinear':
             case 'livepause':
-                session = await yospaceWindow.SessionDVRLive.create(yospaceTypedSource.src!, properties);
+                session = await SessionDVRLive.create(yospaceTypedSource.src!, properties);
                 break;
             default:
                 this.needsTimedMetadata = true;
-                session = await yospaceWindow.SessionLive.create(yospaceTypedSource.src!, properties);
+                session = await SessionLive.create(yospaceTypedSource.src!, properties);
         }
         switch (session.getSessionState()) {
             case SessionState.INITIALISED:
@@ -154,7 +155,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
                 };
             }
             case SessionState.FAILED:
-            case SessionState.SHUT_DOWN:
+            case SessionState.SHUTDOWN:
             default:
                 this.handleSessionInitialisationErrors(session.getResultCode());
         }
@@ -183,7 +184,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
 
         // For Yospace DVRLive sessions we need to offset the playback position from the stream start time
         if (isSessionDVRLive(session)) {
-            const ast = session.getManifestData<Date>('availabilityStartTime')?.getTime();
+            const ast = (session.getManifestData('availabilityStartTime') as unknown as Date | undefined)?.getTime();
             const sst = session.getStreamStart();
             // availabilityStartTime is initially undefined, and streamStart is initially -1
             const delta = (sst < 0 ? 0 : sst) - (ast || 0);
@@ -193,13 +194,13 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
         session.onPlayheadUpdate(currentTime);
     };
 
-    private handleSessionInitialisationErrors(result: ResultCode): never {
+    private handleSessionInitialisationErrors(result: number): never {
         let errorMessage: string;
-        if (result === ResultCode.MALFORMED_URL) {
+        if (result === MALFORMED_URL) {
             errorMessage = 'Yospace: The stream URL is not correctly formatted';
-        } else if (result === ResultCode.CONNECTION_ERROR) {
+        } else if (result === CONNECTION_ERROR) {
             errorMessage = 'Yospace: Connection error';
-        } else if (result === ResultCode.CONNECTION_TIMEOUT) {
+        } else if (result === CONNECTION_TIMEOUT) {
             errorMessage = 'Yospace: Connection timeout';
         } else {
             errorMessage = 'Yospace: Session could not be initialised';

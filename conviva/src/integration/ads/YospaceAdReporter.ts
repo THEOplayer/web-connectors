@@ -123,7 +123,7 @@ export class YospaceAdReporter {
     }
 }
 
-// Keep this in sync with SessionErrorCode from yospace-connector-web
+// Keep this in sync with SessionErrorCode from @yospace/admanagement-sdk
 enum YospaceSessionErrorCode {
     TIMEOUT = 0
 }

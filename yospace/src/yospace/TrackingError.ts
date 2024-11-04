@@ -1,7 +1,1 @@
-export interface TrackingError {
-    getAdBreakIdentifier(): string;
-    getMediaIdentifier(): string;
-    getUrl(): string;
-    getErrorCode(): number;
-    getEvent(): string;
-}
+export type { TrackingError } from '@yospace/admanagement-sdk/types/Public/TrackingError';
