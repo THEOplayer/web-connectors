@@ -9,5 +9,9 @@ const banner = `
 /**
  * THEOplayer Yospace Connector v${version}
  */`.trim();
+const external = ['@yospace/admanagement-sdk'];
+const globals = {
+    '@yospace/admanagement-sdk': 'YospaceAdManagement'
+};
 
-export default getSharedBuildConfiguration({ fileName, globalName, banner });
+export default getSharedBuildConfiguration({ fileName, globalName, banner, external, globals });
