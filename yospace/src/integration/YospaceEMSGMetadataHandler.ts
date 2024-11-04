@@ -13,7 +13,7 @@ function parseEmsgYospaceMetadata(data: number[], startTime: number): YospaceRep
     const result = new YospaceReport(startTime);
     for (const metadataElement of parsedEmsg) {
         const [key, value] = metadataElement.split('=');
-        result[key as YospaceId] = value;
+        result.set(key as YospaceId, value);
     }
     return result;
 }

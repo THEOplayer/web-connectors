@@ -1,4 +1,11 @@
-import type { AddTrackEvent, TextTrack, TextTrackCue, TextTrackCueChangeEvent, TextTracksList } from 'theoplayer';
+import type {
+    AddTrackEvent,
+    TextTrack,
+    TextTrackCue,
+    TextTrackCueChangeEvent,
+    TextTracksList,
+    YospaceId
+} from 'theoplayer';
 import { YospaceWindow } from '../yospace/YospaceWindow';
 import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
 
@@ -6,10 +13,26 @@ export class YospaceReport {
     YMID: string | undefined = undefined;
     YSEQ: string | undefined = undefined;
     YTYP: string | undefined = undefined;
-    YDUR: string | undefined = undefined;
+    YDUR: number | undefined = undefined;
     YCSP: string | undefined = undefined;
 
     constructor(readonly startTime: number) {}
+
+    set(key: YospaceId, value: any): void {
+        switch (key) {
+            case 'YDUR': {
+                this.YDUR = Number(value);
+                break;
+            }
+            case 'YMID':
+            case 'YTYP':
+            case 'YSEQ':
+            case 'YCSP': {
+                this[key] = String(value);
+                break;
+            }
+        }
+    }
 
     isComplete(): boolean {
         return this.YMID !== undefined && this.YDUR !== undefined && this.YSEQ !== undefined && this.YTYP !== undefined;

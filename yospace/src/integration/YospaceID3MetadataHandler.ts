@@ -34,7 +34,7 @@ export class YospaceID3MetadataHandler extends YospaceMetadataHandler {
                 report = new YospaceReport(cue.startTime);
             }
             const frame = cue.content as ID3Yospace;
-            report[frame.id] = frame.text;
+            report.set(frame.id, frame.text);
         }
 
         this.reportData(report);
