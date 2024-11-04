@@ -3,9 +3,10 @@
 The Yospace connector provides a Yospace integration for THEOplayer.
 
 ## Prerequisites
+
 In order to use this connector, a [THEOplayer](https://www.npmjs.com/package/theoplayer) build with a valid license is required. You can use your existing THEOplayer HTML5 SDK license or request yours via [THEOportal](https://portal.theoplayer.com/).
 
-For setting up a valid Yospace session, the Yospace Ad Management SDK is required. For more information on how to install the Ad Management SDK, please refer to the documentation of [Yospace](https://developer.yospace.com/). 
+For setting up a valid Yospace session, the Yospace Ad Management SDK is required. For more information on how to install the Ad Management SDK, please refer to the documentation of [Yospace](https://developer.yospace.com/).
 
 **Remark:** This version of the Yospace Connector is compatible with Yospace Ad Management SDK version 3.5.2 or higher. If you still want to use an older Ad Management SDK, please use the connector version 1.4.0.
 
@@ -26,9 +27,10 @@ yarn add @theoplayer/yospace-connector-web
 ```
 
 ## Usage
+
 First you need to add the Yospace connector to your app :
 
-* Add as a regular script
+-   Add as a regular script
 
 ```html
 <script type="text/javascript" src="path/to/yospace-connector.umd.js"></script>
@@ -38,11 +40,11 @@ First you need to add the Yospace connector to your app :
 </script>
 ```
 
-* Add as an ES2015 module
+-   Add as an ES2015 module
 
 ```html
 <script type="module">
-    import { YospaceConnector } from "path/to/yospace-connector.esm.js";
+    import { YospaceConnector } from 'path/to/yospace-connector.esm.js';
     const player = new THEOplayer.Player(element, configuration);
     const yospaceConnector = new YospaceConnector(player);
 </script>
@@ -54,15 +56,15 @@ To make use of the Yospace integration, you need to set up a session for your Yo
 const source = {
     sources: [
         {
-            src: "YOUR_YOSPACE_SRC",
+            src: 'YOUR_YOSPACE_SRC',
             ssai: {
-                integration: "yospace"
+                integration: 'yospace'
                 // If necessary, you can define your streamType.
                 // streamType: 'vod' | 'live' | 'livepause'
             }
         }
     ]
-}
+};
 
 await yospaceConnector.setupYospaceSession(source);
 ```
@@ -75,15 +77,15 @@ const sessionProperties = new YospaceAdManagement.SessionProperties();
 const source = {
     sources: [
         {
-            src: "YOUR_YOSPACE_SRC",
+            src: 'YOUR_YOSPACE_SRC',
             ssai: {
-                integration: "yospace"
+                integration: 'yospace'
                 // If necessary, you can define your streamType.
                 // streamType: 'vod' | 'live' | 'livepause'
             }
         }
     ]
-}
+};
 
 await yospaceConnector.setupYospaceSession(source, sessionProperties);
 ```
