@@ -4,9 +4,9 @@
         <meta charset="UTF-8" />
         <title>Yospace Connector Test page</title>
         <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css" />
-        <script src="/node_modules/theoplayer/THEOplayer.js"></script>
-        <script src="/dist/yospace-connector.umd.js"></script>
-        <script type="application/javascript" src="YOUR_YOSPACE_AD_MANAGEMENT_SDK"></script>
+        <script src="../../../node_modules/theoplayer/THEOplayer.js"></script>
+        <script src="YOUR_YOSPACE_AD_MANAGEMENT_SDK"></script>
+        <script src="../../dist/yospace-connector.umd.js"></script>
     </head>
     <body>
         <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
@@ -16,7 +16,7 @@
                 ui: {
                     fluid: true
                 },
-                libraryLocation: '/node_modules/theoplayer',
+                libraryLocation: '../../../node_modules/theoplayer',
                 license: 'YOUR_LICENSE'
             });
 
@@ -53,7 +53,7 @@
                     'removeadbreak',
                     'adfirstquartile',
                     'admidpoint',
-                    'adthirdquartile',
+                    'adthirdquartile'
                 ],
                 (event) => {
                     console.log(event.type, event, player.ads.currentAds, player.ads.currentAdBreak);
