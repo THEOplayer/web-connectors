@@ -1,5 +1,15 @@
 # @theoplayer/yospace-connector-web
 
+## 2.5.0
+
+### ✨ Features
+
+- Create ad break from advert start, if missing
+
+### 🐛 Issues
+
+- Require THEOplayer 8.1.0 or higher for correct TypeScript type definitions.
+
 ## 2.4.0
 
 ### ✨ Features
