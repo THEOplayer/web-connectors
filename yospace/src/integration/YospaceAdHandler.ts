@@ -144,6 +144,13 @@ export class YospaceAdHandler {
             this.advertStartListener = undefined;
         }
 
+        if (this.currentAdBreak === undefined) {
+            const missingAdBreak = advert.broker.getAdBreakForAdvert(advert);
+            if (missingAdBreak !== undefined) {
+                this.currentAdBreak = this.getOrCreateAdBreak(missingAdBreak, true);
+            }
+        }
+
         const ad = this.ads.get(advert);
         if (ad !== undefined) {
             this.currentAd = ad;
