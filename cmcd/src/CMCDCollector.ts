@@ -59,7 +59,7 @@ export class CMCDCollector {
      */
     private handleCurrentSourceChange_ = (event: CurrentSourceChangeEvent) => {
         const currentSource = event.currentSource;
-        if (!currentSource) {
+        if (!currentSource || currentSource.type === 'application/vnd.theo.hesp+json') {
             this._streamingFormat = undefined;
         } else {
             this._streamingFormat = getStreamingFormatFromTypedSource(currentSource);
@@ -138,9 +138,13 @@ export class CMCDCollector {
     /**
      * Collects all the CMCD parameters as supported by the connector depending on the provided {@link Request}.
      * @param request The request for which CMCD parameters should be collected.
-     * @returns A payload object containing keys for the provided request.
+     * @returns A payload object containing keys for the provided request or `undefined` if CMCD is not applicable for
+     * this request
      */
-    collect(request: Request): CMCDPayload {
+    collect(request: Request): CMCDPayload | undefined {
+        if (this._streamingFormat === undefined) {
+            return;
+        }
         const sessionKeys = this.collectSessionKeys();
         const requestKeys = this._config.sendRequestID
             ? {

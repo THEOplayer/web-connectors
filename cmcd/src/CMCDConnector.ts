@@ -62,6 +62,9 @@ export class CMCDConnector {
         }
 
         let payload = this._collector.collect(request);
+        if (payload === undefined) {
+            return;
+        }
         if (this._processor) {
             payload = this._processor(payload, request);
         }
