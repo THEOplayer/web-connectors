@@ -68,6 +68,7 @@ export class AdReporter {
             this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
 
         // [Required] The ad technology as CLIENT_SIDE/SERVER_SIDE
+        //  SGAI isn't officially supported by conviva yet, overwrite with our own string for now.
         adMetadata['c3.ad.technology'] = isServerGuidedAd(currentAd) ? 'Server Guided' : calculateAdType(currentAd);
 
         this.convivaAdAnalytics.setAdInfo(adMetadata);
