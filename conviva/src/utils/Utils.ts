@@ -28,6 +28,10 @@ export function collectDeviceMetadata(): ConvivaDeviceMetadata {
     };
 }
 
+export function isServerGuidedAd(adOrBreak: Ad | AdBreak) {
+    return adOrBreak.integration === 'theoads';
+}
+
 export function calculateAdType(adOrBreak: Ad | AdBreak) {
     switch (adOrBreak.integration) {
         case 'theoads': {
