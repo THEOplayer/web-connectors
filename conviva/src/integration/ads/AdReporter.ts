@@ -5,6 +5,7 @@ import {
     calculateCurrentAdBreakInfo,
     collectAdMetadata,
     collectPlayerInfo,
+    isServerGuidedAd,
     updateAdMetadataForGoogleIma
 } from '../../utils/Utils';
 
@@ -67,7 +68,8 @@ export class AdReporter {
             this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
 
         // [Required] The ad technology as CLIENT_SIDE/SERVER_SIDE
-        adMetadata['c3.ad.technology'] = calculateAdType(currentAd);
+        //  SGAI isn't officially supported by conviva yet, overwrite with our own string for now.
+        adMetadata['c3.ad.technology'] = isServerGuidedAd(currentAd) ? 'Server Guided' : calculateAdType(currentAd);
 
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);

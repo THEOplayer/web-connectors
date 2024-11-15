@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Connector test page</title>
-    <link rel="stylesheet" type="text/css" href="/node_modules/theoplayer/ui.css"/>
-    <script src="/node_modules/theoplayer/THEOplayer.js"></script>
-    <script src="/dist/conviva-connector.umd.js"></script>
+    <link rel="stylesheet" type="text/css" href="./../../../node_modules/theoplayer/ui.css"/>
+    <script src="./../../../node_modules/theoplayer/THEOplayer.js"></script>
+    <script src="./../../../node_modules/@convivainc/conviva-js-coresdk/conviva-core-sdk.js"></script>
+    <script src="./../../dist/conviva-connector.umd.js"></script>
     <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3_debug.js"></script>
 </head>
 <body>
@@ -16,7 +17,7 @@
         ui: {
             fluid: true
         },
-        libraryLocation: '/node_modules/theoplayer/',
+        libraryLocation: './../../../node_modules/theoplayer/',
         license: "CUSTOMER_LICENSE_GOES_HERE"
     });
 
