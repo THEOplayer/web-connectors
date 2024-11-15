@@ -1,5 +1,11 @@
 # @theoplayer/cmcd-connector-web
 
+## 1.2.0
+
+### ✨ Features
+
+- Disable CMCD for HESP requests
+
 ## 1.1.0
 
 ### ✨ Features

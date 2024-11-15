@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 2.4.0
+
+### ✨ Features
+
+- Added 'Server Guided' ad technology.
+
 ## 2.3.0
 
 ### ✨ Features
