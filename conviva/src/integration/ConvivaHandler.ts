@@ -4,7 +4,8 @@ import {
     Analytics,
     Constants,
     type ConvivaMetadata,
-    type VideoAnalytics
+    type VideoAnalytics,
+    ConvivaDeviceMetadata,
 } from '@convivainc/conviva-js-coresdk';
 import type { YospaceConnector } from '@theoplayer/yospace-connector-web';
 import { CONVIVA_CALLBACK_FUNCTIONS } from './ConvivaCallbackFunctions';
@@ -12,7 +13,7 @@ import {
     calculateBufferLength,
     calculateConvivaOptions,
     collectContentMetadata,
-    collectDeviceMetadata,
+    collectDefaultDeviceMetadata,
     collectPlayerInfo,
     flattenErrorObject
 } from '../utils/Utils';
@@ -25,6 +26,7 @@ export interface ConvivaConfiguration {
     customerKey: string;
     debug?: boolean;
     gatewayUrl?: string;
+    deviceMetadata?: ConvivaDeviceMetadata;
 }
 
 export class ConvivaHandler {
@@ -52,7 +54,7 @@ export class ConvivaHandler {
         this.convivaConfig = config;
         this.currentSource = player.source;
 
-        Analytics.setDeviceMetadata(collectDeviceMetadata());
+        Analytics.setDeviceMetadata(this.convivaConfig.deviceMetadata ?? collectDefaultDeviceMetadata());
         Analytics.init(
             this.convivaConfig.customerKey,
             CONVIVA_CALLBACK_FUNCTIONS,
