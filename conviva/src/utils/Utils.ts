@@ -21,7 +21,7 @@ import {
 } from 'theoplayer';
 import { ConvivaConfiguration } from '../integration/ConvivaHandler';
 
-export function collectDeviceMetadata(): ConvivaDeviceMetadata {
+export function collectDefaultDeviceMetadata(): ConvivaDeviceMetadata {
     // Most device metadata is auto-collected by Conviva.
     return {
         [Constants.DeviceMetadata.CATEGORY]: Constants.DeviceCategory.WEB
