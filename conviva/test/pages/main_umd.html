@@ -31,7 +31,20 @@
     const convivaConfig = {
         debug: false,
         gatewayUrl: 'CUSTOMER_GATEWAY_GOES_HERE',
-        customerKey: 'CUSTOMER_KEY_GOES_HERE' // Can be a test or production key.
+        customerKey: 'CUSTOMER_KEY_GOES_HERE', // Can be a test or production key.
+        deviceMetadata: {
+            [Conviva.Constants.DeviceMetadata.BRAND]: "Chrome",
+            [Conviva.Constants.DeviceMetadata.MANUFACTURER]: "Apple",
+            [Conviva.Constants.DeviceMetadata.MODEL]: "MacBook Pro M2",
+            [Conviva.Constants.DeviceMetadata.TYPE]:  Conviva.Client.DeviceType.DESKTOP,
+            [Conviva.Constants.DeviceMetadata.VERSION]: "131.0.6778.86",
+            [Conviva.Constants.DeviceMetadata.OS_NAME]: "macOS Sonoma",
+            [Conviva.Constants.DeviceMetadata.OS_VERSION]: "14.7.0",
+            [Conviva.Constants.DeviceMetadata.CATEGORY]: Conviva.Client.DeviceCategory.APPLE_DEVICE,
+            [Conviva.Constants.DeviceMetadata.SCREEN_RESOLUTION_WIDTH]: 3024,
+            [Conviva.Constants.DeviceMetadata.SCREEN_RESOLUTION_HEIGHT]: 1964,
+            [Conviva.Constants.DeviceMetadata.SCREEN_RESOLUTION_SCALE_FACTOR]: 1
+        }
     };
 
     const convivaIntegration = new THEOplayerConvivaConnector.ConvivaConnector(
