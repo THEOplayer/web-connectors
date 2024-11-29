@@ -226,6 +226,9 @@ export function collectAdMetadata(ad: Ad): ConvivaMetadata {
     // The name of the Ad Stitcher. If not using an Ad Stitcher, set to "NA"
     adMetadata['c3.ad.adStitcher'] = 'NA';
 
+    // Report ad content type
+    adMetadata[Constants.IS_LIVE] = Constants.StreamType.VOD;
+
     return adMetadata;
 }
 
