@@ -43,6 +43,26 @@ First you need to define the Conviva metadata and configuration:
     };
 ```
 
+Optionally, you can include device metadata in the ConvivaConfiguration object
+
+```typescript
+const exampleDeviceMetadata: ConvivaDeviceMetadata = {
+    [Constants.DeviceMetadata.BRAND]: "Samsung",
+    [Constants.DeviceMetadata.MANUFACTURER]: "Samsung",
+    [Constants.DeviceMetadata.MODEL]: "QE43Q64BAUXXN",
+    [Constants.DeviceMetadata.TYPE]:  Constants.DeviceType.SMARTTV,
+    [Constants.DeviceMetadata.VERSION]: "6.5.0",
+    [Constants.DeviceMetadata.OS_NAME]: "Tizen",
+    [Constants.DeviceMetadata.OS_VERSION]: "6.5.0",
+    [Constants.DeviceMetadata.CATEGORY]: Constants.DeviceCategory.SAMSUNG_TV,
+    [Constants.DeviceMetadata.SCREEN_RESOLUTION_WIDTH]: 3840,
+    [Constants.DeviceMetadata.SCREEN_RESOLUTION_HEIGHT]: 2160,
+    [Constants.DeviceMetadata.SCREEN_RESOLUTION_SCALE_FACTOR]: 1
+}
+
+convivaMetadata.deviceMetadata = exampleDeviceMetadata
+```
+
 Using these configs you can create the Conviva connector with THEOplayer.
 
 * Add as a regular script:
