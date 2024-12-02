@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 2.4.1
+
+### 🐛 Issues
+
+- Fixed an issue where the content type of an ad would sometimes be reported as "Live".
+
 ## 2.4.0
 
 ### ✨ Features
