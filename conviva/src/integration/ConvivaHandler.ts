@@ -329,7 +329,9 @@ export class ConvivaHandler {
     private readonly onSourceChange = () => {
         this.maybeReportPlaybackEnded();
         this.currentSource = this.player.source;
-        this.customMetadata = {};
+        if (this.currentSource === undefined) {
+            this.customMetadata = {}
+        } 
     };
 
     private readonly onEnded = () => {
