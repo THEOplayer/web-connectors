@@ -43,7 +43,7 @@ First you need to define the Conviva metadata and configuration:
     };
 ```
 
-Optionally, you can include device metadata in the ConvivaConfiguration object
+Optionally, you can include device metadata in the ConvivaConfiguration object. Note that `SCREEN_RESOLUTION_WIDTH`, `SCREEN_RESOLUTION_HEIGHT` and `SCREEN_RESOLUTION_SCALE_FACTOR` are the only fields that Conviva will auto-collect on most web-based platforms.
 
 ```typescript
 const exampleDeviceMetadata: ConvivaDeviceMetadata = {
