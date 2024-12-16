@@ -4,16 +4,23 @@
     <meta charset="UTF-8"/>
     <title>Connector test page</title>
     <link rel="stylesheet" type="text/css" href="./../../../node_modules/theoplayer/ui.css"/>
-    <script src="./../../../node_modules/theoplayer/THEOplayer.js"></script>
-    <script src="./../../../node_modules/@convivainc/conviva-js-coresdk/conviva-core-sdk.js"></script>
-    <script src="./../../dist/conviva-connector.umd.js"></script>
 </head>
 <body>
 <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+<script type="importmap">
+    {
+      "imports": {
+        "theoplayer": "./../../../node_modules/theoplayer/THEOplayer.esm.js",
+        "@convivainc/conviva-js-coresdk": "https://esm.sh/@convivainc/conviva-js-coresdk@4.7.12?exports=Constants,Analytics"
+      }
+    }
+</script>
 <script type="module">
-    import { ConvivaConnector } from "/dist/conviva-connector.esm.js";
+    import { Player } from "theoplayer"
+    import { ConvivaConnector } from "./../../dist/conviva-connector.esm.js";
+    import * as Conviva from "@convivainc/conviva-js-coresdk";
     const element = document.querySelector('#THEOplayer');
-    const player = new THEOplayer.Player(element, {
+    const player = new Player(element, {
         ui: {
             fluid: true
         },
