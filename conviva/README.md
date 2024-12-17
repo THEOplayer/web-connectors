@@ -93,6 +93,11 @@ The Conviva connector is now ready to start a session once THEOplayer starts pla
 
 Note that the `convivaMetadata` provided to the `ConvivaConnector` constructor is primarily used to pass on to the Conviva SDK's `reportPlaybackRequested`. If a source is set to the player after initialisation the connector, you should always provide the corresponding metadata (again) through the connector's `setContentInfo` method.
 
+```js
+player.source = exampleSource;
+convivaIntegration.setContentInfo(exampleSourceMetadata);
+```
+
 ## Usage with Yospace connector
 
 If you have a Yospace SSAI stream and want to also report ad related events to Conviva, you can use this connector in combination with the Yospace connector: [@theoplayer/yospace-connector-web](https://www.npmjs.com/package/@theoplayer/yospace-connector-web)
