@@ -50,7 +50,6 @@ export class ConvivaHandler {
     constructor(player: ChromelessPlayer, convivaMetaData: ConvivaMetadata, config: ConvivaConfiguration) {
         this.player = player;
         this.convivaMetadata = convivaMetaData;
-        this.customMetadata = convivaMetaData;
         this.convivaConfig = config;
         this.currentSource = player.source;
 
