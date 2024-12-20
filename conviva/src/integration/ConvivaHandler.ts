@@ -5,7 +5,7 @@ import {
     Constants,
     type ConvivaMetadata,
     type VideoAnalytics,
-    ConvivaDeviceMetadata,
+    ConvivaDeviceMetadata
 } from '@convivainc/conviva-js-coresdk';
 import type { YospaceConnector } from '@theoplayer/yospace-connector-web';
 import { CONVIVA_CALLBACK_FUNCTIONS } from './ConvivaCallbackFunctions';
@@ -244,7 +244,11 @@ export class ConvivaHandler {
     private reportMetadata() {
         const src = this.player.src ?? '';
         const streamType = this.player.duration === Infinity ? Constants.StreamType.LIVE : Constants.StreamType.VOD;
-        const assetName = this.customMetadata[Constants.ASSET_NAME] ?? this.convivaMetadata[Constants.ASSET_NAME] ?? this.currentSource?.metadata?.title ?? 'NA';
+        const assetName =
+            this.customMetadata[Constants.ASSET_NAME] ??
+            this.convivaMetadata[Constants.ASSET_NAME] ??
+            this.currentSource?.metadata?.title ??
+            'NA';
         const playerName = this.customMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
         const metadata = {
             [Constants.STREAM_URL]: src,
@@ -328,7 +332,7 @@ export class ConvivaHandler {
     private readonly onSourceChange = () => {
         this.maybeReportPlaybackEnded();
         this.currentSource = this.player.source;
-        this.customMetadata = {}
+        this.customMetadata = {};
     };
 
     private readonly onEnded = () => {
