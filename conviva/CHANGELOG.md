@@ -1,5 +1,16 @@
 # @theoplayer/conviva-connector-web
 
+## 2.5.0
+
+### ✨ Features
+
+- Added `deviceMetadata` property to `ConvivaConfiguration`.
+
+### 🐛 Issues
+
+- Fixed an issue where an asset name, provided via a `ConvivaMetadata` object in the `ConvivaConnector` initialization, stops getting reported after a `sourcechange` event.
+- Fixed an issue where the content type of an ad would sometimes be reported as "Live".
+
 ## 2.4.0
 
 ### ✨ Features
