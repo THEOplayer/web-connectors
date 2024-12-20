@@ -91,7 +91,7 @@ Using these configs you can create the Conviva connector with THEOplayer.
 
 The Conviva connector is now ready to start a session once THEOplayer starts playing a source.
 
-Note that the `convivaMetadata` provided to the `ConvivaConnector` constructor is primarily used to pass on to the Conviva SDK's `reportPlaybackRequested`. If a source is set to the player after initialisation the connector, you should always provide the corresponding metadata (again) through the connector's `setContentInfo` method.
+Note that the `convivaMetadata` provided to the `ConvivaConnector` constructor is primarily used to pass on to the Conviva SDK's `reportPlaybackRequested`. If a source is set to the player after initializing the connector, you should always provide the corresponding metadata (again) through the connector's `setContentInfo` method.
 
 ```js
 player.source = exampleSource;
