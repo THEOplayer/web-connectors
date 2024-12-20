@@ -4,7 +4,8 @@ import {
     Analytics,
     Constants,
     type ConvivaMetadata,
-    type VideoAnalytics
+    type VideoAnalytics,
+    ConvivaDeviceMetadata
 } from '@convivainc/conviva-js-coresdk';
 import type { YospaceConnector } from '@theoplayer/yospace-connector-web';
 import { CONVIVA_CALLBACK_FUNCTIONS } from './ConvivaCallbackFunctions';
@@ -12,7 +13,7 @@ import {
     calculateBufferLength,
     calculateConvivaOptions,
     collectContentMetadata,
-    collectDeviceMetadata,
+    collectDefaultDeviceMetadata,
     collectPlayerInfo,
     flattenErrorObject
 } from '../utils/Utils';
@@ -25,6 +26,7 @@ export interface ConvivaConfiguration {
     customerKey: string;
     debug?: boolean;
     gatewayUrl?: string;
+    deviceMetadata?: ConvivaDeviceMetadata;
 }
 
 export class ConvivaHandler {
@@ -48,11 +50,10 @@ export class ConvivaHandler {
     constructor(player: ChromelessPlayer, convivaMetaData: ConvivaMetadata, config: ConvivaConfiguration) {
         this.player = player;
         this.convivaMetadata = convivaMetaData;
-        this.customMetadata = convivaMetaData;
         this.convivaConfig = config;
         this.currentSource = player.source;
 
-        Analytics.setDeviceMetadata(collectDeviceMetadata());
+        Analytics.setDeviceMetadata(this.convivaConfig.deviceMetadata ?? collectDefaultDeviceMetadata());
         Analytics.init(
             this.convivaConfig.customerKey,
             CONVIVA_CALLBACK_FUNCTIONS,
@@ -243,7 +244,11 @@ export class ConvivaHandler {
     private reportMetadata() {
         const src = this.player.src ?? '';
         const streamType = this.player.duration === Infinity ? Constants.StreamType.LIVE : Constants.StreamType.VOD;
-        const assetName = this.customMetadata[Constants.ASSET_NAME] ?? this.currentSource?.metadata?.title ?? 'NA';
+        const assetName =
+            this.customMetadata[Constants.ASSET_NAME] ??
+            this.convivaMetadata[Constants.ASSET_NAME] ??
+            this.currentSource?.metadata?.title ??
+            'NA';
         const playerName = this.customMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
         const metadata = {
             [Constants.STREAM_URL]: src,

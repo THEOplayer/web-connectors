@@ -43,6 +43,26 @@ First you need to define the Conviva metadata and configuration:
     };
 ```
 
+Optionally, you can include device metadata in the ConvivaConfiguration object. Note that `SCREEN_RESOLUTION_WIDTH`, `SCREEN_RESOLUTION_HEIGHT` and `SCREEN_RESOLUTION_SCALE_FACTOR` are the only fields that Conviva will auto-collect on most web-based platforms.
+
+```typescript
+const exampleDeviceMetadata: ConvivaDeviceMetadata = {
+    [Constants.DeviceMetadata.BRAND]: "Samsung",
+    [Constants.DeviceMetadata.MANUFACTURER]: "Samsung",
+    [Constants.DeviceMetadata.MODEL]: "QE43Q64BAUXXN",
+    [Constants.DeviceMetadata.TYPE]:  Constants.DeviceType.SMARTTV,
+    [Constants.DeviceMetadata.VERSION]: "6.5.0",
+    [Constants.DeviceMetadata.OS_NAME]: "Tizen",
+    [Constants.DeviceMetadata.OS_VERSION]: "6.5.0",
+    [Constants.DeviceMetadata.CATEGORY]: Constants.DeviceCategory.SAMSUNG_TV,
+    [Constants.DeviceMetadata.SCREEN_RESOLUTION_WIDTH]: 3840,
+    [Constants.DeviceMetadata.SCREEN_RESOLUTION_HEIGHT]: 2160,
+    [Constants.DeviceMetadata.SCREEN_RESOLUTION_SCALE_FACTOR]: 1
+}
+
+convivaMetadata.deviceMetadata = exampleDeviceMetadata
+```
+
 Using these configs you can create the Conviva connector with THEOplayer.
 
 * Add as a regular script:
@@ -70,6 +90,13 @@ Using these configs you can create the Conviva connector with THEOplayer.
 ```
 
 The Conviva connector is now ready to start a session once THEOplayer starts playing a source.
+
+Note that the `convivaMetadata` provided to the `ConvivaConnector` constructor is primarily used to pass on to the Conviva SDK's `reportPlaybackRequested`. If a source is set to the player after initializing the connector, you should always provide the corresponding metadata (again) through the connector's `setContentInfo` method.
+
+```js
+player.source = exampleSource;
+convivaIntegration.setContentInfo(exampleSourceMetadata);
+```
 
 ## Usage with Yospace connector
 
