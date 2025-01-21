@@ -243,18 +243,19 @@ export class ConvivaHandler {
 
     private reportMetadata() {
         const src = this.player.src ?? '';
-        const streamType = this.player.duration === Infinity ? Constants.StreamType.LIVE : Constants.StreamType.VOD;
         const assetName =
             this.customMetadata[Constants.ASSET_NAME] ??
             this.convivaMetadata[Constants.ASSET_NAME] ??
             this.currentSource?.metadata?.title ??
             'NA';
         const playerName = this.customMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
-        const metadata = {
+        const hasDuration = !Number.isNaN(this.player.duration);
+        const isLive = Number.isFinite(this.player.duration) ? Constants.StreamType.VOD : Constants.StreamType.LIVE;
+        const metadata: ConvivaMetadata = {
             [Constants.STREAM_URL]: src,
-            [Constants.IS_LIVE]: streamType,
             [Constants.ASSET_NAME]: assetName,
-            [Constants.PLAYER_NAME]: playerName
+            [Constants.PLAYER_NAME]: playerName,
+            ...(!hasDuration ? {} : { [Constants.IS_LIVE]: isLive })
         };
         this.setContentInfo(metadata);
     }
