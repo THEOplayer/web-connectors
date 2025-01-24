@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 2.5.1
+
+### 🐛 Issues
+
+- Fixed an issue where the stream type, either `VOD` or `Live`, would sometimes be set with a wrong value for live streams.
+
 ## 2.5.0
 
 ### ✨ Features
