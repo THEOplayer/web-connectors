@@ -258,19 +258,10 @@ export function calculateBufferLength(player: ChromelessPlayer): number {
     return bufferLength * 1000;
 }
 
-export function flattenErrorObject(error?: THEOplayerError): { [key: string]: string } {
-    const errorDetails: { [key: string]: string | undefined } = {
-        code: ErrorCode[error?.code ?? -1],
-        category: ErrorCategory[error?.category ?? -1],
-        name: error?.cause?.name,
-        message: error?.cause?.message,
-        stack: error?.stack
-    };
-    // Remove undefined values
-    for (const key in errorDetails) {
-        if (errorDetails[key] === undefined) {
-            delete errorDetails[key];
-        }
+export function bufferedToString(buffered: TimeRanges) {
+    const ranges: string[] = [];
+    for (let i = 0; i < buffered.length; i++) {
+        ranges.push(`${buffered.start(i)}-${buffered.end(i)}`);
     }
-    return errorDetails as { [key: string]: string };
+    return `[${ranges.join(',')}]`;
 }

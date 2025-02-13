@@ -14,13 +14,13 @@ import {
     calculateConvivaOptions,
     collectContentMetadata,
     collectDefaultDeviceMetadata,
-    collectPlayerInfo,
-    flattenErrorObject
+    collectPlayerInfo
 } from '../utils/Utils';
 import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
 import { VerizonAdReporter } from './ads/VerizonAdReporter';
 import { ErrorEvent } from 'theoplayer';
+import { ErrorReportBuilder } from '../utils/ErrorReportBuilder';
 
 export interface ConvivaConfiguration {
     customerKey: string;
@@ -46,6 +46,8 @@ export class ConvivaHandler {
     private playbackRequested: boolean = false;
 
     private yospaceConnector: YospaceConnector | undefined;
+
+    private errorReportBuilder: ErrorReportBuilder | undefined;
 
     constructor(player: ChromelessPlayer, convivaMetaData: ConvivaMetadata, config: ConvivaConfiguration) {
         this.player = player;
@@ -162,6 +164,8 @@ export class ConvivaHandler {
 
         document.addEventListener('visibilitychange', this.onVisibilityChange);
         window.addEventListener('beforeunload', this.onBeforeUnload);
+
+        this.errorReportBuilder = new ErrorReportBuilder(this.player);
     }
 
     private removeEventListeners(): void {
@@ -182,6 +186,7 @@ export class ConvivaHandler {
 
         document.removeEventListener('visibilitychange', this.onVisibilityChange);
         window.removeEventListener('beforeunload', this.onBeforeUnload);
+        this.errorReportBuilder?.destroy();
     }
 
     private convivaCallback = () => {
@@ -293,9 +298,9 @@ export class ConvivaHandler {
         }
         const error = errorEvent.errorObject;
 
-        // Optionally report error details, which should be a flat {[key: string]: string} object.
-        const errorDetails: Record<string, any> = flattenErrorObject(error);
-        if (Object.keys(errorDetails).length > 0) {
+        // Report error details in a separate event, which should be passed a flat <String, String> map.
+        const errorDetails = this.errorReportBuilder?.withPlayerBuffer().withErrorDetails(error).build();
+        if (errorDetails) {
             this.convivaVideoAnalytics?.reportPlaybackEvent('ErrorDetailsEvent', errorDetails);
         }
         this.convivaVideoAnalytics?.reportPlaybackFailed(error?.message ?? 'Fatal error occurred', metadata);
