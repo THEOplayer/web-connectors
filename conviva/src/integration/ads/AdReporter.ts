@@ -5,7 +5,6 @@ import {
     calculateCurrentAdBreakInfo,
     collectAdMetadata,
     collectPlayerInfo,
-    isServerGuidedAd,
     updateAdMetadataForGoogleIma
 } from '../../utils/Utils';
 
@@ -35,8 +34,9 @@ export class AdReporter {
 
     private readonly onAdBreakBegin = (event: any) => {
         this.currentAdBreak = event.ad as AdBreak;
+        // Conviva assured they expect a string, so we could already pass 'Server Guided' directly.
         this.convivaVideoAnalytics.reportAdBreakStarted(
-            calculateAdType(this.currentAdBreak),
+            calculateAdType(this.currentAdBreak) as any,
             Constants.AdPlayer.CONTENT,
             calculateCurrentAdBreakInfo(this.currentAdBreak, this.adBreakCounter)
         );
@@ -69,7 +69,7 @@ export class AdReporter {
 
         // [Required] The ad technology as CLIENT_SIDE/SERVER_SIDE
         //  SGAI isn't officially supported by conviva yet, overwrite with our own string for now.
-        adMetadata['c3.ad.technology'] = isServerGuidedAd(currentAd) ? 'Server Guided' : calculateAdType(currentAd);
+        adMetadata['c3.ad.technology'] = calculateAdType(currentAd);
 
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
@@ -81,8 +81,11 @@ export class AdReporter {
         );
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.BITRATE, (currentAd as GoogleImaAd).bitrate || 0);
 
-        // Report playing state in case of SSAI.
-        if (calculateAdType(currentAd) === Constants.AdType.SERVER_SIDE) {
+        // Report playing state in case of SSAI or SGAI.
+        if (
+            calculateAdType(currentAd) === Constants.AdType.SERVER_SIDE ||
+            calculateAdType(currentAd) === 'Server Guided'
+        ) {
             this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
         }
     };
