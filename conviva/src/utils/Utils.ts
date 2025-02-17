@@ -4,7 +4,8 @@ import {
     type ConvivaDeviceMetadata,
     type ConvivaMetadata,
     type ConvivaOptions,
-    type ConvivaPlayerInfo
+    type ConvivaPlayerInfo,
+    type ConvivaKeys
 } from '@convivainc/conviva-js-coresdk';
 import type { AdVert } from '@theoplayer/yospace-connector-web';
 import {
@@ -22,9 +23,23 @@ import {
 import { ConvivaConfiguration } from '../integration/ConvivaHandler';
 
 export function collectDefaultDeviceMetadata(): ConvivaDeviceMetadata {
-    // Most device metadata is auto-collected by Conviva.
+    // Most device metadata is auto-collected by Conviva
+    let category: ConvivaKeys = Constants.DeviceCategory.WEB;
+
+    // look for more specific device category in the userAgent:
+    const userAgent = navigator ? navigator.userAgent : '';
+    if (/SMART-TV.*Tizen/i.test(userAgent)) {
+        category = Constants.DeviceCategory.SAMSUNG_TV;
+    } else if (/webos|web0s/i.test(userAgent)) {
+        category = Constants.DeviceCategory.LG_TV;
+    } else if (/VIZIO/i.test(userAgent)) {
+        category = Constants.DeviceCategory.SMART_TV;
+    } else if (/xbox/i.test(userAgent)) {
+        category = Constants.DeviceCategory.XBOX;
+    }
+
     return {
-        [Constants.DeviceMetadata.CATEGORY]: Constants.DeviceCategory.WEB
+        [Constants.DeviceMetadata.CATEGORY]: category
     };
 }
 
