@@ -14,13 +14,13 @@ import {
     calculateConvivaOptions,
     collectContentMetadata,
     collectDefaultDeviceMetadata,
-    collectPlayerInfo,
-    flattenErrorObject
+    collectPlayerInfo
 } from '../utils/Utils';
 import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
 import { VerizonAdReporter } from './ads/VerizonAdReporter';
 import { ErrorEvent } from 'theoplayer';
+import { ErrorReportBuilder } from '../utils/ErrorReportBuilder';
 
 export interface ConvivaConfiguration {
     customerKey: string;
@@ -47,6 +47,8 @@ export class ConvivaHandler {
 
     private yospaceConnector: YospaceConnector | undefined;
 
+    private errorReportBuilder: ErrorReportBuilder | undefined;
+
     constructor(player: ChromelessPlayer, convivaMetaData: ConvivaMetadata, config: ConvivaConfiguration) {
         this.player = player;
         this.convivaMetadata = convivaMetaData;
@@ -61,6 +63,7 @@ export class ConvivaHandler {
         );
 
         this.addEventListeners();
+        this.errorReportBuilder = new ErrorReportBuilder(this.player);
     }
 
     private initializeSession(): void {
@@ -293,9 +296,9 @@ export class ConvivaHandler {
         }
         const error = errorEvent.errorObject;
 
-        // Optionally report error details, which should be a flat {[key: string]: string} object.
-        const errorDetails: Record<string, any> = flattenErrorObject(error);
-        if (Object.keys(errorDetails).length > 0) {
+        // Report error details in a separate event, which should be passed a flat <String, String> map.
+        const errorDetails = this.errorReportBuilder?.withPlayerBuffer().withErrorDetails(error).build();
+        if (errorDetails) {
             this.convivaVideoAnalytics?.reportPlaybackEvent('ErrorDetailsEvent', errorDetails);
         }
         this.convivaVideoAnalytics?.reportPlaybackFailed(error?.message ?? 'Fatal error occurred', metadata);
@@ -377,6 +380,7 @@ export class ConvivaHandler {
     destroy(): void {
         this.maybeReportPlaybackEnded();
         this.removeEventListeners();
+        this.errorReportBuilder?.destroy();
         this.customMetadata = {};
         Analytics.release();
     }
