@@ -63,6 +63,7 @@ export class ConvivaHandler {
         );
 
         this.addEventListeners();
+        this.errorReportBuilder = new ErrorReportBuilder(this.player);
     }
 
     private initializeSession(): void {
@@ -164,8 +165,6 @@ export class ConvivaHandler {
 
         document.addEventListener('visibilitychange', this.onVisibilityChange);
         window.addEventListener('beforeunload', this.onBeforeUnload);
-
-        this.errorReportBuilder = new ErrorReportBuilder(this.player);
     }
 
     private removeEventListeners(): void {
@@ -186,7 +185,6 @@ export class ConvivaHandler {
 
         document.removeEventListener('visibilitychange', this.onVisibilityChange);
         window.removeEventListener('beforeunload', this.onBeforeUnload);
-        this.errorReportBuilder?.destroy();
     }
 
     private convivaCallback = () => {
@@ -382,6 +380,7 @@ export class ConvivaHandler {
     destroy(): void {
         this.maybeReportPlaybackEnded();
         this.removeEventListeners();
+        this.errorReportBuilder?.destroy();
         this.customMetadata = {};
         Analytics.release();
     }
