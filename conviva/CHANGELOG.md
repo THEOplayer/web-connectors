@@ -1,5 +1,16 @@
 # @theoplayer/conviva-connector-web
 
+## 2.6.0
+
+### ✨ Features
+
+- Added a check to differentiate between Samsung, LG, Xbox and Vizio when defining the default device category in the metadata.
+- Added a detailed report, containing the current player buffer and last fetched segments, in case of a playback failure.
+
+### 🐛 Issues
+
+- Added 'Server Guided' as ad type passed when reporting a THEOads ad break has started.
+
 ## 2.5.1
 
 ### 🐛 Issues
