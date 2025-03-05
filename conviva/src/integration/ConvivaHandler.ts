@@ -251,7 +251,10 @@ export class ConvivaHandler {
             this.convivaMetadata[Constants.ASSET_NAME] ??
             this.currentSource?.metadata?.title ??
             'NA';
-        const playerName = this.customMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
+        const playerName =
+            this.customMetadata[Constants.PLAYER_NAME] ??
+            this.convivaMetadata[Constants.PLAYER_NAME] ??
+            'THEOplayer';
         const hasDuration = !Number.isNaN(this.player.duration);
         const isLive = Number.isFinite(this.player.duration) ? Constants.StreamType.VOD : Constants.StreamType.LIVE;
         const metadata: ConvivaMetadata = {
