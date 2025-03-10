@@ -90,7 +90,7 @@ A flag to enable verbose logging.
 The connector allows updating the current asset's metadata at any time. Do it when setting a new source to the player.
 
 ```js
-comscoreConnector.updateMetadata(newMetadata);
+comscoreConnector.update(newMetadata);
 ```
 
 ### ComscoreMetadata fields
