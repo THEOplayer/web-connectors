@@ -29,6 +29,8 @@ export interface ConvivaConfiguration {
     deviceMetadata?: ConvivaDeviceMetadata;
 }
 
+const THEOADS_TAG_PREFIX = 'theoAdsTag_';
+
 export class ConvivaHandler {
     private readonly player: ChromelessPlayer;
     private readonly convivaMetadata: ConvivaMetadata;
@@ -257,10 +259,10 @@ export class ConvivaHandler {
         const isLive = Number.isFinite(this.player.duration) ? Constants.StreamType.VOD : Constants.StreamType.LIVE;
 
         // THEOads adTagParameters
-        const adTagParameters = this.player.source?.ads
+        const adTagParameters: { [key: string]: string } | undefined = this.player.source?.ads
             ?.filter((ad) => ad.integration === 'theoads')
-            .map((theoAd) => (theoAd as TheoAdDescription).adTagParameters)
-            .reduce((acc, obj) => ({ ...acc, ...obj }), {});
+            .flatMap((ad) => Object.entries((ad as TheoAdDescription).adTagParameters || {}))
+            .reduce((acc, [key, value]) => ({ ...acc, [`${THEOADS_TAG_PREFIX}${key}`]: value }), {});
 
         const metadata: ConvivaMetadata = {
             [Constants.STREAM_URL]: src,
