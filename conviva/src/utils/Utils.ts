@@ -15,9 +15,6 @@ import {
     type GoogleImaAd,
     type VerizonMediaAd,
     type VerizonMediaAdBreak,
-    type THEOplayerError,
-    ErrorCategory,
-    ErrorCode,
     version
 } from 'theoplayer';
 import { ConvivaConfiguration } from '../integration/ConvivaHandler';
