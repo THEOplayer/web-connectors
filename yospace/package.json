@@ -42,7 +42,7 @@
     "package.json"
   ],
   "peerDependencies": {
-    "theoplayer": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.1.0"
+    "theoplayer": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.1.0 || ^9.0.0"
   },
   "directories": {
     "test": "test"
