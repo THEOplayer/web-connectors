@@ -1,5 +1,11 @@
 # @theoplayer/yospace-connector-web
 
+## 2.6.0
+
+### ✨ Features
+
+- Added support for THEOplayer `9.0`.
+
 ## 2.5.0
 
 ### ✨ Features

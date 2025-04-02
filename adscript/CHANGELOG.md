@@ -1,5 +1,11 @@
 # @theoplayer/adscript-connector-web
 
+## 0.3.0
+
+### ✨ Features
+
+- Added support for THEOplayer `9.0`.
+
 ## 0.2.0
 
 ### ✨ Features
