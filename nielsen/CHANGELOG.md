@@ -1,5 +1,11 @@
 # @theoplayer/nielsen-connector-web
 
+## 1.5.0
+
+### ✨ Features
+
+- Added support for THEOplayer `9.0`.
+
 ## 1.4.0
 
 ### ✨ Features

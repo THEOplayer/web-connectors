@@ -1,5 +1,12 @@
 # @theoplayer/conviva-connector-web
 
+## 2.7.0
+
+### ✨ Features
+
+- Added the ability to include the player name in the metadata object passed when creating the ConvivaConnector.
+- Added support for THEOplayer `9.0`.
+
 ## 2.6.0
 
 ### ✨ Features
