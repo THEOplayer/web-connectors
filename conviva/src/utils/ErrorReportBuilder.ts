@@ -2,6 +2,9 @@ import { ErrorCategory, ErrorCode, InterceptableResponse, ResponseInterceptor, t
 import { ChromelessPlayer, HTTPHeaders } from 'theoplayer';
 import { bufferedToString } from './Utils';
 
+const MAX_STACK_LINE_LENGTH = 255;
+const MAX_STACK_LINES = 15;
+
 /**
  * ErrorReportBuilder provides extra error details that can be sent when reporting an error.
  */
@@ -60,9 +63,15 @@ export function flattenErrorObject(error?: THEOplayerError): { [key: string]: st
         code: ErrorCode[error?.code ?? -1],
         category: ErrorCategory[error?.category ?? -1],
         name: error?.cause?.name,
-        message: error?.cause?.message,
-        stack: error?.stack
+        message: error?.cause?.message
     };
+    // Split stack info in separate lines: Conviva truncates values at 256 chars.
+    if (error?.stack) {
+        const max = MAX_STACK_LINES * MAX_STACK_LINE_LENGTH;
+        for (let i = 0; i < error?.stack?.length && i < max; i += MAX_STACK_LINE_LENGTH) {
+            errorDetails[`stack${i / MAX_STACK_LINE_LENGTH}`] = error?.stack?.slice(i, i + MAX_STACK_LINE_LENGTH);
+        }
+    }
     // Remove undefined values
     for (const key in errorDetails) {
         if (errorDetails[key] === undefined) {
