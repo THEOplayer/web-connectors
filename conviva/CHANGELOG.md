@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 2.8.0
+
+### ✨ Features
+
+- Added full call stack info to an error report by splitting it in multiple entries.
+
 ## 2.7.0
 
 ### ✨ Features
