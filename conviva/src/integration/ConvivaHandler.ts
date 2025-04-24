@@ -1,4 +1,4 @@
-import type { ChromelessPlayer, SourceDescription, VideoQuality } from 'theoplayer';
+import type { ChromelessPlayer, SourceDescription, TheoAdDescription, VideoQuality } from 'theoplayer';
 import {
     type AdAnalytics,
     Analytics,
@@ -28,6 +28,8 @@ export interface ConvivaConfiguration {
     gatewayUrl?: string;
     deviceMetadata?: ConvivaDeviceMetadata;
 }
+
+const THEOADS_TAG_PREFIX = 'theoAdsTag_';
 
 export class ConvivaHandler {
     private readonly player: ChromelessPlayer;
@@ -252,15 +254,21 @@ export class ConvivaHandler {
             this.currentSource?.metadata?.title ??
             'NA';
         const playerName =
-            this.customMetadata[Constants.PLAYER_NAME] ??
-            this.convivaMetadata[Constants.PLAYER_NAME] ??
-            'THEOplayer';
+            this.customMetadata[Constants.PLAYER_NAME] ?? this.convivaMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
         const hasDuration = !Number.isNaN(this.player.duration);
         const isLive = Number.isFinite(this.player.duration) ? Constants.StreamType.VOD : Constants.StreamType.LIVE;
+
+        // THEOads adTagParameters
+        const adTagParameters: { [key: string]: string } | undefined = this.player.source?.ads
+            ?.filter((ad) => ad.integration === 'theoads')
+            .flatMap((ad) => Object.entries((ad as TheoAdDescription).adTagParameters || {}))
+            .reduce((acc, [key, value]) => ({ ...acc, [`${THEOADS_TAG_PREFIX}${key}`]: value }), {});
+
         const metadata: ConvivaMetadata = {
             [Constants.STREAM_URL]: src,
             [Constants.ASSET_NAME]: assetName,
             [Constants.PLAYER_NAME]: playerName,
+            ...(adTagParameters ?? {}),
             ...(!hasDuration ? {} : { [Constants.IS_LIVE]: isLive })
         };
         this.setContentInfo(metadata);
