@@ -13,7 +13,7 @@ export interface MainVideoContentMetadata {
     crossId: string;
     livestream: string;
     channelId: string;
-    attributes: string;
+    attribute: string;
 }
 
 /**
@@ -25,7 +25,7 @@ export interface EmbeddedContentMetadata {
     length: string;
     title: string;
     asmea: string;
-    attributes: string;
+    attribute: string;
 }
 
 /**
