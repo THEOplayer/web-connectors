@@ -31,7 +31,9 @@ function loadAdScriptInternal(j, h, m, t, c, z) {
               }),
         (b.src = j['JHMTApiProtocol'] + '//cm' + i + '.jhmt.cz/api.js'),
         (b.onerror = function () {
-            b.parentNode.removeChild(b);
+            if (b.parentNode !== 'undefined') {
+                b.parentNode.removeChild(b);
+            }
             z++;
             i = (z % 3) + 1;
             loadAdScriptInternal(j, h, m, t, c, i);
@@ -43,7 +45,9 @@ function loadAdScriptInternal(j, h, m, t, c, z) {
             if (typeof j.JHMTApi !== 'undefined') {
                 clearInterval(it);
             } else {
-                b.parentNode.removeChild(b);
+                if (b.parentNode !== 'undefined') {
+                    b.parentNode.removeChild(b);
+                }
                 z++;
                 i = (z % 3) + 1;
                 loadAdScriptInternal(j, h, m, t, c, i);

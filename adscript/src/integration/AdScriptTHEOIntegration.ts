@@ -8,13 +8,14 @@ import type {
     Event,
     GoogleImaAd,
     PlayEvent,
+    PlayingEvent,
     RateChangeEvent,
     SourceChangeEvent,
     TimeUpdateEvent,
     VolumeChangeEvent
 } from 'theoplayer';
 import { AdScriptConfiguration, EmbeddedContentMetadata, MainVideoContentMetadata } from './AdScriptConfiguration';
-import { EmbeddedContentType } from './../adscript/AdScript';
+import { EmbeddedContentType, JHMTArray, PlayerState } from './../adscript/AdScript';
 import { Logger } from '../utils/Logger';
 
 interface LogPoint {
@@ -34,12 +35,23 @@ export class AdScriptTHEOIntegration {
     private currentAdLogPoints: LogPoint[] = [];
 
     private JHMTApi = window.JHMTApi;
-    private JHMT = window.JHMT;
+    private JHMTBuffer: JHMTArray;
+    private bufferName: string;
 
-    constructor(player: ChromelessPlayer, configuration: AdScriptConfiguration) {
+    constructor(player: ChromelessPlayer, configuration: AdScriptConfiguration, metadata: MainVideoContentMetadata) {
         this.player = player;
         this.logger = new Logger(Boolean(configuration.debug));
         this.adProcessor = configuration?.adProcessor;
+        this.mainContentMetadata = metadata;
+        this.player.element.querySelectorAll('video').forEach((element: HTMLVideoElement) => {
+            element.setAttribute('data-jhmt-player-id', String(player.uid));
+        });
+        this.bufferName = `__theo${String(this.player.uid)}`;
+        this.JHMTApi.addBuffer(this.bufferName, this.player.uid, {
+            contentMetadata: this.mainContentMetadata,
+            playerState: this.getPlayerState()
+        });
+        this.JHMTBuffer = (window as any)[this.bufferName] as JHMTArray;
     }
 
     public start() {
@@ -53,7 +65,7 @@ export class AdScriptTHEOIntegration {
     public updateMetadata(metadata: MainVideoContentMetadata) {
         this.mainContentMetadata = metadata;
         this.logger.onSetMainVideoContentMetadata(this.mainContentMetadata);
-        this.JHMTApi.setContentMetadata(this.mainContentMetadata);
+        this.JHMTApi.setBuffer(this.bufferName, { contentMetadata: this.mainContentMetadata });
     }
 
     public updateUser(i12n: { [key: string]: string }): void {
@@ -159,7 +171,7 @@ export class AdScriptTHEOIntegration {
         const isBeforePreroll = this.player.ads?.scheduledAdBreaks.find((adBreak) => adBreak.timeOffset === 0);
         if (this.player.ads?.playing || isBeforePreroll) return;
         this.logger.onAdScriptEvent('start', this.mainContentMetadata);
-        this.JHMT.push(['start', this.mainContentMetadata]);
+        this.JHMTBuffer.push(['start', this.mainContentMetadata]);
         this.player.removeEventListener('playing', this.onFirstMainContentPlaying);
     };
 
@@ -171,7 +183,7 @@ export class AdScriptTHEOIntegration {
     private onEnded = (event: EndedEvent) => {
         this.logger.onEvent(event);
         this.logger.onAdScriptEvent('complete', this.mainContentMetadata);
-        this.JHMT.push(['complete', this.mainContentMetadata]);
+        this.JHMTBuffer.push(['complete', this.mainContentMetadata]);
     };
 
     private onVolumeChange = (event: VolumeChangeEvent) => {
@@ -202,23 +214,23 @@ export class AdScriptTHEOIntegration {
 
     private onAdFirstQuartile = (event: AdEvent<'adfirstquartile'>) => {
         this.logger.onEvent(event);
-        this.logger.onAdScriptEvent('firstquartile', this.currentAdMetadata);
-        this.JHMT.push(['firstquartile', this.currentAdMetadata]);
+        this.logger.onAdScriptEvent('firstQuartile', this.currentAdMetadata);
+        this.JHMTBuffer.push(['firstQuartile', this.currentAdMetadata]);
     };
     private onAdMidpoint = (event: AdEvent<'admidpoint'>) => {
         this.logger.onEvent(event);
         this.logger.onAdScriptEvent('midpoint', this.currentAdMetadata);
-        this.JHMT.push(['midpoint', this.currentAdMetadata]);
+        this.JHMTBuffer.push(['midpoint', this.currentAdMetadata]);
     };
     private onAdTirdQuartile = (event: AdEvent<'adthirdquartile'>) => {
         this.logger.onEvent(event);
-        this.logger.onAdScriptEvent('thirdquartile', this.currentAdMetadata);
-        this.JHMT.push(['thirdquartile', this.currentAdMetadata]);
+        this.logger.onAdScriptEvent('thirdQuartile', this.currentAdMetadata);
+        this.JHMTBuffer.push(['thirdQuartile', this.currentAdMetadata]);
     };
     private onAdEnd = (event: AdEvent<'adend'>) => {
         this.logger.onEvent(event);
         this.logger.onAdScriptEvent('complete', this.currentAdMetadata);
-        this.JHMT.push(['complete', this.currentAdMetadata]);
+        this.JHMTBuffer.push(['complete', this.currentAdMetadata]);
     };
 
     private onAdBegin = (event: AdEvent<'adbegin'>) => {
@@ -226,8 +238,14 @@ export class AdScriptTHEOIntegration {
         if (event.ad.type !== 'linear') return;
         this.currentAdMetadata = this.buildAdMetadataObject(event);
         this.currentAdLogPoints = this.buildAdLogPoints(event.ad);
+        this.player.removeEventListener('playing', this.onAdFirstTimePlaying);
+        this.player.addEventListener('playing', this.onAdFirstTimePlaying);
+    };
+
+    private onAdFirstTimePlaying = (event: PlayingEvent) => {
         this.logger.onAdScriptEvent('start', this.currentAdMetadata);
-        this.JHMT.push(['start', this.currentAdMetadata]);
+        this.JHMTBuffer.push(['start', this.currentAdMetadata]);
+        this.player.removeEventListener('playing', this.onAdFirstTimePlaying);
     };
 
     private buildAdLogPoints = (ad: Ad) => {
@@ -253,13 +271,23 @@ export class AdScriptTHEOIntegration {
                 length: ad.duration?.toString() ?? ''
             };
         }
+        let asmeaCode = '';
+        try {
+            const traffickingParametersString = (ad as GoogleImaAd)?.traffickingParametersString;
+            if (traffickingParametersString) {
+                const adParams: any = JSON.parse(traffickingParametersString);
+                asmeaCode = adParams ? adParams.akaCode : '';
+            }
+        } catch (error) {
+            // skip error
+        }
         return {
             assetid: ad.id ?? '',
             type: this.getAdType(adBreak.timeOffset, this.player.duration, adBreak.integration),
             length: ad.duration?.toString() ?? '',
             title: ad.integration?.includes('google') ? (ad as GoogleImaAd).title ?? '' : '',
-            asmea: '',
-            attributes: ''
+            asmea: asmeaCode,
+            attribute: '2'
         };
     };
 
@@ -271,19 +299,23 @@ export class AdScriptTHEOIntegration {
         return 'midroll';
     };
 
-    private reportPlayerState = () => {
-        const playerState = {
+    private getPlayerState(): PlayerState {
+        return {
             muted: this.player.muted ? 1 : 0,
             volume: this.player.volume * 100,
             triggeredByUser: this.player.autoplay ? 1 : 0,
             normalSpeed: this.player.playbackRate === 1 ? 1 : 0,
             fullscreen: this.player.presentation.currentMode === 'fullscreen' ? 1 : 0,
-            visibility: this.player.visibility.ratio * 100,
+            visibility: Math.floor(this.player.visibility.ratio * 10000) / 100,
             width: this.player.element.clientWidth,
             height: this.player.element.clientHeight
         };
+    }
+
+    private reportPlayerState = () => {
+        const playerState = this.getPlayerState();
         this.logger.onPlayerStateChange(playerState);
-        this.JHMTApi.setPlayerState(playerState);
+        this.JHMTApi.setBuffer(this.bufferName, { playerState: playerState });
     };
 
     private maybeReportLogPoint = (
@@ -296,7 +328,7 @@ export class AdScriptTHEOIntegration {
             if (!reported && currentTime >= offset && currentTime < offset + 1) {
                 logPoint.reported = true;
                 this.logger.onAdScriptEvent(name, metadata);
-                this.JHMT.push([name, metadata]);
+                this.JHMTBuffer.push([name, metadata]);
             }
         });
     };
