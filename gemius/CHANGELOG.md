@@ -1,5 +1,12 @@
 # @theoplayer/gemius-connector-web
 
+## 0.3.1
+
+### ✨ Issues
+
+- removed newProgram for every ad to content transition
+- removed close event for every ad end
+
 ## 0.3.0
 
 ### ✨ Features
