@@ -1,6 +1,16 @@
 import type { ChromelessPlayer } from 'theoplayer';
-import { NielsenConfiguration, NielsenDCRContentMetadata, NielsenOptions } from '../nielsen/Types';
-import { NielsenHandler } from './NielsenHandler';
+import {
+    AdLoadType,
+    HasAds,
+    NielsenConfiguration,
+    NielsenCountry,
+    NielsenDCRContentMetadata,
+    NielsenDCRContentMetadataCZ,
+    NielsenHandler,
+    NielsenOptions
+} from '../nielsen/Types';
+import { NielsenHandlerDCR } from './NielsenHandlerDCR';
+import { NielsenHandlerDTVR } from './NielsenHandlerDTVR';
 
 export class NielsenConnector {
     private nielsenHandler: NielsenHandler;
@@ -12,6 +22,7 @@ export class NielsenConnector {
      * @param appId         UniqueID assigned to player/site.
      * @param instanceName  User-defined string value for describing the player/site.
      * @param options       Additional options.
+     * @param configuration Specifies nielsen configuration, e.g. handler type.
      */
     constructor(
         player: ChromelessPlayer,
@@ -20,15 +31,15 @@ export class NielsenConnector {
         options?: NielsenOptions,
         configuration?: NielsenConfiguration
     ) {
-        this.nielsenHandler = new NielsenHandler(player, appId, instanceName, options, configuration);
+        if (configuration?.country === NielsenCountry.US) {
+            this.nielsenHandler = new NielsenHandlerDTVR(player, appId, instanceName, options, configuration);
+        } else {
+            this.nielsenHandler = new NielsenHandlerDCR(player, appId, instanceName, options, configuration);
+        }
     }
 
     updateMetadata(metadata: { [key: string]: string }): void {
         this.nielsenHandler.updateMetadata(metadata);
-    }
-
-    updateDCRContentMetadata(metadata: NielsenDCRContentMetadata): void {
-        this.nielsenHandler.updateDCRContentMetadata(metadata);
     }
 
     destroy() {

@@ -2,9 +2,10 @@ export type AdType = 'preroll' | 'midroll' | 'postroll' | 'ad';
 
 export type NielsenConfiguration = {
     country: NielsenCountry;
-    enableDTVR: boolean;
-    enableDCR: boolean;
+    handlerType: NielsenHandlerType;
 };
+
+export type NielsenHandlerType = 'DCR' | 'DTVR';
 
 export type NielsenOptions = {
     // HTML DOM element id of the player container
@@ -16,6 +17,14 @@ export type NielsenOptions = {
     // Set the ability to optout on initialization of the SDK
     optout?: boolean;
 };
+
+/**
+ * Nielsen handler type definition.
+ */
+export interface NielsenHandler {
+    updateMetadata(metadata: { [key: string]: string }): void;
+    destroy(): void;
+}
 
 export type DCRContentMetadata = {
     /*
@@ -89,7 +98,7 @@ export type NielsenDCRContentMetadata = {
     /*
      * Indication of whether the video content being played is the entire episode or only part of it. Always reported as true for live.
      */
-    isfullepisode: boolean;
+    isfullepisode: 'y' | 'n';
     /*
      * CMS tag helper item. The method of recording ads insertion: 1. Linear – corresponds to TV insertion of ads 2. Dynamic – Dynamic Ad Insertion (DAI)
      */
