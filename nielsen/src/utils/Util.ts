@@ -37,7 +37,7 @@ export function buildDCRContentMetadata(
         title: metadata.title,
         length: metadata.length,
         airdate: metadata?.airdate ?? '19700101 00:00:01',
-        isfullepisode: metadata.isfullepisode ? 'y' : 'n',
+        isfullepisode: metadata.isfullepisode,
         adloadtype: metadata.adloadtype
     };
     if (country === NielsenCountry.CZ) {
@@ -45,10 +45,10 @@ export function buildDCRContentMetadata(
         const dcrContentMetadataCZ: DCRContentMetadataCZ = {
             ...dcrContentMetadata,
             ['crossId1']: crossId1,
-            ['nol_c1']: `p1,${c1 ?? ''}`,
-            ['nol_c2']: `p2,${c2 ?? ''}`,
-            ['nol_c4']: `p4,${c4 ?? ''}`,
-            segB: segB,
+            ['nol_c1']: c1 ? `p1, ${c1}` : 'p1,',
+            ['nol_c2']: c2 ? `p2, ${c2}` : 'p2,',
+            ['nol_c4']: c4 ? `p4, ${c4}` : 'p4,',
+            segB: segB ?? '',
             segC: segC ?? '',
             hasAds: hasAds
         };
@@ -69,23 +69,34 @@ export function buildDCRContentMetadata(
 }
 
 export function buildDCRAdMetadata(ad: Ad, country: NielsenCountry, duration: number): AdMetadata {
+    const adBreakType = getAdType(ad.adBreak.timeOffset, duration);
     const adMetadata = {
         assetid: ad.id ?? '',
-        type: getAdType(ad.adBreak.timeOffset, duration)
+        type: adBreakType
     };
     if (country == NielsenCountry.US) {
         return adMetadata;
     }
     if (country == NielsenCountry.CZ) {
-        const dcrAdMetadataCZ: DCRAdMetadataCZ = {
+        let asmeaCode = '';
+        try {
+            const traffickingParametersString = (ad as GoogleImaAd)?.traffickingParametersString;
+            if (traffickingParametersString) {
+                const adParams: any = JSON.parse(traffickingParametersString);
+                asmeaCode = adParams ? adParams.akaCode : '';
+            }
+        } catch (error) {
+            // skip error
+        }
+
+        return {
             ...adMetadata,
-            ['nol_c4']: 'PLACEHOLDER',
-            ['nol_c5']: '2', // 1. regular show, 2. advertising, 3. trailer, 4. divide, 5. komerce (teleshopping,sponsor) TODO: provide API to control this
-            ['nol_c6']: `p6,${adMetadata.type}`,
+            nol_c4: asmeaCode ? `p4,${asmeaCode}` : 'p4,',
+            nol_c5: 'p5,2',
+            nol_c6: `p6,${adBreakType}`,
             title: (ad as GoogleImaAd).title ?? '',
             length: ad.duration?.toString() ?? '0'
         };
-        return dcrAdMetadataCZ;
     }
     console.error('[NIELSEN - Error] No NielsenCountry was provided - sending only assetid and type');
     return adMetadata;
