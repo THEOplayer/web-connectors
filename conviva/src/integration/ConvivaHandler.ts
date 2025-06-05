@@ -14,6 +14,7 @@ import {
     calculateConvivaOptions,
     calculateStreamType,
     collectDefaultDeviceMetadata,
+    collectPlaybackConfigMetadata,
     collectPlayerInfo
 } from '../utils/Utils';
 import { AdReporter } from './ads/AdReporter';
@@ -254,7 +255,8 @@ export class ConvivaHandler {
         const metadata: ConvivaMetadata = {
             [Constants.STREAM_URL]: src,
             [Constants.ASSET_NAME]: assetName,
-            [Constants.PLAYER_NAME]: playerName
+            [Constants.PLAYER_NAME]: playerName,
+            ...collectPlaybackConfigMetadata(this.player)
         };
         // Only pass `isLive` property if we have a valid duration
         const streamType = calculateStreamType(this.player);
