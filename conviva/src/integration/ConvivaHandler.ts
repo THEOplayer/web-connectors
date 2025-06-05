@@ -258,10 +258,14 @@ export class ConvivaHandler {
             [Constants.PLAYER_NAME]: playerName,
             ...collectPlaybackConfigMetadata(this.player)
         };
-        // Only pass `isLive` property if we have a valid duration
-        const streamType = calculateStreamType(this.player);
-        if (streamType) {
-            metadata[Constants.IS_LIVE] = streamType;
+        // Do not override the `isLive` value if already set by the consumer, as the value
+        // is read-only for a given session.
+        if (!this.customMetadata[Constants.IS_LIVE] && !this.convivaMetadata[Constants.IS_LIVE]) {
+            // Only pass `isLive` property if we have a valid duration
+            const streamType = calculateStreamType(this.player);
+            if (streamType) {
+                metadata[Constants.IS_LIVE] = streamType;
+            }
         }
         // Only pass a finite duration value, never NaN or Infinite.
         if (isFinite(this.player.duration)) {
