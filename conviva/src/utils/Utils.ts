@@ -120,6 +120,13 @@ export function collectPlaybackConfigMetadata(player: ChromelessPlayer) {
     if (player.abr.bufferLookbackWindow) {
         metadata['bufferLookbackWindow'] = player.abr.bufferLookbackWindow.toString();
     }
+    const abrStrategy = player.abr.strategy;
+    if (abrStrategy) {
+        metadata['abrStrategy'] = typeof abrStrategy === 'string' ? abrStrategy : abrStrategy.type.toString();
+        if (typeof abrStrategy !== 'string' && abrStrategy.metadata?.bitrate) {
+            metadata['abrMetadata'] = abrStrategy.metadata.bitrate.toString();
+        }
+    }
     const source = Array.isArray(player.source?.sources) ? player.source?.sources[0] : player.source?.sources;
     const liveOffset = (source as TypedSource)?.liveOffset?.toString();
     if (liveOffset) {
