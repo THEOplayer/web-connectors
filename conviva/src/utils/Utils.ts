@@ -102,6 +102,12 @@ export function calculateConvivaOptions(config: ConvivaConfiguration): ConvivaOp
     return options;
 }
 
+export function calculateStreamType(player: ChromelessPlayer) {
+    if (!Number.isNaN(player.duration)) {
+        return isFinite(player.duration) ? Constants.StreamType.VOD : Constants.StreamType.LIVE;
+    }
+}
+
 export function collectPlayerInfo(): ConvivaPlayerInfo {
     return {
         [Constants.FRAMEWORK_NAME]: 'THEOplayer',
