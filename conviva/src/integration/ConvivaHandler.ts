@@ -12,7 +12,7 @@ import { CONVIVA_CALLBACK_FUNCTIONS } from './ConvivaCallbackFunctions';
 import {
     calculateBufferLength,
     calculateConvivaOptions,
-    collectContentMetadata,
+    calculateStreamType,
     collectDefaultDeviceMetadata,
     collectPlayerInfo
 } from '../utils/Utils';
@@ -229,9 +229,7 @@ export class ConvivaHandler {
             if (!this.convivaVideoAnalytics) {
                 this.initializeSession();
             }
-            this.convivaVideoAnalytics!.reportPlaybackRequested(
-                collectContentMetadata(this.player, this.convivaMetadata)
-            );
+            this.convivaVideoAnalytics!.reportPlaybackRequested(this.convivaMetadata);
             this.reportMetadata();
         }
     }
@@ -252,17 +250,21 @@ export class ConvivaHandler {
             this.currentSource?.metadata?.title ??
             'NA';
         const playerName =
-            this.customMetadata[Constants.PLAYER_NAME] ??
-            this.convivaMetadata[Constants.PLAYER_NAME] ??
-            'THEOplayer';
-        const hasDuration = !Number.isNaN(this.player.duration);
-        const isLive = Number.isFinite(this.player.duration) ? Constants.StreamType.VOD : Constants.StreamType.LIVE;
+            this.customMetadata[Constants.PLAYER_NAME] ?? this.convivaMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
         const metadata: ConvivaMetadata = {
             [Constants.STREAM_URL]: src,
             [Constants.ASSET_NAME]: assetName,
-            [Constants.PLAYER_NAME]: playerName,
-            ...(!hasDuration ? {} : { [Constants.IS_LIVE]: isLive })
+            [Constants.PLAYER_NAME]: playerName
         };
+        // Only pass `isLive` property if we have a valid duration
+        const streamType = calculateStreamType(this.player);
+        if (streamType) {
+            metadata[Constants.IS_LIVE] = streamType;
+        }
+        // Only pass a finite duration value, never NaN or Infinite.
+        if (isFinite(this.player.duration)) {
+            metadata[Constants.DURATION] = this.player.duration;
+        }
         this.setContentInfo(metadata);
     }
 
@@ -351,15 +353,8 @@ export class ConvivaHandler {
     };
 
     private readonly onDurationChange = () => {
-        const contentInfo: ConvivaMetadata = {};
-        const duration = this.player.duration;
-        if (duration === Infinity) {
-            contentInfo[Constants.IS_LIVE] = Constants.StreamType.LIVE;
-        } else {
-            contentInfo[Constants.IS_LIVE] = Constants.StreamType.VOD;
-            contentInfo[Constants.DURATION] = duration;
-        }
-        this.convivaVideoAnalytics?.setContentInfo(contentInfo);
+        // Report updated metadata now that we know the duration & streamType.
+        this.reportMetadata();
     };
 
     private readonly onDestroy = () => {
