@@ -1,5 +1,12 @@
 # @theoplayer/conviva-connector-web
 
+## 2.9.0
+
+### ✨ Features
+
+- Added play-out configuration values such as `liveOffset`, `targetBuffer`, `bufferLookbackWindow`, `abrStrategy` and `abrMetadata` as custom metadata fields.
+- Fixed an issue where the `streamType` value set through the connector API could be overriden with a different value by the connector.
+
 ## 2.8.0
 
 ### ✨ Features
