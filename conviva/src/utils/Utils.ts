@@ -15,10 +15,8 @@ import {
     type GoogleImaAd,
     type VerizonMediaAd,
     type VerizonMediaAdBreak,
-    type THEOplayerError,
-    ErrorCategory,
-    ErrorCode,
-    version
+    version,
+    TypedSource
 } from 'theoplayer';
 import { ConvivaConfiguration } from '../integration/ConvivaHandler';
 
@@ -102,26 +100,39 @@ export function calculateConvivaOptions(config: ConvivaConfiguration): ConvivaOp
     return options;
 }
 
+export function calculateStreamType(player: ChromelessPlayer) {
+    if (!Number.isNaN(player.duration)) {
+        return isFinite(player.duration) ? Constants.StreamType.VOD : Constants.StreamType.LIVE;
+    }
+}
+
 export function collectPlayerInfo(): ConvivaPlayerInfo {
     return {
         [Constants.FRAMEWORK_NAME]: 'THEOplayer',
         [Constants.FRAMEWORK_VERSION]: version
     };
 }
-
-export function collectContentMetadata(
-    player: ChromelessPlayer,
-    configuredContentMetadata: ConvivaMetadata
-): ConvivaMetadata {
-    const contentInfo: ConvivaMetadata = {};
-    const duration = player.duration;
-    if (!Number.isNaN(duration) && duration !== Infinity) {
-        contentInfo[Constants.DURATION] = duration;
+export function collectPlaybackConfigMetadata(player: ChromelessPlayer) {
+    const metadata: { [key: string]: string } = {};
+    if (player.abr.targetBuffer) {
+        metadata['targetBuffer'] = player.abr.targetBuffer.toString();
     }
-    return {
-        ...configuredContentMetadata,
-        ...contentInfo
-    };
+    if (player.abr.bufferLookbackWindow) {
+        metadata['bufferLookbackWindow'] = player.abr.bufferLookbackWindow.toString();
+    }
+    const abrStrategy = player.abr.strategy;
+    if (abrStrategy) {
+        metadata['abrStrategy'] = typeof abrStrategy === 'string' ? abrStrategy : abrStrategy.type.toString();
+        if (typeof abrStrategy !== 'string' && abrStrategy.metadata?.bitrate) {
+            metadata['abrMetadata'] = abrStrategy.metadata.bitrate.toString();
+        }
+    }
+    const source = Array.isArray(player.source?.sources) ? player.source?.sources[0] : player.source?.sources;
+    const liveOffset = (source as TypedSource)?.liveOffset?.toString();
+    if (liveOffset) {
+        metadata['liveOffset'] = liveOffset;
+    }
+    return metadata;
 }
 
 export function collectYospaceAdMetadata(player: ChromelessPlayer, ad: AdVert): ConvivaMetadata {

@@ -17,6 +17,7 @@ export function getSharedBuildConfiguration({ fileName, globalName, banner, exte
                     format: 'umd',
                     indent: false,
                     banner,
+                    sourcemap: true,
                     globals: { theoplayer: 'THEOplayer', ...(globals ?? {}) }
                 },
                 {
@@ -24,6 +25,7 @@ export function getSharedBuildConfiguration({ fileName, globalName, banner, exte
                     entryFileNames: '[name].esm.js',
                     format: 'esm',
                     indent: false,
+                    sourcemap: true,
                     banner
                 }
             ],

@@ -45,6 +45,10 @@
             ['Conviva.assetName']: `Main page ${(new Date()).toLocaleString()}`,
             ['customTag1']: "customValue1",
             ['customTag2']: "customValue2",
+
+            // Optionally pass the streamType, otherwise the player will derive,
+            // but only once it has the stream's metadata.
+            // ['Conviva.streamType']: 'VOD' // or 'LIVE'
         }
         convivaIntegration.setContentInfo(metadata);
     }
