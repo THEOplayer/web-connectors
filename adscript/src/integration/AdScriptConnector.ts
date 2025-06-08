@@ -44,11 +44,10 @@ export class AdScriptConnector {
             return;
         }
         if (typeof window.JHMTApi === 'object') {
-            this.adScriptIntegration = new AdScriptTHEOIntegration(this.player, this.configuration);
+            this.adScriptIntegration = new AdScriptTHEOIntegration(this.player, this.configuration, this.metadata);
             if (this.i12n) {
                 this.adScriptIntegration.updateUser(this.i12n);
             }
-            this.adScriptIntegration.updateMetadata(this.metadata);
             this.adScriptIntegration.start();
             return;
         }
