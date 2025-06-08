@@ -252,8 +252,6 @@ export class GemiusTHEOIntegration {
         const { adBreak } = event;
         const { timeOffset } = adBreak;
         if (!this.isPreRoll(adBreak)) this.partCount++;
-        const { programID, customAttributes, ...additionalParameters } = this.programParameters;
-        this.gemiusPlayer.newProgram(programID, { ...additionalParameters, ...customAttributes });
         this.player.removeEventListener('playing', this.onFirstPlaying);
         if (timeOffset === 0) this.player.addEventListener('playing', this.onFirstPlaying);
     };
@@ -284,7 +282,6 @@ export class GemiusTHEOIntegration {
         const { timeOffset } = adBreak;
         const normalizedTimeOffset = this.normalizeTime(timeOffset);
         this.gemiusPlayer.adEvent(programID, ad.id ?? DEFAULT_AD_ID, normalizedTimeOffset, BasicEvent.COMPLETE);
-        this.gemiusPlayer.adEvent(programID, ad.id ?? DEFAULT_AD_ID, normalizedTimeOffset, BasicEvent.CLOSE);
         this.adCount++;
         this.currentAd = undefined;
         this.player.removeEventListener('playing', this.onFirstPlaying);
