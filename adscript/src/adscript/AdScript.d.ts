@@ -22,6 +22,11 @@ interface StaticContentMetadata {
     ref: string;
 }
 
+interface BufferMetadata {
+    contentMetadata?: MainVideoContentMetadata;
+    playerState?: PlayerState;
+}
+
 export interface PlayerState {
     muted: number;
     volume: number;
@@ -54,4 +59,8 @@ export interface JHMTApi {
     setContentMetadata(contentMetadata: ContentMetadata);
 
     setPlayerState(playerState: PlayerState);
+
+    addBuffer(bufferName: string, playerId: string, bufferMetadata: BufferMetadata);
+
+    setBuffer(bufferName: string, bufferMetadata: BufferMetadata);
 }
