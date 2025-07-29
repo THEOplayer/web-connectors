@@ -107,15 +107,19 @@ export class UplynkAdReporter {
     };
 
     private addEventListeners() {
-        this.player.uplynk!.ads.adBreaks.addEventListener('addadbreak', this.onAddAdBreak);
-        this.player.uplynk!.ads.adBreaks.addEventListener('removeadbreak', this.onRemoveAdBreak);
+        if (this.player.uplynk) {
+            this.player.uplynk.ads.adBreaks.addEventListener('addadbreak', this.onAddAdBreak);
+            this.player.uplynk.ads.adBreaks.addEventListener('removeadbreak', this.onRemoveAdBreak);
+        }
         this.player.addEventListener('playing', this.onPlaying);
         this.player.addEventListener('pause', this.onPause);
     }
 
     private removeEventListeners() {
-        this.player.uplynk!.ads.adBreaks.removeEventListener('addadbreak', this.onAddAdBreak);
-        this.player.uplynk!.ads.adBreaks.removeEventListener('removeadbreak', this.onRemoveAdBreak);
+        if (this.player.uplynk) {
+            this.player.uplynk.ads.adBreaks.removeEventListener('addadbreak', this.onAddAdBreak);
+            this.player.uplynk.ads.adBreaks.removeEventListener('removeadbreak', this.onRemoveAdBreak);
+        }
         this.player.removeEventListener('playing', this.onPlaying);
         this.player.removeEventListener('pause', this.onPause);
     }
