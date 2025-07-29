@@ -7,7 +7,7 @@
     <script src="./../../../node_modules/theoplayer/THEOplayer.js"></script>
     <script src="./../../../node_modules/@convivainc/conviva-js-coresdk/conviva-core-sdk.js"></script>
     <script src="./../../dist/conviva-connector.umd.js"></script>
-    <script type="text/javascript" src="http://imasdk.googleapis.com/js/sdkloader/ima3_debug.js"></script>
+    <script type="text/javascript" src="//imasdk.googleapis.com/js/sdkloader/ima3_debug.js"></script>
 </head>
 <body>
 <div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
@@ -29,9 +29,9 @@
     };
 
     const convivaConfig = {
+        debug: true, // Enable to make sure all events pass TouchStone.
         gatewayUrl: 'CUSTOMER_GATEWAY_GOES_HERE',
-        customerKey: 'CUSTOMER_KEY_GOES_HERE' // Can be a test or production key. 
-        debug: true,
+        customerKey: 'CUSTOMER_KEY_GOES_HERE', // Can be a test or production key.
     };
 
     const convivaIntegration = new THEOplayerConvivaConnector.ConvivaConnector(
