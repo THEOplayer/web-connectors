@@ -41,7 +41,7 @@ export class ConvivaHandler {
 
     private adReporter: AdReporter | undefined;
     private yospaceAdReporter: YospaceAdReporter | undefined;
-    private verizonAdReporter: UplynkAdReporter | undefined;
+    private uplynkAdReporter: UplynkAdReporter | undefined;
 
     private currentSource: SourceDescription | undefined;
     private playbackRequested: boolean = false;
@@ -82,7 +82,7 @@ export class ConvivaHandler {
         );
 
         if (this.player.uplynk !== undefined) {
-            this.verizonAdReporter = new UplynkAdReporter(
+            this.uplynkAdReporter = new UplynkAdReporter(
                 this.player,
                 this.convivaVideoAnalytics,
                 this.convivaAdAnalytics
@@ -369,10 +369,10 @@ export class ConvivaHandler {
 
     private releaseSession(): void {
         this.adReporter?.destroy();
-        this.verizonAdReporter?.destroy();
+        this.uplynkAdReporter?.destroy();
         this.yospaceAdReporter?.destroy();
         this.adReporter = undefined;
-        this.verizonAdReporter = undefined;
+        this.uplynkAdReporter = undefined;
         this.yospaceAdReporter = undefined;
 
         this.convivaAdAnalytics?.release();
