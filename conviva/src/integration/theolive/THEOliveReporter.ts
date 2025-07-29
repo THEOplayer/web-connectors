@@ -12,13 +12,11 @@ export class THEOliveReporter {
     }
 
     private readonly onEndpointLoaded = (event: EndpointLoadedEvent) => {
-        console.debug('onEndpointLoaded', event);
         const { endpoint } = event;
         this.convivaVideoAnalytics?.reportPlaybackEvent('endpointLoaded', endpoint);
     };
 
     private readonly onIntentToFallback = (event: IntentToFallbackEvent) => {
-        console.debug('onIntentToFallback', event);
         const { reason } = event;
         this.convivaVideoAnalytics?.reportPlaybackEvent('intentToFallback', reason);
     };
