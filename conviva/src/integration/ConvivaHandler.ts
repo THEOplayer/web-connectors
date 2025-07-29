@@ -19,7 +19,7 @@ import {
 } from '../utils/Utils';
 import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
-import { VerizonAdReporter } from './ads/VerizonAdReporter';
+import { UplynkAdReporter } from './ads/UplynkAdReporter';
 import { ErrorEvent } from 'theoplayer';
 import { ErrorReportBuilder } from '../utils/ErrorReportBuilder';
 
@@ -41,7 +41,7 @@ export class ConvivaHandler {
 
     private adReporter: AdReporter | undefined;
     private yospaceAdReporter: YospaceAdReporter | undefined;
-    private verizonAdReporter: VerizonAdReporter | undefined;
+    private verizonAdReporter: UplynkAdReporter | undefined;
 
     private currentSource: SourceDescription | undefined;
     private playbackRequested: boolean = false;
@@ -81,8 +81,8 @@ export class ConvivaHandler {
             () => this.customMetadata
         );
 
-        if (this.player.verizonMedia !== undefined) {
-            this.verizonAdReporter = new VerizonAdReporter(
+        if (this.player.uplynk !== undefined) {
+            this.verizonAdReporter = new UplynkAdReporter(
                 this.player,
                 this.convivaVideoAnalytics,
                 this.convivaAdAnalytics

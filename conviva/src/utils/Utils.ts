@@ -13,10 +13,10 @@ import {
     type AdBreak,
     type ChromelessPlayer,
     type GoogleImaAd,
-    type VerizonMediaAd,
-    type VerizonMediaAdBreak,
     version,
-    TypedSource
+    TypedSource,
+    UplynkAdBreak,
+    UplynkAd
 } from 'theoplayer';
 import { ConvivaConfiguration } from '../integration/ConvivaHandler';
 
@@ -62,7 +62,7 @@ export function calculateAdType(adOrBreak: Ad | AdBreak) {
     }
 }
 
-export function calculateVerizonAdBreakInfo(adBreak: VerizonMediaAdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
+export function calculateUplynkAdBreakInfo(adBreak: UplynkAdBreak, adBreakIndex: number): ConvivaAdBreakInfo {
     return {
         [Constants.POD_DURATION]: adBreak.duration!,
         [Constants.POD_INDEX]: adBreakIndex
@@ -154,7 +154,7 @@ export function collectYospaceAdMetadata(player: ChromelessPlayer, ad: AdVert): 
     };
 }
 
-export function collectVerizonAdMetadata(ad: VerizonMediaAd): ConvivaMetadata {
+export function collectUplynkAdMetadata(ad: UplynkAd): ConvivaMetadata {
     const adMetadata: ConvivaMetadata = {
         [Constants.DURATION]: ad.duration as any
     };

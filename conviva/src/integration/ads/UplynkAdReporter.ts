@@ -1,21 +1,21 @@
 import type {
     ChromelessPlayer,
-    VerizonMediaAdBeginEvent,
-    VerizonMediaAdBreak,
-    VerizonMediaAdBreakBeginEvent,
-    VerizonMediaAddAdBreakEvent,
-    VerizonMediaRemoveAdBreakEvent,
+    UplynkAdBeginEvent,
+    UplynkAdBreak,
+    UplynkAdBreakBeginEvent,
+    UplynkAddAdBreakEvent,
+    UplynkRemoveAdBreakEvent,
     VideoQuality
 } from 'theoplayer';
 import { type AdAnalytics, Constants, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
-import { calculateVerizonAdBreakInfo, collectPlayerInfo, collectVerizonAdMetadata } from '../../utils/Utils';
+import { calculateUplynkAdBreakInfo, collectPlayerInfo, collectUplynkAdMetadata } from '../../utils/Utils';
 
-export class VerizonAdReporter {
+export class UplynkAdReporter {
     private readonly player: ChromelessPlayer;
     private readonly convivaVideoAnalytics: VideoAnalytics;
     private readonly convivaAdAnalytics: AdAnalytics;
 
-    private currentAdBreak: VerizonMediaAdBreak | undefined;
+    private currentAdBreak: UplynkAdBreak | undefined;
     private adBreakCounter: number = 1;
 
     constructor(player: ChromelessPlayer, videoAnalytics: VideoAnalytics, adAnalytics: AdAnalytics) {
@@ -26,12 +26,12 @@ export class VerizonAdReporter {
         this.addEventListeners();
     }
 
-    private onAdBreakBegin = (event: VerizonMediaAdBreakBeginEvent) => {
+    private onAdBreakBegin = (event: UplynkAdBreakBeginEvent) => {
         this.currentAdBreak = event.adBreak;
         this.convivaVideoAnalytics.reportAdBreakStarted(
             Constants.AdType.SERVER_SIDE,
             Constants.AdPlayer.CONTENT,
-            calculateVerizonAdBreakInfo(this.currentAdBreak, this.adBreakCounter)
+            calculateUplynkAdBreakInfo(this.currentAdBreak, this.adBreakCounter)
         );
         this.adBreakCounter++;
     };
@@ -47,8 +47,8 @@ export class VerizonAdReporter {
         this.currentAdBreak = undefined;
     };
 
-    private onAdBegin = (event: VerizonMediaAdBeginEvent) => {
-        const adMetadata = collectVerizonAdMetadata(event.ad);
+    private onAdBegin = (event: UplynkAdBeginEvent) => {
+        const adMetadata = collectUplynkAdMetadata(event.ad);
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdStarted(adMetadata);
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
@@ -72,7 +72,7 @@ export class VerizonAdReporter {
         this.convivaAdAnalytics.reportAdEnded();
     };
 
-    private onAddAdBreak = (event: VerizonMediaAddAdBreakEvent) => {
+    private onAddAdBreak = (event: UplynkAddAdBreakEvent) => {
         const adBreak = event.adBreak;
         adBreak.addEventListener('adbreakbegin', this.onAdBreakBegin);
         adBreak.addEventListener('adbreakend', this.onAdBreakEnd);
@@ -83,7 +83,7 @@ export class VerizonAdReporter {
         }
     };
 
-    private onRemoveAdBreak = (event: VerizonMediaRemoveAdBreakEvent) => {
+    private onRemoveAdBreak = (event: UplynkRemoveAdBreakEvent) => {
         const adBreak = event.adBreak;
         adBreak.removeEventListener('adbreakbegin', this.onAdBreakBegin);
         adBreak.removeEventListener('adbreakend', this.onAdBreakEnd);
@@ -107,15 +107,15 @@ export class VerizonAdReporter {
     };
 
     private addEventListeners() {
-        this.player.verizonMedia!.ads.adBreaks.addEventListener('addadbreak', this.onAddAdBreak);
-        this.player.verizonMedia!.ads.adBreaks.addEventListener('removeadbreak', this.onRemoveAdBreak);
+        this.player.uplynk!.ads.adBreaks.addEventListener('addadbreak', this.onAddAdBreak);
+        this.player.uplynk!.ads.adBreaks.addEventListener('removeadbreak', this.onRemoveAdBreak);
         this.player.addEventListener('playing', this.onPlaying);
         this.player.addEventListener('pause', this.onPause);
     }
 
     private removeEventListeners() {
-        this.player.verizonMedia!.ads.adBreaks.removeEventListener('addadbreak', this.onAddAdBreak);
-        this.player.verizonMedia!.ads.adBreaks.removeEventListener('removeadbreak', this.onRemoveAdBreak);
+        this.player.uplynk!.ads.adBreaks.removeEventListener('addadbreak', this.onAddAdBreak);
+        this.player.uplynk!.ads.adBreaks.removeEventListener('removeadbreak', this.onRemoveAdBreak);
         this.player.removeEventListener('playing', this.onPlaying);
         this.player.removeEventListener('pause', this.onPause);
     }
