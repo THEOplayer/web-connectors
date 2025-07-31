@@ -22,6 +22,7 @@ import { YospaceAdReporter } from './ads/YospaceAdReporter';
 import { UplynkAdReporter } from './ads/UplynkAdReporter';
 import { ErrorEvent } from 'theoplayer';
 import { ErrorReportBuilder } from '../utils/ErrorReportBuilder';
+import { THEOliveReporter } from './theolive/THEOliveReporter';
 
 export interface ConvivaConfiguration {
     customerKey: string;
@@ -40,6 +41,7 @@ export class ConvivaHandler {
     private convivaAdAnalytics: AdAnalytics | undefined;
 
     private adReporter: AdReporter | undefined;
+    private THEOliveReporter: THEOliveReporter | undefined;
     private yospaceAdReporter: YospaceAdReporter | undefined;
     private uplynkAdReporter: UplynkAdReporter | undefined;
 
@@ -80,6 +82,8 @@ export class ConvivaHandler {
             this.convivaAdAnalytics,
             () => this.customMetadata
         );
+
+        this.THEOliveReporter = new THEOliveReporter(this.player, this.convivaVideoAnalytics);
 
         if (this.player.uplynk !== undefined) {
             this.uplynkAdReporter = new UplynkAdReporter(
@@ -371,9 +375,11 @@ export class ConvivaHandler {
         this.adReporter?.destroy();
         this.uplynkAdReporter?.destroy();
         this.yospaceAdReporter?.destroy();
+        this.THEOliveReporter?.destroy();
         this.adReporter = undefined;
         this.uplynkAdReporter = undefined;
         this.yospaceAdReporter = undefined;
+        this.THEOliveReporter = undefined;
 
         this.convivaAdAnalytics?.release();
         this.convivaVideoAnalytics?.release();
