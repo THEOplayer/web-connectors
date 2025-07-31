@@ -1,5 +1,5 @@
 import type { ChromelessPlayer, EndpointLoadedEvent, IntentToFallbackEvent } from 'theoplayer';
-import { type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { Constants, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
 
 export class THEOliveReporter {
     private readonly player: ChromelessPlayer;
@@ -14,6 +14,10 @@ export class THEOliveReporter {
     private readonly onEndpointLoaded = (event: EndpointLoadedEvent) => {
         const { endpoint } = event;
         this.convivaVideoAnalytics?.reportPlaybackEvent('endpointLoaded', endpoint);
+
+        if (endpoint.cdn) {
+            this.convivaVideoAnalytics?.setContentInfo({ [Constants.DEFAULT_RESOURCE]: endpoint.cdn });
+        }
     };
 
     private readonly onIntentToFallback = (event: IntentToFallbackEvent) => {
