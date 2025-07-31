@@ -1,5 +1,6 @@
 import type { ChromelessPlayer, EndpointLoadedEvent, IntentToFallbackEvent } from 'theoplayer';
 import { Constants, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { flattenErrorObject } from '../../utils/ErrorReportBuilder';
 
 export class THEOliveReporter {
     private readonly player: ChromelessPlayer;
@@ -22,7 +23,7 @@ export class THEOliveReporter {
 
     private readonly onIntentToFallback = (event: IntentToFallbackEvent) => {
         const { reason } = event;
-        this.convivaVideoAnalytics?.reportPlaybackEvent('intentToFallback', reason);
+        this.convivaVideoAnalytics?.reportPlaybackEvent('intentToFallback', flattenErrorObject(reason));
     };
 
     private addEventListeners(): void {
