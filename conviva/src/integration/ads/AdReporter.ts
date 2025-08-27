@@ -16,7 +16,6 @@ export class AdReporter {
 
     private currentAdBreak: AdBreak | undefined;
     private currentAd: Ad | undefined;
-    private hasAdStarted: boolean = false;
     private adBreakCounter: number = 1;
 
     constructor(
@@ -118,11 +117,17 @@ export class AdReporter {
         if (!this.currentAdBreak || !this.currentAd) {
             return;
         }
-        if (!this.hasAdStarted) {
-            this.startCurrentAd();
-        }
 
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
+    };
+
+    // Using onLoadedData based off of Conviva comments in THEOSD-15024 stating ad start should happen when the
+    // first frame of the ad is displayed, regardless of playing status.
+    private readonly onLoadedData = () => {
+        if (!this.currentAdBreak || !this.currentAd) {
+            return;
+        }
+        this.startCurrentAd();
     };
 
     private readonly onPause = () => {
@@ -140,6 +145,7 @@ export class AdReporter {
     private addEventListeners(): void {
         this.player.addEventListener('playing', this.onPlaying);
         this.player.addEventListener('pause', this.onPause);
+        this.player.addEventListener('loadeddata', this.onLoadedData);
         [this.player.ads, this.player.ads?.convivaAdEventsExtension].forEach((dispatcher) => {
             dispatcher?.addEventListener('adbreakbegin', this.onAdBreakBegin);
             dispatcher?.addEventListener('adbreakend', this.onAdBreakEnd);
@@ -167,14 +173,13 @@ export class AdReporter {
 
     private clearCurrentAd(): void {
         this.currentAd = undefined;
-        this.hasAdStarted = false;
     }
 
     private startCurrentAd(): void {
-        if (this.hasAdStarted || !this.currentAd) {
+        if (!this.currentAd) {
             return;
         }
-        this.hasAdStarted = true;
+        console.log('### start current ad');
         const adMetadata = collectAdMetadata(this.currentAd);
         this.convivaAdAnalytics.reportAdStarted(adMetadata);
         this.convivaAdAnalytics.reportAdMetric(
