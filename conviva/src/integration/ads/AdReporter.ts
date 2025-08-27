@@ -180,7 +180,6 @@ export class AdReporter {
         if (!this.currentAd) {
             return;
         }
-        console.log('### start current ad');
         const adMetadata = collectAdMetadata(this.currentAd);
         this.convivaAdAnalytics.reportAdStarted(adMetadata);
         this.convivaAdAnalytics.reportAdMetric(
