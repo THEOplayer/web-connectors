@@ -15,6 +15,8 @@ export class AdReporter {
     private readonly contentInfo: () => ConvivaMetadata;
 
     private currentAdBreak: AdBreak | undefined;
+    private currentAd: Ad | undefined;
+    private hasAdStarted: boolean = false;
     private adBreakCounter: number = 1;
 
     constructor(
@@ -45,11 +47,13 @@ export class AdReporter {
 
     private readonly onAdBreakEnd = () => {
         this.convivaVideoAnalytics.reportAdBreakEnded();
+        this.clearCurrentAd();
         this.currentAdBreak = undefined;
     };
 
     private readonly onAdBegin = (event: any) => {
         const currentAd = event.ad as Ad;
+        this.currentAd = currentAd;
         if (currentAd.type !== 'linear') {
             return;
         }
@@ -73,13 +77,6 @@ export class AdReporter {
 
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
-        this.convivaAdAnalytics.reportAdStarted(adMetadata);
-        this.convivaAdAnalytics.reportAdMetric(
-            Constants.Playback.RESOLUTION,
-            this.player.videoWidth,
-            this.player.videoHeight
-        );
-        this.convivaAdAnalytics.reportAdMetric(Constants.Playback.BITRATE, (currentAd as GoogleImaAd).bitrate || 0);
 
         // Report playing state in case of SSAI or SGAI.
         if (
@@ -95,6 +92,7 @@ export class AdReporter {
         if (currentAd.type !== 'linear') {
             return;
         }
+        this.clearCurrentAd();
         this.convivaAdAnalytics.reportAdEnded();
     };
 
@@ -117,9 +115,13 @@ export class AdReporter {
     };
 
     private readonly onPlaying = () => {
-        if (!this.currentAdBreak) {
+        if (!this.currentAdBreak || !this.currentAd) {
             return;
         }
+        if (!this.hasAdStarted) {
+            this.startCurrentAd();
+        }
+
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
     };
 
@@ -161,6 +163,29 @@ export class AdReporter {
             dispatcher?.removeEventListener('adbuffering', this.onAdBuffering);
             dispatcher?.removeEventListener('aderror', this.onAdError);
         });
+    }
+
+    private clearCurrentAd(): void {
+        this.currentAd = undefined;
+        this.hasAdStarted = false;
+    }
+
+    private startCurrentAd(): void {
+        if (this.hasAdStarted || !this.currentAd) {
+            return;
+        }
+        this.hasAdStarted = true;
+        const adMetadata = collectAdMetadata(this.currentAd);
+        this.convivaAdAnalytics.reportAdStarted(adMetadata);
+        this.convivaAdAnalytics.reportAdMetric(
+            Constants.Playback.RESOLUTION,
+            this.player.videoWidth,
+            this.player.videoHeight
+        );
+        this.convivaAdAnalytics.reportAdMetric(
+            Constants.Playback.BITRATE,
+            (this.currentAd as GoogleImaAd).bitrate || 0
+        );
     }
 
     reset(): void {
