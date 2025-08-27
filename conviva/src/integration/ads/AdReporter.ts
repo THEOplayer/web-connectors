@@ -160,6 +160,7 @@ export class AdReporter {
     private removeEventListeners(): void {
         this.player.removeEventListener('playing', this.onPlaying);
         this.player.removeEventListener('pause', this.onPause);
+        this.player.removeEventListener('loadeddata', this.onLoadedData);
         [this.player.ads, this.player.ads?.convivaAdEventsExtension].forEach((dispatcher) => {
             dispatcher?.removeEventListener('adbreakbegin', this.onAdBreakBegin);
             dispatcher?.removeEventListener('adbreakend', this.onAdBreakEnd);
