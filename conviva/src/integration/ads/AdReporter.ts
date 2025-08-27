@@ -121,8 +121,8 @@ export class AdReporter {
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
     };
 
-    // Using onLoadedData based off of Conviva comments in THEOSD-15024 stating ad start should happen when the
-    // first frame of the ad is displayed, regardless of playing status.
+    // NOTE (nils.thingvall@dolby.com, 27/08/2025): Using onLoadedData based off of Conviva comments
+    // stating ad start should happen when the first frame of the ad is displayed, regardless of playing status.
     private readonly onLoadedData = () => {
         if (!this.currentAdBreak || !this.currentAd) {
             return;
