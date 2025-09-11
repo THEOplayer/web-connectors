@@ -43,7 +43,7 @@
     "prettier": "^3.2.4",
     "rimraf": "^5.0.5",
     "rollup": "^4.14.0",
-    "theoplayer": "^8.3.0",
+    "theoplayer": "^9.12.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
