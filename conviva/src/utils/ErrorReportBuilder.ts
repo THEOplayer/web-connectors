@@ -1,5 +1,12 @@
-import { ErrorCategory, ErrorCode, InterceptableResponse, ResponseInterceptor, type THEOplayerError } from 'theoplayer';
-import { ChromelessPlayer, HTTPHeaders } from 'theoplayer';
+import {
+    ChromelessPlayer,
+    ErrorCategory,
+    ErrorCode,
+    HTTPHeaders,
+    InterceptableResponse,
+    ResponseInterceptor,
+    type THEOplayerError
+} from 'theoplayer';
 import { bufferedToString } from './Utils';
 
 const MAX_STACK_LINE_LENGTH = 255;
