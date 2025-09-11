@@ -1,4 +1,4 @@
-import type { Ad, AdBreak, ChromelessPlayer, GoogleImaAd } from 'theoplayer';
+import type { Ad, AdBreak, AdsEventMap, ChromelessPlayer, EventDispatcher, GoogleImaAd } from 'theoplayer';
 import { type AdAnalytics, Constants, type ConvivaMetadata, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
 import {
     calculateAdType,
@@ -7,6 +7,12 @@ import {
     collectPlayerInfo,
     updateAdMetadataForGoogleIma
 } from '../../utils/Utils';
+
+declare module 'theoplayer' {
+    interface Ads {
+        convivaAdEventsExtension?: EventDispatcher<AdsEventMap>;
+    }
+}
 
 export class AdReporter {
     private readonly player: ChromelessPlayer;
