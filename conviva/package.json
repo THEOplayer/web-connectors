@@ -52,6 +52,6 @@
     }
   },
   "devDependencies": {
-    "@convivainc/conviva-js-coresdk": "^4.7.4"
+    "@convivainc/conviva-js-coresdk": "^4.8.0"
   }
 }
