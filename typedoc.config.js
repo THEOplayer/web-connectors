@@ -8,5 +8,5 @@ module.exports = {
     entryPointStrategy: 'packages',
     includeVersion: false,
     out: 'api',
-    sitemapBaseUrl: 'https://theoplayer.github.io/web-connectors/api/'
+    hostedBaseUrl: 'https://theoplayer.github.io/web-connectors/api/'
 };
