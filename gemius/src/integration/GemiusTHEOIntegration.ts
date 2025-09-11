@@ -265,7 +265,7 @@ export class GemiusTHEOIntegration {
         const { id, duration, width, height } = ad;
         const { clientWidth, clientHeight } = this.player.element;
         this.gemiusPlayer.newAd(id ?? DEFAULT_AD_ID, {
-            adName: ad.integration?.includes('google') ? (ad as GoogleImaAd).title ?? '' : '',
+            adName: ad.integration?.includes('google') ? ((ad as GoogleImaAd).title ?? '') : '',
             adDuration: duration,
             adType: AdType.BREAK,
             // TODO campaignClassification

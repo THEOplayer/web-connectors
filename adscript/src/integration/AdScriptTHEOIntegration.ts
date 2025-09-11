@@ -257,7 +257,7 @@ export class AdScriptTHEOIntegration {
             assetid: ad.id ?? '',
             type: this.getAdType(adBreak.timeOffset, this.player.duration, adBreak.integration),
             length: ad.duration?.toString() ?? '',
-            title: ad.integration?.includes('google') ? (ad as GoogleImaAd).title ?? '' : '',
+            title: ad.integration?.includes('google') ? ((ad as GoogleImaAd).title ?? '') : '',
             asmea: '',
             attributes: ''
         };
