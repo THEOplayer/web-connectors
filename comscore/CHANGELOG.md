@@ -1,5 +1,11 @@
 # @theoplayer/comscore-connector-web
 
+## 1.4.0
+
+### ✨ Features
+
+- Added support for THEOplayer version 10.
+
 ## 1.3.0
 
 ### ✨ Features

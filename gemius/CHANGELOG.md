@@ -1,5 +1,11 @@
 # @theoplayer/gemius-connector-web
 
+## 0.4.0
+
+### ✨ Features
+
+- Added support for THEOplayer version 10.
+
 ## 0.3.0
 
 ### ✨ Features
