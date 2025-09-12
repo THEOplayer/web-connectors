@@ -20,7 +20,7 @@ export class ConvivaConnector {
     }
 
     /**
-     * Sets Conviva metadata on the Conviva video analytics. Use this method to set source 
+     * Sets Conviva metadata on the Conviva video analytics. Use this method to set source
      * specific metadata after setting a source to the player.
      * @param metadata object of key value pairs
      */

@@ -1,11 +1,12 @@
 import type { ChromelessPlayer, SourceDescription, VideoQuality } from 'theoplayer';
+import { ErrorEvent } from 'theoplayer';
 import {
     type AdAnalytics,
     Analytics,
     Constants,
+    ConvivaDeviceMetadata,
     type ConvivaMetadata,
-    type VideoAnalytics,
-    ConvivaDeviceMetadata
+    type VideoAnalytics
 } from '@convivainc/conviva-js-coresdk';
 import type { YospaceConnector } from '@theoplayer/yospace-connector-web';
 import { CONVIVA_CALLBACK_FUNCTIONS } from './ConvivaCallbackFunctions';
@@ -19,8 +20,7 @@ import {
 } from '../utils/Utils';
 import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
-import { VerizonAdReporter } from './ads/VerizonAdReporter';
-import { ErrorEvent } from 'theoplayer';
+import { UplynkAdReporter } from './ads/UplynkAdReporter';
 import { ErrorReportBuilder } from '../utils/ErrorReportBuilder';
 
 export interface ConvivaConfiguration {
@@ -41,7 +41,7 @@ export class ConvivaHandler {
 
     private adReporter: AdReporter | undefined;
     private yospaceAdReporter: YospaceAdReporter | undefined;
-    private verizonAdReporter: VerizonAdReporter | undefined;
+    private uplynkAdReporter: UplynkAdReporter | undefined;
 
     private currentSource: SourceDescription | undefined;
     private playbackRequested: boolean = false;
@@ -81,8 +81,8 @@ export class ConvivaHandler {
             () => this.customMetadata
         );
 
-        if (this.player.verizonMedia !== undefined) {
-            this.verizonAdReporter = new VerizonAdReporter(
+        if (this.player.uplynk !== undefined) {
+            this.uplynkAdReporter = new UplynkAdReporter(
                 this.player,
                 this.convivaVideoAnalytics,
                 this.convivaAdAnalytics
@@ -369,10 +369,10 @@ export class ConvivaHandler {
 
     private releaseSession(): void {
         this.adReporter?.destroy();
-        this.verizonAdReporter?.destroy();
+        this.uplynkAdReporter?.destroy();
         this.yospaceAdReporter?.destroy();
         this.adReporter = undefined;
-        this.verizonAdReporter = undefined;
+        this.uplynkAdReporter = undefined;
         this.yospaceAdReporter = undefined;
 
         this.convivaAdAnalytics?.release();

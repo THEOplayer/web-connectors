@@ -17,10 +17,10 @@ function loadAdScriptInternal(j, h, m, t, c, z) {
     j['JHMTApiProtocol'] = 'https:';
     z = z || 3;
 
-    var i = (z % 3) + 1,
+    let i = (z % 3) + 1,
         b = h.createElement('script');
 
-    (b.async = !0),
+    ((b.async = !0),
         b.readyState
             ? (b.onreadystatechange = function () {
                   ('loaded' !== b.readyState && 'complete' !== b.readyState) ||
@@ -36,7 +36,7 @@ function loadAdScriptInternal(j, h, m, t, c, z) {
             i = (z % 3) + 1;
             loadAdScriptInternal(j, h, m, t, c, i);
         }),
-        h.getElementsByTagName('head')[0].appendChild(b);
+        h.getElementsByTagName('head')[0].appendChild(b));
 
     try {
         var it = setInterval(function () {
