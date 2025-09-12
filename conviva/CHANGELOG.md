@@ -1,5 +1,15 @@
 # @theoplayer/conviva-connector-web
 
+## 3.0.0
+
+### 💥 Breaking Changes
+
+- Dropped support for THEOplayer version 8.11.0 and lower.
+
+### ✨ Features
+
+- Added support for THEOplayer version 10.
+
 ## 2.9.0
 
 ### ✨ Features
