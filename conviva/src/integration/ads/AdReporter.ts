@@ -46,7 +46,7 @@ export class AdReporter {
 
     private readonly onAdBreakEnd = () => {
         this.convivaVideoAnalytics.reportAdBreakEnded();
-        this.clearCurrentAd();
+        this.currentAd = undefined;
         this.currentAdBreak = undefined;
     };
 
@@ -91,7 +91,7 @@ export class AdReporter {
         if (currentAd.type !== 'linear') {
             return;
         }
-        this.clearCurrentAd();
+        this.currentAd = undefined;
         this.convivaAdAnalytics.reportAdEnded();
     };
 
@@ -170,10 +170,6 @@ export class AdReporter {
             dispatcher?.removeEventListener('adbuffering', this.onAdBuffering);
             dispatcher?.removeEventListener('aderror', this.onAdError);
         });
-    }
-
-    private clearCurrentAd(): void {
-        this.currentAd = undefined;
     }
 
     private startCurrentAd(): void {
