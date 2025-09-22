@@ -69,7 +69,7 @@ analytics.PlatformApi.setPlatformApi(analytics.PlatformApi.PlatformApis.Skeleton
 });
 ```
 
-For more information, please consult the [Skeleton PlatformAPI Implementation Guide](https://mymetrix-support.comscore.com/hc/en-us/article_attachments/19635711827867)
+For more information, please consult the [Skeleton PlatformAPI Implementation Guide](https://mymetrix-support.comscore.com/hc/en-us/article_attachments/31257678886299)
 
 Note that if the skeleton property is defined, the connector will always use `setPlatformAPI(ns_.analytics.PlatformAPIs.Skeleton)`.
 
