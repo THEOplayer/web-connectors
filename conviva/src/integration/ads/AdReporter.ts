@@ -21,6 +21,7 @@ export class AdReporter {
     private readonly contentInfo: () => ConvivaMetadata;
 
     private currentAdBreak: AdBreak | undefined;
+    private currentAd: Ad | undefined;
     private adBreakCounter: number = 1;
 
     constructor(
@@ -51,11 +52,13 @@ export class AdReporter {
 
     private readonly onAdBreakEnd = () => {
         this.convivaVideoAnalytics.reportAdBreakEnded();
+        this.currentAd = undefined;
         this.currentAdBreak = undefined;
     };
 
     private readonly onAdBegin = (event: any) => {
         const currentAd = event.ad as Ad;
+        this.currentAd = currentAd;
         if (currentAd.type !== 'linear') {
             return;
         }
@@ -79,13 +82,6 @@ export class AdReporter {
 
         this.convivaAdAnalytics.setAdInfo(adMetadata);
         this.convivaAdAnalytics.reportAdLoaded(adMetadata);
-        this.convivaAdAnalytics.reportAdStarted(adMetadata);
-        this.convivaAdAnalytics.reportAdMetric(
-            Constants.Playback.RESOLUTION,
-            this.player.videoWidth,
-            this.player.videoHeight
-        );
-        this.convivaAdAnalytics.reportAdMetric(Constants.Playback.BITRATE, (currentAd as GoogleImaAd).bitrate || 0);
 
         // Report playing state in case of SSAI or SGAI.
         if (
@@ -101,6 +97,7 @@ export class AdReporter {
         if (currentAd.type !== 'linear') {
             return;
         }
+        this.currentAd = undefined;
         this.convivaAdAnalytics.reportAdEnded();
     };
 
@@ -123,10 +120,20 @@ export class AdReporter {
     };
 
     private readonly onPlaying = () => {
-        if (!this.currentAdBreak) {
+        if (!this.currentAdBreak || !this.currentAd) {
             return;
         }
+
         this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
+    };
+
+    // NOTE (nils.thingvall@dolby.com, 27/08/2025): Using onLoadedData based off of Conviva comments
+    // stating ad start should happen when the first frame of the ad is displayed, regardless of playing status.
+    private readonly onLoadedData = () => {
+        if (!this.currentAdBreak || !this.currentAd) {
+            return;
+        }
+        this.startCurrentAd();
     };
 
     private readonly onPause = () => {
@@ -144,6 +151,7 @@ export class AdReporter {
     private addEventListeners(): void {
         this.player.addEventListener('playing', this.onPlaying);
         this.player.addEventListener('pause', this.onPause);
+        this.player.addEventListener('loadeddata', this.onLoadedData);
         [this.player.ads, this.player.ads?.convivaAdEventsExtension].forEach((dispatcher) => {
             dispatcher?.addEventListener('adbreakbegin', this.onAdBreakBegin);
             dispatcher?.addEventListener('adbreakend', this.onAdBreakEnd);
@@ -158,6 +166,7 @@ export class AdReporter {
     private removeEventListeners(): void {
         this.player.removeEventListener('playing', this.onPlaying);
         this.player.removeEventListener('pause', this.onPause);
+        this.player.removeEventListener('loadeddata', this.onLoadedData);
         [this.player.ads, this.player.ads?.convivaAdEventsExtension].forEach((dispatcher) => {
             dispatcher?.removeEventListener('adbreakbegin', this.onAdBreakBegin);
             dispatcher?.removeEventListener('adbreakend', this.onAdBreakEnd);
@@ -167,6 +176,23 @@ export class AdReporter {
             dispatcher?.removeEventListener('adbuffering', this.onAdBuffering);
             dispatcher?.removeEventListener('aderror', this.onAdError);
         });
+    }
+
+    private startCurrentAd(): void {
+        if (!this.currentAd) {
+            return;
+        }
+        const adMetadata = collectAdMetadata(this.currentAd);
+        this.convivaAdAnalytics.reportAdStarted(adMetadata);
+        this.convivaAdAnalytics.reportAdMetric(
+            Constants.Playback.RESOLUTION,
+            this.player.videoWidth,
+            this.player.videoHeight
+        );
+        this.convivaAdAnalytics.reportAdMetric(
+            Constants.Playback.BITRATE,
+            (this.currentAd as GoogleImaAd).bitrate || 0
+        );
     }
 
     reset(): void {
