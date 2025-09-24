@@ -23,6 +23,7 @@ import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
 import { UplynkAdReporter } from './ads/UplynkAdReporter';
 import { ErrorReportBuilder } from '../utils/ErrorReportBuilder';
+import { THEOliveReporter } from './theolive/THEOliveReporter';
 
 enum CustomConstants {
     ENCODING_TYPE = 'encoding_type'
@@ -45,6 +46,7 @@ export class ConvivaHandler {
     private convivaAdAnalytics: AdAnalytics | undefined;
 
     private adReporter: AdReporter | undefined;
+    private THEOliveReporter: THEOliveReporter | undefined;
     private yospaceAdReporter: YospaceAdReporter | undefined;
     private uplynkAdReporter: UplynkAdReporter | undefined;
 
@@ -102,6 +104,8 @@ export class ConvivaHandler {
                 this.yospaceConnector
             );
         }
+
+        this.THEOliveReporter = new THEOliveReporter(this.player, this.convivaVideoAnalytics);
     }
 
     connect(connector: YospaceConnector): void {
@@ -388,9 +392,11 @@ export class ConvivaHandler {
         this.adReporter?.destroy();
         this.uplynkAdReporter?.destroy();
         this.yospaceAdReporter?.destroy();
+        this.THEOliveReporter?.destroy();
         this.adReporter = undefined;
         this.uplynkAdReporter = undefined;
         this.yospaceAdReporter = undefined;
+        this.THEOliveReporter = undefined;
 
         this.convivaAdAnalytics?.release();
         this.convivaVideoAnalytics?.release();
