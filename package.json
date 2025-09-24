@@ -16,7 +16,7 @@
     "gemius"
   ],
   "scripts": {
-    "changeset:version": "changeset version && node .changeset/post-process.js",
+    "changeset:version": "changeset version && node .changeset/post-process.mjs",
     "build": "npm run build --workspaces",
     "clean": "npm run clean --workspaces",
     "test": "npm run test --workspaces && npm run test:docs",
