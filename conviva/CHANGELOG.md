@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 3.1.0
+
+### ✨ Features
+
+- Moved the ad start tracking to when the first frame has loaded.
+
 ## 3.0.0
 
 ### 💥 Breaking Changes
