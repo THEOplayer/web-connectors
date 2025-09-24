@@ -1,4 +1,4 @@
-import type { ChromelessPlayer, SourceDescription, VideoQuality } from 'theoplayer';
+import type { ChromelessPlayer, CurrentSourceChangeEvent, SourceDescription, VideoQuality } from 'theoplayer';
 import { ErrorEvent } from 'theoplayer';
 import {
     type AdAnalytics,
@@ -13,6 +13,7 @@ import { CONVIVA_CALLBACK_FUNCTIONS } from './ConvivaCallbackFunctions';
 import {
     calculateBufferLength,
     calculateConvivaOptions,
+    calculateEncodingType,
     calculateStreamType,
     collectDefaultDeviceMetadata,
     collectPlaybackConfigMetadata,
@@ -22,6 +23,10 @@ import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
 import { UplynkAdReporter } from './ads/UplynkAdReporter';
 import { ErrorReportBuilder } from '../utils/ErrorReportBuilder';
+
+enum CustomConstants {
+    ENCODING_TYPE = 'encoding_type'
+}
 
 export interface ConvivaConfiguration {
     customerKey: string;
@@ -158,6 +163,7 @@ export class ConvivaHandler {
         this.player.addEventListener('error', this.onError);
         this.player.addEventListener('segmentnotfound', this.onSegmentNotFound);
         this.player.addEventListener('sourcechange', this.onSourceChange);
+        this.player.addEventListener('currentsourcechange', this.onCurrentSourceChange);
         this.player.addEventListener('ended', this.onEnded);
         this.player.addEventListener('durationchange', this.onDurationChange);
         this.player.addEventListener('destroy', this.onDestroy);
@@ -178,6 +184,7 @@ export class ConvivaHandler {
         this.player.removeEventListener('error', this.onError);
         this.player.removeEventListener('segmentnotfound', this.onSegmentNotFound);
         this.player.removeEventListener('sourcechange', this.onSourceChange);
+        this.player.removeEventListener('currentsourcechange', this.onCurrentSourceChange);
         this.player.removeEventListener('ended', this.onEnded);
         this.player.removeEventListener('durationchange', this.onDurationChange);
         this.player.removeEventListener('destroy', this.onDestroy);
@@ -348,6 +355,16 @@ export class ConvivaHandler {
         this.maybeReportPlaybackEnded();
         this.currentSource = this.player.source;
         this.customMetadata = {};
+    };
+
+    private readonly onCurrentSourceChange = (event: CurrentSourceChangeEvent) => {
+        // Do not override `encoding_type` value if already set by the customer.
+        const configuredEncodingType =
+            this.customMetadata[CustomConstants.ENCODING_TYPE] ?? this.convivaMetadata[CustomConstants.ENCODING_TYPE];
+        const encodingType = configuredEncodingType ?? calculateEncodingType(event.currentSource);
+        if (encodingType) {
+            this.setContentInfo({ [CustomConstants.ENCODING_TYPE]: encodingType });
+        }
     };
 
     private readonly onEnded = () => {
