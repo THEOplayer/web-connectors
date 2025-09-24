@@ -20,6 +20,13 @@ import {
 } from 'theoplayer';
 import { ConvivaConfiguration } from '../integration/ConvivaHandler';
 
+enum EncodingType {
+    DASH = 'application/dash+xml',
+    HLS = 'application/vnd.apple.mpegurl',
+    HLSX = 'application/x-mpegurl',
+    HESP = 'application/vnd.theo.hesp+json'
+}
+
 export function collectDefaultDeviceMetadata(): ConvivaDeviceMetadata {
     // Most device metadata is auto-collected by Conviva
     let category: ConvivaKeys = Constants.DeviceCategory.WEB;
@@ -104,6 +111,19 @@ export function calculateStreamType(player: ChromelessPlayer) {
     if (!Number.isNaN(player.duration)) {
         return isFinite(player.duration) ? Constants.StreamType.VOD : Constants.StreamType.LIVE;
     }
+}
+
+export function calculateEncodingType(source: TypedSource | undefined): string | null {
+    switch (source?.type) {
+        case EncodingType.DASH:
+            return 'DASH';
+        case EncodingType.HLS:
+        case EncodingType.HLSX:
+            return 'HLS';
+        case EncodingType.HESP:
+            return 'HESP';
+    }
+    return null;
 }
 
 export function collectPlayerInfo(): ConvivaPlayerInfo {
