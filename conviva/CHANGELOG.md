@@ -1,5 +1,12 @@
 # @theoplayer/conviva-connector-web
 
+## 3.1.0
+
+### ✨ Features
+
+- Moved the ad start tracking to when the first frame has loaded.
+- Added reporting of `encoding_type` (either "DASH", "HLS" or "HESP"), as well as `Constant.defaultResource` and `intentToFallback` reason for THEOlive sources.
+
 ## 3.0.0
 
 ### 💥 Breaking Changes
