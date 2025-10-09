@@ -2,6 +2,6 @@
 import Conviva from '@convivainc/conviva-js-coresdk';
 
 // Re-create Conviva's namespace.
-export const Analytics = Conviva.Analytics;
-export const Constants = Conviva.Constants;
+const { Analytics, Constants } = Conviva;
+export { Analytics, Constants };
 export type * from '@convivainc/conviva-js-coresdk';
