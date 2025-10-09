@@ -1,5 +1,5 @@
 import type { ChromelessPlayer } from 'theoplayer';
-import type { ConvivaMetadata } from '@convivainc/conviva-js-coresdk';
+import type { ConvivaMetadata } from '../utils/ConvivaSdk';
 /** @ts-ignore Optional dependency, will become `any` if not installed. */
 import type { YospaceConnector } from '@theoplayer/yospace-connector-web';
 import { type ConvivaConfiguration, ConvivaHandler } from './ConvivaHandler';

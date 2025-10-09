@@ -18,6 +18,7 @@ export function getSharedBuildConfiguration({ fileName, globalName, banner, exte
                     indent: false,
                     banner,
                     sourcemap: true,
+                    interop: 'auto',
                     globals: { theoplayer: 'THEOplayer', ...(globals ?? {}) }
                 },
                 {
@@ -26,6 +27,7 @@ export function getSharedBuildConfiguration({ fileName, globalName, banner, exte
                     format: 'esm',
                     indent: false,
                     sourcemap: true,
+                    interop: 'auto',
                     banner
                 }
             ],

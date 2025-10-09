@@ -1,5 +1,5 @@
 import type { Ad, AdBreak, AdsEventMap, ChromelessPlayer, EventDispatcher, GoogleImaAd } from 'theoplayer';
-import { type AdAnalytics, Constants, type ConvivaMetadata, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { type AdAnalytics, Constants, type ConvivaMetadata, type VideoAnalytics } from '../../utils/ConvivaSdk';
 import {
     calculateAdType,
     calculateCurrentAdBreakInfo,

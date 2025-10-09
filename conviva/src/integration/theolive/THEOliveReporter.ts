@@ -1,5 +1,5 @@
 import type { ChromelessPlayer, EndpointLoadedEvent, IntentToFallbackEvent } from 'theoplayer';
-import { Constants, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { Constants, type VideoAnalytics } from '../../utils/ConvivaSdk';
 import { flattenErrorObject } from '../../utils/ErrorReportBuilder';
 
 export class THEOliveReporter {
