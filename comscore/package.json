@@ -21,7 +21,8 @@
     "watch": "npm run bundle -- --watch",
     "build": "npm run clean && npm run bundle",
     "serve": "http-server ./.. -o /comscore/test/pages/main_umd.html",
-    "test": "echo \"No tests yet\""
+    "test": "npm run test:typecheck",
+    "test:typecheck": "tsc --project . --noEmit"
   },
   "repository": {
     "type": "git",

@@ -30,7 +30,9 @@
     "build": "npm run clean && npm run bundle",
     "watch": "npm run bundle -- --watch",
     "serve": "http-server",
-    "test": "jest"
+    "test": "npm run test:typecheck && npm run test:unit",
+    "test:typecheck": "tsc --project . --noEmit",
+    "test:unit": "jest"
   },
   "author": "THEO Technologies NV",
   "license": "MIT",

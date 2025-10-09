@@ -21,7 +21,9 @@
     "watch": "npm run bundle -- --watch",
     "build": "npm run clean && npm run bundle",
     "serve": "http-server ./.. -o /nielsen/test/pages/main.html",
-    "test": "jest"
+    "test": "npm run test:typecheck && npm run test:unit",
+    "test:typecheck": "tsc --project . --noEmit",
+    "test:unit": "jest"
   },
   "author": "THEO Technologies NV",
   "repository": {
