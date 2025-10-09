@@ -1,6 +1,6 @@
-import { AdBreak, AdVert } from './AdBreak';
-import { TrackingError } from './TrackingError';
-import { YospaceSessionManager } from './YospaceSessionManager';
+import type { AdBreak, AdVert } from './AdBreak';
+import type { TrackingError } from './TrackingError';
+import type { YospaceSessionManager } from './YospaceSessionManager';
 
 // Keep this in sync with YospaceSessionErrorCode from conviva-connector-web
 export enum SessionErrorCode {

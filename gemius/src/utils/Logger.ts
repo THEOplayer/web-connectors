@@ -1,4 +1,4 @@
-import { Event } from 'theoplayer';
+import type { Event } from 'theoplayer';
 
 export class Logger {
     private readonly debug: boolean;

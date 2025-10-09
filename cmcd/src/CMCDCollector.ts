@@ -1,6 +1,6 @@
 import type { ChromelessPlayer, CurrentSourceChangeEvent, MediaTrack, MediaType, Quality, Request } from 'theoplayer';
-import { CMCDObjectType, CMCDPayload, CMCDReservedKey, CMCDStreamingFormat, CMCDStreamType } from './CMCDPayload';
-import { Configuration } from './Configuration';
+import { CMCDObjectType, type CMCDPayload, CMCDReservedKey, CMCDStreamingFormat, CMCDStreamType } from './CMCDPayload';
+import type { Configuration } from './Configuration';
 import { calculateBufferSize, getStreamingFormatFromTypedSource } from './PlayerUtils';
 import { uuid } from './RandomUtils';
 

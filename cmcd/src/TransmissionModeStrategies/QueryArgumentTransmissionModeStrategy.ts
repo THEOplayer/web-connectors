@@ -1,7 +1,7 @@
 import type { InterceptableRequest } from 'theoplayer';
-import { CMCDPayload } from '../CMCDPayload';
+import type { CMCDPayload } from '../CMCDPayload';
 import { transformToQueryParameters } from '../CMCDPayloadUtils';
-import { TransmissionModeStrategy } from './TransmissionModeStrategy';
+import type { TransmissionModeStrategy } from './TransmissionModeStrategy';
 
 /**
  * The transmission mode strategy to transmit CMCD data as query arguments as specified in section 2.2 of CTA-5004.

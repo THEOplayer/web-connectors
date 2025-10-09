@@ -2,6 +2,7 @@
   "name": "@theoplayer/adscript-connector-web",
   "version": "0.4.0",
   "description": "A connector implementing AdScript with THEOplayer",
+  "type": "module",
   "main": "dist/adscript-connector.umd.js",
   "module": "dist/adscript-connector.esm.js",
   "types": "dist/types/index.d.ts",
@@ -21,7 +22,8 @@
     "watch": "npm run bundle -- --watch",
     "build": "npm run clean && npm run bundle",
     "serve": "http-server ./.. -o /adscript/test/pages/main_esm.html",
-    "test": "echo \"No tests yet\""
+    "test": "npm run test:typecheck",
+    "test:typecheck": "tsc --project . --noEmit"
   },
   "repository": {
     "type": "git",

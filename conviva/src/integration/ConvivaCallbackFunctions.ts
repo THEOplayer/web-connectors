@@ -1,4 +1,4 @@
-import { Constants, ConvivaUtils } from '@convivainc/conviva-js-coresdk';
+import { Constants, type ConvivaUtils } from '@convivainc/conviva-js-coresdk';
 
 export const CONVIVA_CALLBACK_FUNCTIONS: ConvivaUtils = {
     [Constants.CallbackFunctions.CONSOLE_LOG](message: string, logLevel: number) {

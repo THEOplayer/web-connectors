@@ -2,6 +2,7 @@
   "name": "@theoplayer/cmcd-connector-web",
   "version": "1.4.0",
   "description": "A connector implementing CMCD support for web.",
+  "type": "module",
   "main": "dist/cmcd-connector.umd.js",
   "repository": {
     "type": "git",
@@ -30,7 +31,9 @@
     "watch": "npm run bundle -- --watch",
     "build": "npm run clean && npm run bundle",
     "serve": "http-server",
-    "test": "jest"
+    "test": "npm run test:typecheck && npm run test:unit",
+    "test:typecheck": "tsc --project . --noEmit",
+    "test:unit": "vitest --run"
   },
   "author": "THEO Technologies NV",
   "license": "MIT",

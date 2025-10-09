@@ -7,14 +7,19 @@ import type {
     ServerSideAdIntegrationController,
     UniversalAdId
 } from 'theoplayer';
-import { AnalyticEventObserver, SessionErrorCode } from '../yospace/AnalyticEventObserver';
-import { AdBreak as YospaceAdBreak, Advert as YospaceAdvert, ResourceType, VASTProperty } from '../yospace/AdBreak';
-import { YospaceUiHandler } from './YospaceUIHandler';
-import { YospaceManager } from './YospaceManager';
+import { type AnalyticEventObserver, SessionErrorCode } from '../yospace/AnalyticEventObserver';
+import {
+    type AdBreak as YospaceAdBreak,
+    type Advert as YospaceAdvert,
+    ResourceType,
+    type VASTProperty
+} from '../yospace/AdBreak';
+import type { YospaceUiHandler } from './YospaceUIHandler';
+import type { YospaceManager } from './YospaceManager';
 import { arrayRemove } from '../utils/DefaultEventDispatcher';
-import { TrackingError } from '../yospace/TrackingError';
-import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
-import { YospaceWindow } from '../yospace/YospaceWindow';
+import type { TrackingError } from '../yospace/TrackingError';
+import type { YospaceSessionManager } from '../yospace/YospaceSessionManager';
+import type { YospaceWindow } from '../yospace/YospaceWindow';
 
 export class YospaceAdHandler {
     private readonly yospaceManager: YospaceManager;

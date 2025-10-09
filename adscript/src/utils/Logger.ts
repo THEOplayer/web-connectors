@@ -1,6 +1,6 @@
 import type { Event } from 'theoplayer';
-import { PlayerState } from '../adscript/AdScript';
-import { EmbeddedContentMetadata, MainVideoContentMetadata } from '../integration/AdScriptConfiguration';
+import type { PlayerState } from '../adscript/AdScript';
+import type { EmbeddedContentMetadata, MainVideoContentMetadata } from '../integration/AdScriptConfiguration';
 
 export class Logger {
     private readonly debug: boolean;

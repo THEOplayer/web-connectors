@@ -1,7 +1,7 @@
 import type { InterceptableRequest } from 'theoplayer';
-import { CMCDHeaderName, CMCDPayload } from '../CMCDPayload';
+import { CMCDHeaderName, type CMCDPayload } from '../CMCDPayload';
 import { extractKeysFor, transformToQueryParameters } from '../CMCDPayloadUtils';
-import { TransmissionModeStrategy } from './TransmissionModeStrategy';
+import type { TransmissionModeStrategy } from './TransmissionModeStrategy';
 
 /**
  * The transmission mode strategy to transmit CMCD data as HTTP Headers as specified in section 2.1 of CTA-5004.

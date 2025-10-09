@@ -1,4 +1,5 @@
-import { CMCDObjectType, CMCDStreamingFormat, CMCDStreamType } from '../../src';
+import { describe, expect, it } from 'vitest';
+import { CMCDObjectType, CMCDStreamingFormat, CMCDStreamType } from '@theoplayer/cmcd-connector-web';
 import { transformToQueryParameters } from '../../src/CMCDPayloadUtils';
 
 describe('transformToQueryParameters', () => {

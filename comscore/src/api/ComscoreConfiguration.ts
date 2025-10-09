@@ -1,4 +1,4 @@
-import { Ad } from "theoplayer";
+import type { Ad } from "theoplayer";
 
 export enum ComscoreUserConsent {
     denied = "0",

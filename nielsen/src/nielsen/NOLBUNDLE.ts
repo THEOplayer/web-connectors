@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { NielsenCountry, NielsenOptions } from './Types';
+import { NielsenCountry, type NielsenOptions } from './Types';
 
 export function loadNielsenLibrary(
     appId: string,
@@ -20,7 +20,7 @@ export function loadNielsenLibrary(
                     //@ts-ignore
                     var s = e.document,
                         a = s.createElement('script');
-                    (a.async = 1),
+                    ((a.async = 1),
                         (a.src =
                             ('http:' === e.location.protocol ? 'http:' : 'https:') +
                             '//cdn-gl.imrworldwide.com/conf/' +
@@ -28,7 +28,7 @@ export function loadNielsenLibrary(
                             '.js#name=' +
                             r +
                             '&ns=' +
-                            n);
+                            n));
                     var i = s.getElementsByTagName('script')[0];
                     return (
                         i.parentNode.insertBefore(a, i),

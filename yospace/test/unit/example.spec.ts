@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 describe('My connector code', () => {
     it('should be decently tested', () => {
         const a: number = 3;

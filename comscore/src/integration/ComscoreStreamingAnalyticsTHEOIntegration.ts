@@ -1,8 +1,9 @@
-import {
+import type {
     AdBreakEvent,
     AdEvent,
     ChromelessPlayer,
     EndedEvent,
+    ErrorEvent,
     LoadedMetadataEvent,
     PauseEvent,
     PlayEvent,
@@ -11,12 +12,11 @@ import {
     SeekedEvent,
     SeekingEvent,
     SourceChangeEvent,
-    WaitingEvent,
-    ErrorEvent,
-    version
+    WaitingEvent
 } from 'theoplayer';
-import { ComscoreConfiguration } from '../api/ComscoreConfiguration';
-import { ComscoreMetadata } from '../api/ComscoreMetadata';
+import { version } from 'theoplayer';
+import type { ComscoreConfiguration } from '../api/ComscoreConfiguration';
+import type { ComscoreMetadata } from '../api/ComscoreMetadata';
 import { buildContentMetadata } from './ComscoreContentMetadata';
 import { toMilliSeconds } from './Utils';
 

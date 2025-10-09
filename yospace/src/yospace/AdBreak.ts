@@ -1,4 +1,4 @@
-import { YospaceSessionManager } from './YospaceSessionManager';
+import type { YospaceSessionManager } from './YospaceSessionManager';
 
 export enum ResourceType {
     STATIC,

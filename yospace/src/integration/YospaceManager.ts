@@ -10,19 +10,19 @@ import {
     PlaybackMode,
     ResultCode,
     SessionState,
-    YospaceSession,
-    YospaceSessionDVRLive,
-    YospaceSessionManager
+    type YospaceSession,
+    type YospaceSessionDVRLive,
+    type YospaceSessionManager
 } from '../yospace/YospaceSessionManager';
-import { YospaceWindow } from '../yospace/YospaceWindow';
+import type { YospaceWindow } from '../yospace/YospaceWindow';
 import { YospaceAdHandler } from './YospaceAdHandler';
 import { YospaceUiHandler } from './YospaceUIHandler';
 import { YospaceID3MetadataHandler } from './YospaceID3MetadataHandler';
 import { YospaceEMSGMetadataHandler } from './YospaceEMSGMetadataHandler';
-import { SessionProperties } from '../yospace/SessionProperties';
-import { AnalyticEventObserver } from '../yospace/AnalyticEventObserver';
+import type { SessionProperties } from '../yospace/SessionProperties';
+import type { AnalyticEventObserver } from '../yospace/AnalyticEventObserver';
 import { DefaultEventDispatcher } from '../utils/DefaultEventDispatcher';
-import { YospaceEventMap } from './YospaceConnector';
+import type { YospaceEventMap } from './YospaceConnector';
 import { BaseEvent } from '../utils/event/Event';
 import { nextEvent } from '../utils/EventUtils';
 

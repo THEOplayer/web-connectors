@@ -1,7 +1,7 @@
 import { PlayerEvent } from './PlayerEvent';
-import { TimedMetadata } from './TimedMetadata';
-import { AnalyticEventObserver } from './AnalyticEventObserver';
-import { AdVert, AdBreak } from './AdBreak';
+import type { TimedMetadata } from './TimedMetadata';
+import type { AnalyticEventObserver } from './AnalyticEventObserver';
+import type { AdVert, AdBreak } from './AdBreak';
 
 export enum ResultCode {
     CONNECTION_ERROR = -1,
@@ -71,4 +71,4 @@ export interface YospaceSessionDVRLive extends YospaceSession {
     setAdBreaksInactivePriorTo(playhead: number): void;
 }
 
-export { YospaceSession as YospaceSessionManager };
+export type { YospaceSession as YospaceSessionManager };

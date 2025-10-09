@@ -1,7 +1,8 @@
-const { workspaces } = require('./package.json');
+import { readFileSync } from 'node:fs';
+const { workspaces } = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 /** @type {import('typedoc').TypeDocOptions} */
-module.exports = {
+export default {
     extends: ['./typedoc.base.json'],
     name: 'THEOplayer Web SDK Connectors',
     entryPoints: workspaces.slice().sort(),

@@ -1,8 +1,7 @@
 import type {
-    Ad,
     AdBreakEvent,
-    AdEvent,
     AddTrackEvent,
+    AdEvent,
     ChromelessPlayer,
     DurationChangeEvent,
     TextTrack,
@@ -12,13 +11,13 @@ import type {
 } from 'theoplayer';
 import { loadNielsenLibrary } from '../nielsen/NOLBUNDLE';
 import {
-    AdMetadata,
-    DCRContentMetadata,
-    DTVRContentMetadata,
-    NielsenConfiguration,
+    type AdMetadata,
+    type DCRContentMetadata,
+    type DTVRContentMetadata,
+    type NielsenConfiguration,
     NielsenCountry,
-    NielsenDCRContentMetadata,
-    NielsenOptions
+    type NielsenDCRContentMetadata,
+    type NielsenOptions
 } from '../nielsen/Types';
 import { buildDCRAdMetadata, buildDCRContentMetadata, getAdType } from '../utils/Util';
 

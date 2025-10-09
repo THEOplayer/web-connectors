@@ -1,4 +1,4 @@
-import { Event } from './Event';
+import type { Event } from './Event';
 
 /**
  * The keys of T which are strings.

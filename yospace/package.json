@@ -2,6 +2,7 @@
   "name": "@theoplayer/yospace-connector-web",
   "version": "2.7.0",
   "description": "A connector implementing Yospace for web.",
+  "type": "module",
   "main": "dist/yospace-connector.umd.js",
   "repository": {
     "type": "git",
@@ -30,7 +31,9 @@
     "build": "npm run clean && npm run bundle",
     "watch": "npm run bundle -- --watch",
     "serve": "http-server",
-    "test": "jest"
+    "test": "npm run test:typecheck && npm run test:unit",
+    "test:typecheck": "tsc --project . --noEmit",
+    "test:unit": "vitest --run"
   },
   "author": "THEO Technologies NV",
   "license": "MIT",

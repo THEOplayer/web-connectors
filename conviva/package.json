@@ -2,6 +2,7 @@
   "name": "@theoplayer/conviva-connector-web",
   "version": "3.1.0",
   "description": "A connector implementing Conviva for web.",
+  "type": "module",
   "main": "dist/conviva-connector.umd.js",
   "homepage": "https://github.com/THEOplayer/web-connectors/tree/main/conviva#readme",
   "module": "dist/conviva-connector.esm.js",
@@ -22,7 +23,9 @@
     "watch": "npm run bundle -- --watch",
     "build": "npm run clean && npm run bundle",
     "serve": "http-server ./.. -o /conviva/test/pages/",
-    "test": "jest"
+    "test": "npm run test:typecheck && npm run test:unit",
+    "test:typecheck": "tsc --project . --noEmit",
+    "test:unit": "vitest --run"
   },
   "author": "THEO Technologies NV",
   "repository": {

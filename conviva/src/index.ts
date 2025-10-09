@@ -1,2 +1,2 @@
 export { ConvivaConnector } from './integration/ConvivaConnector';
-export { ConvivaConfiguration } from './integration/ConvivaHandler';
+export type { ConvivaConfiguration } from './integration/ConvivaHandler';
