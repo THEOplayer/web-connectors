@@ -7,13 +7,13 @@
   "author": "THEO Technologies NV",
   "license": "MIT",
   "workspaces": [
-    "yospace",
-    "conviva",
-    "nielsen",
+    "adscript",
     "cmcd",
     "comscore",
-    "adscript",
-    "gemius"
+    "conviva",
+    "gemius",
+    "nielsen",
+    "yospace"
   ],
   "scripts": {
     "changeset:version": "changeset version && node .changeset/post-process.mjs",
