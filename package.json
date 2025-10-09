@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "private": true,
+  "type": "module",
   "keywords": [],
   "author": "THEO Technologies NV",
   "license": "MIT",

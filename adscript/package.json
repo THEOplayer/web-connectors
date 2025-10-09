@@ -2,6 +2,7 @@
   "name": "@theoplayer/adscript-connector-web",
   "version": "0.4.0",
   "description": "A connector implementing AdScript with THEOplayer",
+  "type": "module",
   "main": "dist/adscript-connector.umd.js",
   "module": "dist/adscript-connector.esm.js",
   "types": "dist/types/index.d.ts",

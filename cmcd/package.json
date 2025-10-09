@@ -2,6 +2,7 @@
   "name": "@theoplayer/cmcd-connector-web",
   "version": "1.4.0",
   "description": "A connector implementing CMCD support for web.",
+  "type": "module",
   "main": "dist/cmcd-connector.umd.js",
   "repository": {
     "type": "git",

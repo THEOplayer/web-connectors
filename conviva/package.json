@@ -2,6 +2,7 @@
   "name": "@theoplayer/conviva-connector-web",
   "version": "3.1.0",
   "description": "A connector implementing Conviva for web.",
+  "type": "module",
   "main": "dist/conviva-connector.umd.js",
   "homepage": "https://github.com/THEOplayer/web-connectors/tree/main/conviva#readme",
   "module": "dist/conviva-connector.esm.js",

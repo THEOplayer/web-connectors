@@ -2,6 +2,7 @@
   "name": "@theoplayer/comscore-connector-web",
   "version": "1.4.0",
   "description": "A connector implementing Comscore with THEOplayer",
+  "type": "module",
   "main": "dist/comscore-connector.umd.js",
   "module": "dist/comscore-connector.esm.js",
   "types": "dist/types/index.d.ts",
