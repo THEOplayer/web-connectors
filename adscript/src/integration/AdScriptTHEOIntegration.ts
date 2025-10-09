@@ -13,8 +13,8 @@ import type {
     TimeUpdateEvent,
     VolumeChangeEvent
 } from 'theoplayer';
-import { AdScriptConfiguration, EmbeddedContentMetadata, MainVideoContentMetadata } from './AdScriptConfiguration';
-import { EmbeddedContentType } from './../adscript/AdScript';
+import type { AdScriptConfiguration, EmbeddedContentMetadata, MainVideoContentMetadata } from './AdScriptConfiguration';
+import type { EmbeddedContentType } from './../adscript/AdScript';
 import { Logger } from '../utils/Logger';
 
 interface LogPoint {

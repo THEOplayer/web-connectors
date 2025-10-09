@@ -1,4 +1,4 @@
-import { Creative, LinearCreative, NonLinearCreative } from '../yospace/AdBreak';
+import type { Creative, LinearCreative, NonLinearCreative } from '../yospace/AdBreak';
 
 export function stretchToParent(element: HTMLElement): void {
     const { style } = element;

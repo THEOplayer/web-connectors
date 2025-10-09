@@ -1,6 +1,6 @@
-import { SessionPropertiesConstructor } from './SessionProperties';
-import { TimedMetadata } from './TimedMetadata';
-import { YospaceSessionManagerCreator } from './YospaceSessionManager';
+import type { SessionPropertiesConstructor } from './SessionProperties';
+import type { TimedMetadata } from './TimedMetadata';
+import type { YospaceSessionManagerCreator } from './YospaceSessionManager';
 import { BreakType, ResourceType, ViewableEvent } from './AdBreak';
 
 export interface YospaceAdManagement {

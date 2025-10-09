@@ -1,15 +1,15 @@
-import type { Ad, AdBreak, GoogleImaAd } from 'theoplayer';
+import type { Ad, GoogleImaAd } from 'theoplayer';
 import {
-    AdMetadata,
-    AdType,
-    DCRAdMetadataCZ,
-    DCRContentMetadata,
-    DCRContentMetadataCZ,
-    DCRContentMetadataUS,
+    type AdMetadata,
+    type AdType,
+    type DCRAdMetadataCZ,
+    type DCRContentMetadata,
+    type DCRContentMetadataCZ,
+    type DCRContentMetadataUS,
     NielsenCountry,
-    NielsenDCRContentMetadata,
-    NielsenDCRContentMetadataCZ,
-    NielsenDCRContentMetadataUS
+    type NielsenDCRContentMetadata,
+    type NielsenDCRContentMetadataCZ,
+    type NielsenDCRContentMetadataUS
 } from '../nielsen/Types';
 
 export function getAdType(offset: number, duration: number): AdType {

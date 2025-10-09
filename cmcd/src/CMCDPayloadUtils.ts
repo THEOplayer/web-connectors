@@ -1,4 +1,4 @@
-import { CMCDHeaderName, CMCDPayload, CMCDReservedKey } from './CMCDPayload';
+import { CMCDHeaderName, type CMCDPayload, CMCDReservedKey } from './CMCDPayload';
 
 /**
  * Transforms the provided payload into a query parameter string. Strings will be escaped and placed between quotes, numbers

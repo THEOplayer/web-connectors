@@ -1,11 +1,11 @@
 export * from './integration/YospaceConnector';
-export * from './integration/YospaceConfiguration';
-export { AnalyticEventObserver, SessionErrorCode } from './yospace/AnalyticEventObserver';
+export type * from './integration/YospaceConfiguration';
+export { type AnalyticEventObserver, SessionErrorCode } from './yospace/AnalyticEventObserver';
 export * from './yospace/AdBreak';
-export { SessionProperties } from './yospace/SessionProperties';
+export type { SessionProperties } from './yospace/SessionProperties';
 export * from './yospace/PlayerEvent';
-export * from './yospace/TimedMetadata';
+export type * from './yospace/TimedMetadata';
 export * from './yospace/TrackingError';
 export * from './yospace/YospaceSessionManager';
-export { Event } from './utils/event/Event';
-export * from './utils/event/EventDispatcher';
+export type { Event } from './utils/event/Event';
+export type * from './utils/event/EventDispatcher';

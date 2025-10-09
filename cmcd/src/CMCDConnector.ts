@@ -1,11 +1,11 @@
 import type { ChromelessPlayer, InterceptableRequest, Request } from 'theoplayer';
 import { CMCDCollector } from './CMCDCollector';
-import { CMCDPayload } from './CMCDPayload';
-import { Configuration, TransmissionMode } from './Configuration';
+import type { CMCDPayload } from './CMCDPayload';
+import { type Configuration, TransmissionMode } from './Configuration';
 import { uuid } from './RandomUtils';
 import {
     createTransmissionModeStrategyFor,
-    TransmissionModeStrategy
+    type TransmissionModeStrategy
 } from './TransmissionModeStrategies/TransmissionModeStrategy';
 
 /**

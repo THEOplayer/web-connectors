@@ -1,9 +1,9 @@
 import type { ChromelessPlayer, SourceDescription } from 'theoplayer';
 import { YospaceManager } from './YospaceManager';
-import { SessionProperties } from '../yospace/SessionProperties';
-import { AnalyticEventObserver } from '../yospace/AnalyticEventObserver';
-import { EventDispatcher, EventListener, StringKeyOf } from '../utils/event/EventDispatcher';
-import { Event } from '../utils/event/Event';
+import type { SessionProperties } from '../yospace/SessionProperties';
+import type { AnalyticEventObserver } from '../yospace/AnalyticEventObserver';
+import type { EventDispatcher, EventListener, StringKeyOf } from '../utils/event/EventDispatcher';
+import type { Event } from '../utils/event/Event';
 
 export interface YospaceEventMap {
     /**

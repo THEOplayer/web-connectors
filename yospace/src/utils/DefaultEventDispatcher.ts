@@ -1,5 +1,5 @@
-import { Event } from './event/Event';
-import { EventDispatcher, EventMap, StringKeyOf } from './event/EventDispatcher';
+import type { Event } from './event/Event';
+import type { EventDispatcher, EventMap, StringKeyOf } from './event/EventDispatcher';
 
 export type EventListener<TEvent extends Event = Event> = (event: TEvent) => void;
 export type EventListenerList<TEvent extends Event> = Array<EventListener<TEvent>> | EventListener<TEvent> | undefined;

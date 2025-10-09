@@ -1,10 +1,10 @@
-import {
+import type {
     Ad,
     AdBreak,
     AdBreakEvent,
+    AddTrackEvent,
     AdEvent,
     AdSkipEvent,
-    AddTrackEvent,
     ChromelessPlayer,
     EndedEvent,
     GoogleImaAd,
@@ -21,8 +21,8 @@ import {
     WaitingEvent
 } from 'theoplayer';
 import type { GemiusPlayer } from '../gemius/Gemius';
-import { GemiusConfiguration } from './GemiusConfiguration';
-import { AdType, GemiusProgramParameters } from './GemiusParameters';
+import type { GemiusConfiguration } from './GemiusConfiguration';
+import { AdType, type GemiusProgramParameters } from './GemiusParameters';
 import { Logger } from '../utils/Logger';
 import { BasicEvent } from './GemiusEvents';
 

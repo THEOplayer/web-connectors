@@ -1,11 +1,11 @@
 export { NielsenConnector } from './integration/NielsenConnector';
 export {
-    NielsenOptions,
-    NielsenDCRContentMetadata,
-    NielsenDCRContentMetadataCZ,
-    NielsenDCRContentMetadataUS,
-    NielsenConfiguration,
-    NielsenCountry,
+    type NielsenOptions,
+    type NielsenDCRContentMetadata,
+    type NielsenDCRContentMetadataCZ,
+    type NielsenDCRContentMetadataUS,
+    type NielsenConfiguration,
+    type NielsenCountry,
     AdLoadType,
     HasAds
 } from './nielsen/Types';

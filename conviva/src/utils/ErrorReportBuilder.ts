@@ -1,10 +1,10 @@
 import {
-    ChromelessPlayer,
+    type ChromelessPlayer,
     ErrorCategory,
     ErrorCode,
-    HTTPHeaders,
-    InterceptableResponse,
-    ResponseInterceptor,
+    type HTTPHeaders,
+    type InterceptableResponse,
+    type ResponseInterceptor,
     type THEOplayerError
 } from 'theoplayer';
 import { bufferedToString } from './Utils';

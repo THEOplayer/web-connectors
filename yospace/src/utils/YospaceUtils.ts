@@ -4,7 +4,7 @@ import type {
     YospaceSSAIIntegrationID
 } from '../integration/YospaceConfiguration';
 import { implementsInterface, isTypedSource, toSources } from './SourceUtils';
-import { YospaceWindow } from '../yospace/YospaceWindow';
+import type { YospaceWindow } from '../yospace/YospaceWindow';
 
 export const YOSPACE_SSAI_INTEGRATION_ID: YospaceSSAIIntegrationID = 'yospace';
 

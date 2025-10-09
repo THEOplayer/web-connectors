@@ -1,10 +1,15 @@
-import type { ChromelessPlayer, CurrentSourceChangeEvent, SourceDescription, VideoQuality } from 'theoplayer';
-import { ErrorEvent } from 'theoplayer';
+import type {
+    ChromelessPlayer,
+    CurrentSourceChangeEvent,
+    ErrorEvent,
+    SourceDescription,
+    VideoQuality
+} from 'theoplayer';
 import {
     type AdAnalytics,
     Analytics,
     Constants,
-    ConvivaDeviceMetadata,
+    type ConvivaDeviceMetadata,
     type ConvivaMetadata,
     type VideoAnalytics
 } from '@convivainc/conviva-js-coresdk';

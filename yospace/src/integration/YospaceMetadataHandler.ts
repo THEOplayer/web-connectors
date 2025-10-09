@@ -1,6 +1,6 @@
 import type { AddTrackEvent, TextTrack, TextTrackCue, TextTrackCueChangeEvent, TextTracksList } from 'theoplayer';
-import { YospaceWindow } from '../yospace/YospaceWindow';
-import { YospaceSessionManager } from '../yospace/YospaceSessionManager';
+import type { YospaceWindow } from '../yospace/YospaceWindow';
+import type { YospaceSessionManager } from '../yospace/YospaceSessionManager';
 
 export class YospaceReport {
     YMID: string | undefined = undefined;

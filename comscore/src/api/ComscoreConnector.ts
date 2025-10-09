@@ -1,5 +1,5 @@
 import { ChromelessPlayer } from 'theoplayer';
-import { ComscoreConfiguration, ComscorePlatformAPIs, ComscoreUserConsent } from './ComscoreConfiguration';
+import { type ComscoreConfiguration, ComscorePlatformAPIs, ComscoreUserConsent } from './ComscoreConfiguration';
 import type { ComscoreMetadata } from './ComscoreMetadata';
 import { ComscoreStreamingAnalyticsTHEOIntegration } from '../integration/ComscoreStreamingAnalyticsTHEOIntegration';
 

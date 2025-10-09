@@ -1,7 +1,7 @@
 import { ChromelessPlayer } from 'theoplayer';
 import { GemiusTHEOIntegration } from './GemiusTHEOIntegration';
-import { GemiusConfiguration } from './GemiusConfiguration';
-import { GemiusProgramParameters } from './GemiusParameters';
+import type { GemiusConfiguration } from './GemiusConfiguration';
+import type { GemiusProgramParameters } from './GemiusParameters';
 
 export class GemiusConnector {
     private gemiusIntegration: GemiusTHEOIntegration;

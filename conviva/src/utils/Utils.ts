@@ -8,17 +8,9 @@ import {
     type ConvivaPlayerInfo
 } from '@convivainc/conviva-js-coresdk';
 import type { AdVert } from '@theoplayer/yospace-connector-web';
-import {
-    type Ad,
-    type AdBreak,
-    type ChromelessPlayer,
-    type GoogleImaAd,
-    TypedSource,
-    type UplynkAd,
-    type UplynkAdBreak,
-    version
-} from 'theoplayer';
-import { ConvivaConfiguration } from '../integration/ConvivaHandler';
+import type { Ad, AdBreak, ChromelessPlayer, GoogleImaAd, TypedSource, UplynkAd, UplynkAdBreak } from 'theoplayer';
+import { version } from 'theoplayer';
+import type { ConvivaConfiguration } from '../integration/ConvivaHandler';
 
 enum EncodingType {
     DASH = 'application/dash+xml',
