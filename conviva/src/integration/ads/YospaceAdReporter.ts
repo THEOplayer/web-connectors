@@ -1,11 +1,11 @@
 import type { ChromelessPlayer, VideoQuality } from 'theoplayer';
 import { type AdAnalytics, Constants, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
-import {
-    type AdBreak,
-    type AdVert,
-    type AnalyticEventObserver,
+import type {
+    AdBreak,
+    AdVert,
+    AnalyticEventObserver,
     SessionErrorCode,
-    type YospaceConnector
+    YospaceConnector
 } from '@theoplayer/yospace-connector-web';
 import { collectPlayerInfo, collectYospaceAdMetadata } from '../../utils/Utils';
 

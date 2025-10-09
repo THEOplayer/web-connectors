@@ -1,4 +1,4 @@
-import { ChromelessPlayer } from 'theoplayer';
+import type { ChromelessPlayer } from 'theoplayer';
 import { GemiusTHEOIntegration } from './GemiusTHEOIntegration';
 import type { GemiusConfiguration } from './GemiusConfiguration';
 import type { GemiusProgramParameters } from './GemiusParameters';

@@ -14,8 +14,8 @@ import {
     ResourceType,
     type VASTProperty
 } from '../yospace/AdBreak';
-import { YospaceUiHandler } from './YospaceUIHandler';
-import { YospaceManager } from './YospaceManager';
+import type { YospaceUiHandler } from './YospaceUIHandler';
+import type { YospaceManager } from './YospaceManager';
 import { arrayRemove } from '../utils/DefaultEventDispatcher';
 import type { TrackingError } from '../yospace/TrackingError';
 import type { YospaceSessionManager } from '../yospace/YospaceSessionManager';
