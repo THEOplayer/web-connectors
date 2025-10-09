@@ -33,7 +33,7 @@
     "serve": "http-server",
     "test": "npm run test:typecheck && npm run test:unit",
     "test:typecheck": "tsc --project . --noEmit",
-    "test:unit": "jest"
+    "test:unit": "vitest --run"
   },
   "author": "THEO Technologies NV",
   "license": "MIT",
