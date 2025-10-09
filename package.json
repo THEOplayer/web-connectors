@@ -11,10 +11,10 @@
     "adscript",
     "cmcd",
     "comscore",
-    "conviva",
     "gemius",
     "nielsen",
-    "yospace"
+    "yospace",
+    "conviva"
   ],
   "scripts": {
     "changeset:version": "changeset version && node .changeset/post-process.mjs",
