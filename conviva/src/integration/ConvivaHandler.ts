@@ -12,7 +12,7 @@ import {
     type ConvivaDeviceMetadata,
     type ConvivaMetadata,
     type VideoAnalytics
-} from '@convivainc/conviva-js-coresdk';
+} from '../utils/ConvivaSdk';
 import type { YospaceConnector } from '@theoplayer/yospace-connector-web';
 import { CONVIVA_CALLBACK_FUNCTIONS } from './ConvivaCallbackFunctions';
 import {

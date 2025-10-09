@@ -1,5 +1,5 @@
 import type { ChromelessPlayer, VideoQuality } from 'theoplayer';
-import { type AdAnalytics, Constants, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { type AdAnalytics, Constants, type VideoAnalytics } from '../../utils/ConvivaSdk';
 import type {
     AdBreak,
     AdVert,

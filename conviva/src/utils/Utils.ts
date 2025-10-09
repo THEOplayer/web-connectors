@@ -6,7 +6,7 @@ import {
     type ConvivaMetadata,
     type ConvivaOptions,
     type ConvivaPlayerInfo
-} from '@convivainc/conviva-js-coresdk';
+} from './ConvivaSdk';
 import type { AdVert } from '@theoplayer/yospace-connector-web';
 import type { Ad, AdBreak, ChromelessPlayer, GoogleImaAd, TypedSource, UplynkAd, UplynkAdBreak } from 'theoplayer';
 import { version } from 'theoplayer';

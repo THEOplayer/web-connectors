@@ -7,7 +7,7 @@ import type {
     UplynkRemoveAdBreakEvent,
     VideoQuality
 } from 'theoplayer';
-import { type AdAnalytics, Constants, type VideoAnalytics } from '@convivainc/conviva-js-coresdk';
+import { type AdAnalytics, Constants, type VideoAnalytics } from '../../utils/ConvivaSdk';
 import { calculateUplynkAdBreakInfo, collectPlayerInfo, collectUplynkAdMetadata } from '../../utils/Utils';
 
 export class UplynkAdReporter {
