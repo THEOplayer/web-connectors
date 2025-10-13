@@ -152,9 +152,18 @@ export class ConvivaHandler {
     }
 
     stopAndStartNewSession(metadata: ConvivaMetadata): void {
+        // End current session if one had already started
         this.maybeReportPlaybackEnded();
-        this.maybeReportPlaybackRequested();
+
+        // Start new session
+        // If play-out was paused, the session will start once play-out resumes.
+        if (!this.player.paused) {
+            this.maybeReportPlaybackRequested();
+        }
+        // Pass new metadata
         this.setContentInfo(metadata);
+
+        // Notify current playback state
         if (this.player.paused) {
             this.onPause();
         } else {
