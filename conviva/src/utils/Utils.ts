@@ -168,7 +168,7 @@ export function collectYospaceAdMetadata(player: ChromelessPlayer, ad: AdVert): 
 
 export function collectUplynkAdMetadata(ad: UplynkAd): ConvivaMetadata {
     const adMetadata: ConvivaMetadata = {
-        [Constants.DURATION]: ad.duration as any
+        [Constants.DURATION]: ad.duration
     };
     const assetName = ad.creative;
     if (assetName) {
@@ -204,7 +204,7 @@ export function updateAdMetadataForGoogleIma(ad: GoogleImaAd, metadata: ConvivaM
 
 export function collectAdMetadata(ad: Ad): ConvivaMetadata {
     const adMetadata: ConvivaMetadata = {
-        [Constants.DURATION]: ad.duration as any
+        [Constants.DURATION]: ad.duration!
     };
     const streamUrl = ad.resourceURI;
     if (streamUrl) {
