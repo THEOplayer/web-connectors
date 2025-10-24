@@ -11,6 +11,7 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/conviva-connector.esm.js",
+      "webpack": "./dist/conviva-connector.esm.js",
       "require": "./dist/conviva-connector.umd.js"
     },
     "./dist/*": "./dist/*",
