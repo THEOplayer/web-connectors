@@ -40,7 +40,7 @@ export class AdReporter {
     }
 
     private readonly onAdBreakBegin = (event: any) => {
-        this.currentAdBreak = event.ad as AdBreak;
+        this.currentAdBreak = event.adBreak as AdBreak;
         // Conviva assured they expect a string, so we could already pass 'Server Guided' directly.
         this.convivaVideoAnalytics.reportAdBreakStarted(
             calculateAdType(this.currentAdBreak) as any,
