@@ -113,7 +113,7 @@ export class NielsenHandler {
         this.player.removeEventListener('durationchange', this.onDurationChange);
         this.player.removeEventListener('timeupdate', this.onTimeUpdate);
 
-        this.player.textTracks.removeEventListener('addtrack', this.onAddTrack);
+        this.player.textTracks?.removeEventListener('addtrack', this.onAddTrack);
 
         if (this.player.ads) {
             this.player.ads.removeEventListener('adbegin', this.onAdBegin);
