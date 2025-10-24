@@ -19,6 +19,7 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/cmcd-connector.esm.js",
+      "webpack": "./dist/cmcd-connector.esm.js",
       "require": "./dist/cmcd-connector.umd.js"
     },
     "./dist/*": "./dist/*",
