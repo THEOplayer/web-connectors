@@ -1,4 +1,13 @@
-import type { Ad, AdBreak, AdsEventMap, ChromelessPlayer, EventDispatcher, GoogleImaAd } from 'theoplayer';
+import type {
+    Ad,
+    AdBreak,
+    AdBreakEvent,
+    AdEvent,
+    AdsEventMap,
+    ChromelessPlayer,
+    EventDispatcher,
+    GoogleImaAd
+} from 'theoplayer';
 import { type AdAnalytics, Constants, type ConvivaMetadata, type VideoAnalytics } from '../../utils/ConvivaSdk';
 import {
     calculateAdType,
@@ -39,8 +48,8 @@ export class AdReporter {
         this.addEventListeners();
     }
 
-    private readonly onAdBreakBegin = (event: any) => {
-        this.currentAdBreak = event.adBreak as AdBreak;
+    private readonly onAdBreakBegin = (event: AdBreakEvent<'adbreakbegin'>) => {
+        this.currentAdBreak = event.adBreak;
         // Conviva assured they expect a string, so we could already pass 'Server Guided' directly.
         this.convivaVideoAnalytics.reportAdBreakStarted(
             calculateAdType(this.currentAdBreak) as any,
@@ -56,8 +65,8 @@ export class AdReporter {
         this.currentAdBreak = undefined;
     };
 
-    private readonly onAdBegin = (event: any) => {
-        const currentAd = event.ad as Ad;
+    private readonly onAdBegin = (event: AdEvent<'adbegin'>) => {
+        const currentAd = event.ad;
         this.currentAd = currentAd;
         if (currentAd.type !== 'linear') {
             return;
@@ -92,8 +101,8 @@ export class AdReporter {
         }
     };
 
-    private readonly onAdEnd = (event: any) => {
-        const currentAd = event.ad as Ad;
+    private readonly onAdEnd = (event: AdEvent<'adend'>) => {
+        const currentAd = event.ad;
         if (currentAd.type !== 'linear') {
             return;
         }
