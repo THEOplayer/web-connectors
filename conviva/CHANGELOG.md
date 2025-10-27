@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 3.1.2
+
+### 🐛 Issues
+
+- Fixed an issue where ads were no longer reported correctly, caused by a deprecation in the adBreakBegin event.
+
 ## 3.1.1
 
 ### 🐛 Issues
