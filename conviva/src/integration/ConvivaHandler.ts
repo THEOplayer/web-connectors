@@ -152,14 +152,26 @@ export class ConvivaHandler {
     }
 
     stopAndStartNewSession(metadata: ConvivaMetadata): void {
+        // End current session if one had already started
         this.maybeReportPlaybackEnded();
-        this.maybeReportPlaybackRequested();
-        this.setContentInfo(metadata);
-        if (this.player.paused) {
-            this.onPause();
-        } else {
-            this.onPlaying();
+
+        // If play-out was paused, the session will start once play-out resumes.
+        if (!this.player.paused) {
+            // Start new session
+            this.maybeReportPlaybackRequested();
         }
+        // Pass new metadata
+        this.setContentInfo(metadata);
+
+        // Notify current playback state
+        this.convivaVideoAnalytics?.reportPlaybackMetric(Constants.Playback.PLAYER_STATE, this.getPlaybackState());
+    }
+
+    private getPlaybackState() {
+        if (this.player.ended) return Constants.PlayerState.STOPPED;
+        if (this.player.paused) return Constants.PlayerState.PAUSED;
+        if (this.player.readyState >= 3 /*HAVE_FUTURE_DATA*/) return Constants.PlayerState.PLAYING;
+        return Constants.PlayerState.BUFFERING;
     }
 
     private addEventListeners(): void {
