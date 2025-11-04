@@ -8,7 +8,16 @@ import {
     type ConvivaPlayerInfo
 } from './ConvivaSdk';
 import type { AdVert } from '@theoplayer/yospace-connector-web';
-import type { Ad, AdBreak, ChromelessPlayer, GoogleImaAd, TypedSource, UplynkAd, UplynkAdBreak } from 'theoplayer';
+import type {
+    Ad,
+    AdBreak,
+    ChromelessPlayer,
+    GoogleImaAd,
+    TheoAdDescription,
+    TypedSource,
+    UplynkAd,
+    UplynkAdBreak
+} from 'theoplayer';
 import { version } from 'theoplayer';
 import type { ConvivaConfiguration } from '../integration/ConvivaHandler';
 
@@ -145,6 +154,13 @@ export function collectPlaybackConfigMetadata(player: ChromelessPlayer) {
         metadata['liveOffset'] = liveOffset;
     }
     return metadata;
+}
+
+export function collectTheoAdMetadata(player: ChromelessPlayer): { [key: string]: string } {
+    const streamActivityMonitorId = player.source?.ads
+        ?.map((ad) => (ad as TheoAdDescription).streamActivityMonitorId)
+        ?.find((id) => id !== undefined);
+    return streamActivityMonitorId ? { streamActivityMonitorId } : {};
 }
 
 export function collectYospaceAdMetadata(player: ChromelessPlayer, ad: AdVert): ConvivaMetadata {

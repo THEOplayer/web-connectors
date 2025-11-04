@@ -3,7 +3,6 @@ import type {
     CurrentSourceChangeEvent,
     ErrorEvent,
     SourceDescription,
-    TheoAdDescription,
     VideoQuality
 } from 'theoplayer';
 import {
@@ -23,7 +22,8 @@ import {
     calculateStreamType,
     collectDefaultDeviceMetadata,
     collectPlaybackConfigMetadata,
-    collectPlayerInfo
+    collectPlayerInfo,
+    collectTheoAdMetadata
 } from '../utils/Utils';
 import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
@@ -281,16 +281,13 @@ export class ConvivaHandler {
             'NA';
         const playerName =
             this.customMetadata[Constants.PLAYER_NAME] ?? this.convivaMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
-        const streamActivityMonitorId = this.player.source?.ads
-            ?.map((ad) => (ad as TheoAdDescription).streamActivityMonitorId)
-            ?.find((id) => id !== undefined);
 
         const metadata: ConvivaMetadata = {
             [Constants.STREAM_URL]: src,
             [Constants.ASSET_NAME]: assetName,
             [Constants.PLAYER_NAME]: playerName,
             ...collectPlaybackConfigMetadata(this.player),
-            ...(streamActivityMonitorId ? { streamActivityMonitorId } : {})
+            ...collectTheoAdMetadata(this.player)
         };
         // Do not override the `isLive` value if already set by the consumer, as the value
         // is read-only for a given session.
