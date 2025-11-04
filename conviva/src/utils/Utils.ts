@@ -156,7 +156,7 @@ export function collectPlaybackConfigMetadata(player: ChromelessPlayer) {
     return metadata;
 }
 
-export function collectTheoAdMetadata(player: ChromelessPlayer): { [key: string]: string } {
+export function collectAdDescriptionMetadata(player: ChromelessPlayer): { [key: string]: string } {
     const streamActivityMonitorId = player.source?.ads
         ?.map((ad) => (ad as TheoAdDescription).streamActivityMonitorId)
         ?.find((id) => id !== undefined);

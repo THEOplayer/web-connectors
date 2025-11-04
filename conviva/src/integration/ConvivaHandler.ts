@@ -23,7 +23,7 @@ import {
     collectDefaultDeviceMetadata,
     collectPlaybackConfigMetadata,
     collectPlayerInfo,
-    collectTheoAdMetadata
+    collectAdDescriptionMetadata
 } from '../utils/Utils';
 import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
@@ -287,7 +287,7 @@ export class ConvivaHandler {
             [Constants.ASSET_NAME]: assetName,
             [Constants.PLAYER_NAME]: playerName,
             ...collectPlaybackConfigMetadata(this.player),
-            ...collectTheoAdMetadata(this.player)
+            ...collectAdDescriptionMetadata(this.player)
         };
         // Do not override the `isLive` value if already set by the consumer, as the value
         // is read-only for a given session.
