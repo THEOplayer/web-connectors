@@ -12,6 +12,7 @@ import type {
     Ad,
     AdBreak,
     ChromelessPlayer,
+    GoogleDAIConfiguration,
     GoogleImaAd,
     TheoAdDescription,
     TypedSource,
@@ -133,6 +134,21 @@ export function collectPlayerInfo(): ConvivaPlayerInfo {
         [Constants.FRAMEWORK_VERSION]: version
     };
 }
+
+/**
+ * Get the primary configured source from the player.
+ */
+function getPrimarySource(player: ChromelessPlayer) {
+    return Array.isArray(player.source?.sources) ? player.source?.sources[0] : player.source?.sources;
+}
+
+/**
+ * Get the primary configured TypedSource from the player.
+ */
+function getPrimaryTypedSource(player: ChromelessPlayer): TypedSource | undefined {
+    return getPrimarySource(player) as TypedSource;
+}
+
 export function collectPlaybackConfigMetadata(player: ChromelessPlayer) {
     const metadata: { [key: string]: string } = {};
     if (player.abr.targetBuffer) {
@@ -148,8 +164,7 @@ export function collectPlaybackConfigMetadata(player: ChromelessPlayer) {
             metadata['abrMetadata'] = abrStrategy.metadata.bitrate.toString();
         }
     }
-    const source = Array.isArray(player.source?.sources) ? player.source?.sources[0] : player.source?.sources;
-    const liveOffset = (source as TypedSource)?.liveOffset?.toString();
+    const liveOffset = getPrimaryTypedSource(player)?.liveOffset?.toString();
     if (liveOffset) {
         metadata['liveOffset'] = liveOffset;
     }
@@ -157,9 +172,12 @@ export function collectPlaybackConfigMetadata(player: ChromelessPlayer) {
 }
 
 export function collectAdDescriptionMetadata(player: ChromelessPlayer): { [key: string]: string } {
-    const streamActivityMonitorId = player.source?.ads
+    const theoStreamActivityMonitorId = player.source?.ads
         ?.map((ad) => (ad as TheoAdDescription).streamActivityMonitorId)
         ?.find((id) => id !== undefined);
+    const daiStreamActivityMonitorId = (getPrimaryTypedSource(player)?.ssai as GoogleDAIConfiguration)
+        ?.streamActivityMonitorID;
+    const streamActivityMonitorId = theoStreamActivityMonitorId ?? daiStreamActivityMonitorId;
     return streamActivityMonitorId ? { streamActivityMonitorId } : {};
 }
 
