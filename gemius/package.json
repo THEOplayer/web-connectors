@@ -10,6 +10,7 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/gemius-connector.esm.js",
+      "webpack": "./dist/gemius-connector.esm.js",
       "require": "./dist/gemius-connector.umd.js"
     },
     "./dist/*": "./dist/*",

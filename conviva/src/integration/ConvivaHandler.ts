@@ -211,7 +211,7 @@ export class ConvivaHandler {
         this.player.removeEventListener('durationchange', this.onDurationChange);
         this.player.removeEventListener('destroy', this.onDestroy);
 
-        this.player.network.removeEventListener('offline', this.onNetworkOffline);
+        this.player.network?.removeEventListener('offline', this.onNetworkOffline);
 
         document.removeEventListener('visibilitychange', this.onVisibilityChange);
         window.removeEventListener('beforeunload', this.onBeforeUnload);
