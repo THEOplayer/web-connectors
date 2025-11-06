@@ -1,5 +1,12 @@
 # @theoplayer/conviva-connector-web
 
+## 3.2.0
+
+### ✨ Features
+
+- Changed the behaviour of `stopAndStartNewSession`, not starting a new session if the player is paused until play-out is resumed.
+- Added reporting of THEOads `streamActivityMonitorId`, which is passed to the GAM Pod stream request.
+
 ## 3.1.2
 
 ### 🐛 Issues
