@@ -22,7 +22,8 @@ import {
     calculateStreamType,
     collectDefaultDeviceMetadata,
     collectPlaybackConfigMetadata,
-    collectPlayerInfo
+    collectPlayerInfo,
+    collectAdDescriptionMetadata
 } from '../utils/Utils';
 import { AdReporter } from './ads/AdReporter';
 import { YospaceAdReporter } from './ads/YospaceAdReporter';
@@ -280,11 +281,13 @@ export class ConvivaHandler {
             'NA';
         const playerName =
             this.customMetadata[Constants.PLAYER_NAME] ?? this.convivaMetadata[Constants.PLAYER_NAME] ?? 'THEOplayer';
+
         const metadata: ConvivaMetadata = {
             [Constants.STREAM_URL]: src,
             [Constants.ASSET_NAME]: assetName,
             [Constants.PLAYER_NAME]: playerName,
-            ...collectPlaybackConfigMetadata(this.player)
+            ...collectPlaybackConfigMetadata(this.player),
+            ...collectAdDescriptionMetadata(this.player)
         };
         // Do not override the `isLive` value if already set by the consumer, as the value
         // is read-only for a given session.
