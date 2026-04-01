@@ -39,9 +39,15 @@ First you need to define the Conviva metadata and configuration:
     const convivaConfig = {
         debug: false,
         gatewayUrl: 'CUSTOMER_GATEWAY_GOES_HERE',
-        customerKey: 'CUSTOMER_KEY_GOES_HERE' // Can be a test or production key.
+        customerKey: 'CUSTOMER_KEY_GOES_HERE', // Can be a test or production key.
+        preserveSessionOnStartupSourceChange: false, // Optional, default false.
+        startupGraceMs: 10000 // Optional, default 10000 ms.
     };
 ```
+
+When `preserveSessionOnStartupSourceChange` is enabled, early `sourcechange` events between the first `play` and the first
+`playing` event are treated as startup transitions and do not end the current session as long as they happen within
+`startupGraceMs`.
 
 Optionally, you can include device metadata in the ConvivaConfiguration object. Note that `SCREEN_RESOLUTION_WIDTH`, `SCREEN_RESOLUTION_HEIGHT` and `SCREEN_RESOLUTION_SCALE_FACTOR` are the only fields that Conviva will auto-collect on most web-based platforms.
 
