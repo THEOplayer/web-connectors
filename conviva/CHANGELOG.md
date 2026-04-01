@@ -1,5 +1,13 @@
 # @theoplayer/conviva-connector-web
 
+## Unreleased
+
+### ✨ Features
+
+- Added optional startup source-change preservation configuration:
+  - `preserveSessionOnStartupSourceChange` (default `false`)
+  - `startupGraceMs` (default `10000`)
+
 ## 3.2.0
 
 ### ✨ Features

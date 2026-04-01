@@ -35,17 +35,36 @@ enum CustomConstants {
     ENCODING_TYPE = 'encoding_type'
 }
 
+const DEFAULT_STARTUP_GRACE_MS = 10_000;
+
 export interface ConvivaConfiguration {
     customerKey: string;
     debug?: boolean;
     gatewayUrl?: string;
     deviceMetadata?: ConvivaDeviceMetadata;
+    /**
+     * When enabled, do not end the session on early sourcechange events that happen
+     * between first play and first playing (startup phase).
+     * Default: false (backward compatible).
+     */
+    preserveSessionOnStartupSourceChange?: boolean;
+    /**
+     * Maximum startup preservation window in milliseconds.
+     * Only used when preserveSessionOnStartupSourceChange is true.
+     * Default: 10000.
+     */
+    startupGraceMs?: number;
 }
+
+type NormalizedConvivaConfiguration = ConvivaConfiguration & {
+    preserveSessionOnStartupSourceChange: boolean;
+    startupGraceMs: number;
+};
 
 export class ConvivaHandler {
     private readonly player: ChromelessPlayer;
     private readonly convivaMetadata: ConvivaMetadata;
-    private readonly convivaConfig: ConvivaConfiguration;
+    private readonly convivaConfig: NormalizedConvivaConfiguration;
     private customMetadata: ConvivaMetadata = {};
 
     private convivaVideoAnalytics: VideoAnalytics | undefined;
@@ -58,6 +77,7 @@ export class ConvivaHandler {
 
     private currentSource: SourceDescription | undefined;
     private playbackRequested: boolean = false;
+    private startupAt: number | null = null;
 
     private yospaceConnector: YospaceConnector | undefined;
 
@@ -66,7 +86,11 @@ export class ConvivaHandler {
     constructor(player: ChromelessPlayer, convivaMetaData: ConvivaMetadata, config: ConvivaConfiguration) {
         this.player = player;
         this.convivaMetadata = convivaMetaData;
-        this.convivaConfig = config;
+        this.convivaConfig = {
+            ...config,
+            preserveSessionOnStartupSourceChange: config.preserveSessionOnStartupSourceChange ?? false,
+            startupGraceMs: config.startupGraceMs ?? DEFAULT_STARTUP_GRACE_MS
+        };
         this.currentSource = player.source;
 
         Analytics.setDeviceMetadata(this.convivaConfig.deviceMetadata ?? collectDefaultDeviceMetadata());
@@ -249,7 +273,24 @@ export class ConvivaHandler {
         }
     };
 
+    private markStartup(): void {
+        if (this.startupAt === null) {
+            this.startupAt = Date.now();
+        }
+    }
+
+    private clearStartup(): void {
+        this.startupAt = null;
+    }
+
+    private shouldPreserveSessionOnSourceChange(): boolean {
+        if (!this.convivaConfig.preserveSessionOnStartupSourceChange) return false;
+        if (!this.playbackRequested || this.startupAt === null) return false;
+        return Date.now() - this.startupAt <= this.convivaConfig.startupGraceMs;
+    }
+
     private readonly onPlay = () => {
+        this.markStartup();
         this.maybeReportPlaybackRequested();
     };
 
@@ -269,6 +310,7 @@ export class ConvivaHandler {
             this.convivaVideoAnalytics?.reportPlaybackEnded();
             this.releaseSession();
             this.playbackRequested = false;
+            this.clearStartup();
         }
     }
 
@@ -306,6 +348,7 @@ export class ConvivaHandler {
     }
 
     private readonly onPlaying = () => {
+        this.clearStartup();
         this.convivaVideoAnalytics?.reportPlaybackMetric(
             Constants.Playback.PLAYER_STATE,
             Constants.PlayerState.PLAYING
@@ -376,9 +419,16 @@ export class ConvivaHandler {
     };
 
     private readonly onSourceChange = () => {
+        if (this.shouldPreserveSessionOnSourceChange()) {
+            // Keep startup anchored to first play; refresh source metadata only.
+            this.currentSource = this.player.source;
+            this.reportMetadata();
+            return;
+        }
         this.maybeReportPlaybackEnded();
         this.currentSource = this.player.source;
         this.customMetadata = {};
+        this.clearStartup();
     };
 
     private readonly onCurrentSourceChange = (event: CurrentSourceChangeEvent) => {
