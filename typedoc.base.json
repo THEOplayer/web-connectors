@@ -1,10 +1,7 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "includeVersion": true,
-  "plugin": [
-    "typedoc-plugin-external-resolver",
-    "typedoc-plugin-mdn-links"
-  ],
+  "plugin": ["typedoc-plugin-external-resolver", "typedoc-plugin-mdn-links"],
   "navigationLinks": {
     "Docs": "https://optiview.dolby.com/docs/theoplayer/web/",
     "Dolby OptiView": "https://optiview.dolby.com/"
@@ -15,7 +12,7 @@
   "externalDocumentation": {
     "theoplayer": {
       "dtsPath": "~/THEOplayer.d.ts",
-      "externalBaseURL": "https://optiview.dolby.com/docs/theoplayer/v9/api-reference/web"
+      "externalBaseURL": "https://optiview.dolby.com/docs/theoplayer/v11/api-reference/web"
     }
   }
 }
