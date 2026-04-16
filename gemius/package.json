@@ -1,6 +1,6 @@
 {
   "name": "@theoplayer/gemius-connector-web",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A connector implementing Gemius with THEOplayer",
   "type": "module",
   "main": "dist/gemius-connector.umd.js",
