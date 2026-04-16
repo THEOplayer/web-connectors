@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 3.3.0
+
+### ✨ Features
+
+- Added support for THEOplayer v11.
+
 ## 3.2.0
 
 ### ✨ Features

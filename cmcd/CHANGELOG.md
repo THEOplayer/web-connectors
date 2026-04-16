@@ -1,5 +1,11 @@
 # @theoplayer/cmcd-connector-web
 
+## 1.5.0
+
+### ✨ Features
+
+- Added support for THEOplayer v11.
+
 ## 1.4.0
 
 ### ✨ Features
