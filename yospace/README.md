@@ -5,7 +5,7 @@ The Yospace connector provides a Yospace integration for THEOplayer.
 ## Prerequisites
 In order to use this connector, a [THEOplayer](https://www.npmjs.com/package/theoplayer) build with a valid license is required. You can use your existing THEOplayer HTML5 SDK license or request yours via [THEOportal](https://portal.theoplayer.com/).
 
-For setting up a valid Yospace session, the Yospace Ad Management SDK is required. For more information on how to install the Ad Management SDK, please refer to the documentation of [Yospace](https://developer.yospace.com/). 
+For setting up a valid Yospace session, the Yospace Ad Management SDK is required. For more information on how to install the Ad Management SDK, please refer to the documentation of [Yospace](https://docs.yospace.com/library/technical/sdks/en/ad-management-sdks-v3/javascript.html). 
 
 **Remark:** This version of the Yospace Connector is compatible with Yospace Ad Management SDK version 3.5.2 or higher. If you still want to use an older Ad Management SDK, please use the connector version 1.4.0.
 
