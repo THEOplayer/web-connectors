@@ -1,5 +1,16 @@
 # @theoplayer/yospace-connector-web
 
+## 3.0.0
+
+### 💥 Breaking Changes
+
+- Removed `isPlaceholder()` and `isEncoded()` type definitions since they were removed in Yospace Ad Management SDK 3.11.0.
+- Replaced `PlaybackMode` with `SessionMode` for compatibility with Yospace Ad Management SDK 3.10.0+. This change brings the minimum supported Yospace Ad Management SDK version to 3.10.0.
+
+### 🐛 Issues
+
+- Fixed an exception when an ad break starts without data during live playback.
+
 ## 2.8.0
 
 ### ✨ Features
