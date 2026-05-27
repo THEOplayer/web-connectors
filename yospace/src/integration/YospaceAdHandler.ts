@@ -123,7 +123,14 @@ export class YospaceAdHandler {
         };
     }
 
-    private onAdvertBreakStart(yospaceAdBreak: YospaceAdBreak) {
+    private onAdvertBreakStart(yospaceAdBreak: YospaceAdBreak | null) {
+        if (yospaceAdBreak === null) {
+            // During live playback, an ad break may be started without any information
+            this.currentAdBreak = this.adIntegrationController?.createAdBreak({
+                timeOffset: this.player.currentTime
+            });
+            return;
+        }
         this.currentAdBreak = this.getOrCreateAdBreak(yospaceAdBreak, true);
     }
 

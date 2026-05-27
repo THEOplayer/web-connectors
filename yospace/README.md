@@ -7,7 +7,7 @@ In order to use this connector, a [THEOplayer](https://www.npmjs.com/package/the
 
 For setting up a valid Yospace session, the Yospace Ad Management SDK is required. For more information on how to install the Ad Management SDK, please refer to the documentation of [Yospace](https://docs.yospace.com/library/technical/sdks/en/ad-management-sdks-v3/javascript.html). 
 
-**Remark:** This version of the Yospace Connector is compatible with Yospace Ad Management SDK version 3.5.2 or higher. If you still want to use an older Ad Management SDK, please use the connector version 1.4.0.
+**Remark:** This version of the Yospace Connector is compatible with Yospace Ad Management SDK version 3.10.0 or higher. If you still want to use an older Ad Management SDK, please use the connector version 2.8.0 or earlier.
 
 ## Installation
 

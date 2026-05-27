@@ -7,7 +7,7 @@ import type {
 import { getFirstYospaceTypedSource, type YospaceTypedSource, yoSpaceWebSdkIsAvailable } from '../utils/YospaceUtils';
 import { PlayerEvent } from '../yospace/PlayerEvent';
 import {
-    PlaybackMode,
+    SessionMode,
     ResultCode,
     SessionState,
     type YospaceSession,
@@ -298,7 +298,7 @@ export class YospaceManager extends DefaultEventDispatcher<YospaceEventMap> {
 }
 
 function isSessionDVRLive(session: YospaceSession): session is YospaceSessionDVRLive {
-    return session.getPlaybackMode() === PlaybackMode.DVRLIVE;
+    return session.getSessionMode() === SessionMode.DVRLIVE;
 }
 
 function createIntegrationHandler(yospaceManager: YospaceManager): ServerSideAdIntegrationHandler {

@@ -26,7 +26,6 @@ export interface Resource {
     getCreativeType(): string;
     getResourceType(): ResourceType;
     getStringData(): string;
-    isEncoded(): boolean;
 }
 
 export interface CreativeEventHandler {
@@ -117,7 +116,6 @@ export interface AdBreak {
     getType(): BreakType;
     getDuration(): number;
     getIdentifier(): string;
-    isPlaceholder(): boolean;
     getPosition(): BreakPosition;
     getRemainingTime(): number;
     getStart(): number;

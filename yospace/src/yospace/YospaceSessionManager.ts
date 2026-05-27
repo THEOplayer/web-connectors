@@ -18,7 +18,7 @@ export enum SessionState {
     SHUT_DOWN
 }
 
-export enum PlaybackMode {
+export enum SessionMode {
     LIVE = 0,
     DVRLIVE = 1,
     VOD = 2
@@ -31,7 +31,7 @@ export type YospaceSessionManagerCreator = {
 export interface YospaceSession {
     getAdBreakForAdvert(advert: AdVert): AdBreak | undefined;
 
-    getPlaybackMode(): PlaybackMode;
+    getSessionMode(): SessionMode;
 
     getPlaybackUrl(): string;
 
@@ -53,7 +53,7 @@ export interface YospaceSession {
 }
 
 export interface YospaceSessionDVRLive extends YospaceSession {
-    getPlaybackMode(): PlaybackMode.DVRLIVE;
+    getSessionMode(): SessionMode.DVRLIVE;
 
     getDuration(): number;
 
