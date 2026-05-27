@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 3.3.1
+
+### 🐛 Issues
+
+- Added support for `@theoplayer/yospace-connector-web` version 3.
+
 ## 3.3.0
 
 ### ✨ Features
