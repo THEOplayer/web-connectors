@@ -1,6 +1,6 @@
 # yospace-connector-web
 
-The Yospace connector provides a Yospace integration for THEOplayer.
+The Yospace connector provides a Server-Side Ad Insertion (SSAI) integration with Yospace for THEOplayer.
 
 ## Prerequisites
 In order to use this connector, a [THEOplayer](https://www.npmjs.com/package/theoplayer) build with a valid license is required. You can use your existing THEOplayer HTML5 SDK license or request yours via [THEOportal](https://portal.theoplayer.com/).
