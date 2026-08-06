@@ -6,7 +6,8 @@ import type {
     AdsEventMap,
     ChromelessPlayer,
     EventDispatcher,
-    GoogleImaAd
+    GoogleImaAd,
+    InterstitialEvent
 } from 'theoplayer';
 import { type AdAnalytics, Constants, type ConvivaMetadata, type VideoAnalytics } from '../../utils/ConvivaSdk';
 import {
@@ -128,6 +129,35 @@ export class AdReporter {
         this.convivaAdAnalytics.reportAdFailed(event.message || 'Ad Request Failed');
     };
 
+    /**
+     * A THEOads (SGAI) ad break can fail before any ad is available, for example when the ad server
+     * returns an empty VAST response. In that case no ad break or ad events are dispatched, so report
+     * the attempted ad break as a failed ad to keep Conviva's ad attempt and fill rate metrics correct.
+     */
+    private readonly onInterstitialError = (event: InterstitialEvent<'interstitialerror'>) => {
+        const { interstitial } = event;
+        if (interstitial?.type !== 'adbreak' || this.currentAdBreak !== undefined) {
+            return;
+        }
+        const message = (event as { message?: string }).message || 'No ad available';
+        this.convivaVideoAnalytics.reportAdBreakStarted('Server Guided' as any, Constants.AdPlayer.CONTENT, {
+            [Constants.POD_DURATION]: interstitial.duration ?? 0,
+            [Constants.POD_INDEX]: this.adBreakCounter
+        } as any);
+        this.adBreakCounter++;
+        const adMetadata: ConvivaMetadata = {
+            'c3.ad.technology': 'Server Guided',
+            // @ts-expect-error: getSessionId() is not present in type declarations.
+            'c3.csid': `${this.convivaVideoAnalytics.getSessionId()}`,
+            contentAssetName: this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA',
+            [Constants.ASSET_NAME]: 'NA',
+            [Constants.IS_LIVE]: Constants.StreamType.UNKNOWN
+        };
+        this.convivaAdAnalytics.setAdInfo(adMetadata);
+        this.convivaAdAnalytics.reportAdFailed(message);
+        this.convivaVideoAnalytics.reportAdBreakEnded();
+    };
+
     private readonly onPlaying = () => {
         if (!this.currentAdBreak || !this.currentAd) {
             return;
@@ -170,6 +200,7 @@ export class AdReporter {
             dispatcher?.addEventListener('adbuffering', this.onAdBuffering);
             dispatcher?.addEventListener('aderror', this.onAdError);
         });
+        this.player.theoads?.addEventListener('interstitialerror', this.onInterstitialError);
     }
 
     private removeEventListeners(): void {
@@ -185,6 +216,7 @@ export class AdReporter {
             dispatcher?.removeEventListener('adbuffering', this.onAdBuffering);
             dispatcher?.removeEventListener('aderror', this.onAdError);
         });
+        this.player.theoads?.removeEventListener('interstitialerror', this.onInterstitialError);
     }
 
     private startCurrentAd(): void {
