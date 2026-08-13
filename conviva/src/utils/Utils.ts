@@ -14,6 +14,7 @@ import type {
     ChromelessPlayer,
     GoogleDAIConfiguration,
     GoogleImaAd,
+    Interstitial,
     TheoAdDescription,
     TypedSource,
     UplynkAd,
@@ -50,10 +51,16 @@ export function collectDefaultDeviceMetadata(): ConvivaDeviceMetadata {
     };
 }
 
+/**
+ * The ad technology reported to Conviva for THEOads (SGAI).
+ * SGAI isn't officially supported by Conviva yet, so we report it with our own string for now.
+ */
+export const SGAI_AD_TYPE = 'Server Guided';
+
 export function calculateAdType(adOrBreak: Ad | AdBreak) {
     switch (adOrBreak.integration) {
         case 'theoads': {
-            return 'Server Guided';
+            return SGAI_AD_TYPE;
         }
         case undefined:
         case '':
@@ -93,6 +100,28 @@ export function calculateCurrentAdBreakInfo(adBreak: AdBreak, adBreakIndex: numb
     return {
         [Constants.POD_POSITION]: calculateCurrentAdBreakPosition(adBreak),
         [Constants.POD_DURATION]: adBreak.maxDuration!,
+        [Constants.POD_INDEX]: adBreakIndex
+    };
+}
+
+export function calculateInterstitialAdBreakPosition(interstitial: Interstitial): string {
+    const startTime = interstitial.startTime;
+    if (startTime === 0) {
+        return Constants.AdPosition.PREROLL;
+    }
+    if (startTime < 0 || !isFinite(startTime)) {
+        return Constants.AdPosition.POSTROLL;
+    }
+    return Constants.AdPosition.MIDROLL;
+}
+
+export function calculateInterstitialAdBreakInfo(
+    interstitial: Interstitial,
+    adBreakIndex: number
+): ConvivaAdBreakInfo {
+    return {
+        [Constants.POD_POSITION]: calculateInterstitialAdBreakPosition(interstitial),
+        [Constants.POD_DURATION]: interstitial.duration ?? 0,
         [Constants.POD_INDEX]: adBreakIndex
     };
 }

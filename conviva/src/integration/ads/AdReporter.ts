@@ -13,14 +13,23 @@ import { type AdAnalytics, Constants, type ConvivaMetadata, type VideoAnalytics 
 import {
     calculateAdType,
     calculateCurrentAdBreakInfo,
+    calculateInterstitialAdBreakInfo,
     collectAdMetadata,
     collectPlayerInfo,
+    SGAI_AD_TYPE,
     updateAdMetadataForGoogleIma
 } from '../../utils/Utils';
 
 declare module 'theoplayer' {
     interface Ads {
         convivaAdEventsExtension?: EventDispatcher<AdsEventMap>;
+    }
+
+    interface InterstitialEvent<TType extends string> {
+        /**
+         * The error message, only present on 'interstitialerror' events.
+         */
+        message?: string;
     }
 }
 
@@ -47,6 +56,22 @@ export class AdReporter {
         this.convivaAdAnalytics.setAdPlayerInfo(collectPlayerInfo());
         this.contentInfo = contentInfo;
         this.addEventListeners();
+    }
+
+    /**
+     * Ad metadata shared between successful and failed ad reporting.
+     * Every session ad or content has its session ID. In order to “attach” an ad to its respective content session,
+     * there are two tags that are critical:
+     * - `c3.csid`: the content’s sessionID;
+     * - `contentAssetName`: the content's assetName.
+     */
+    private collectBaseAdMetadata(): ConvivaMetadata {
+        const adMetadata: ConvivaMetadata = {};
+        // @ts-expect-error: getSessionId() is not present in type declarations.
+        adMetadata['c3.csid'] = `${this.convivaVideoAnalytics.getSessionId()}`;
+        adMetadata.contentAssetName =
+            this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
+        return adMetadata;
     }
 
     private readonly onAdBreakBegin = (event: AdBreakEvent<'adbreakbegin'>) => {
@@ -76,18 +101,9 @@ export class AdReporter {
         if (currentAd.integration === 'google-ima') {
             updateAdMetadataForGoogleIma(currentAd as GoogleImaAd, adMetadata);
         }
-
-        // Every session ad or content has its session ID. In order to “attach” an ad to its respective content session,
-        // there are two tags that are critical:
-        // - `c3.csid`: the content’s sessionID;
-        // - `contentAssetName`: the content's assetName.
-        // @ts-expect-error: getSessionId() is not present in type declarations.
-        adMetadata['c3.csid'] = `${this.convivaVideoAnalytics.getSessionId()}`;
-        adMetadata.contentAssetName =
-            this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
+        Object.assign(adMetadata, this.collectBaseAdMetadata());
 
         // [Required] The ad technology as CLIENT_SIDE/SERVER_SIDE
-        //  SGAI isn't officially supported by conviva yet, overwrite with our own string for now.
         adMetadata['c3.ad.technology'] = calculateAdType(currentAd);
 
         this.convivaAdAnalytics.setAdInfo(adMetadata);
@@ -96,7 +112,7 @@ export class AdReporter {
         // Report playing state in case of SSAI or SGAI.
         if (
             calculateAdType(currentAd) === Constants.AdType.SERVER_SIDE ||
-            calculateAdType(currentAd) === 'Server Guided'
+            calculateAdType(currentAd) === SGAI_AD_TYPE
         ) {
             this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
         }
@@ -139,17 +155,17 @@ export class AdReporter {
         if (interstitial?.type !== 'adbreak' || this.currentAdBreak !== undefined) {
             return;
         }
-        const message = (event as { message?: string }).message || 'No ad available';
-        this.convivaVideoAnalytics.reportAdBreakStarted('Server Guided' as any, Constants.AdPlayer.CONTENT, {
-            [Constants.POD_DURATION]: interstitial.duration ?? 0,
-            [Constants.POD_INDEX]: this.adBreakCounter
-        } as any);
+        const message = event.message || 'No ad available';
+        // Conviva assured they expect a string, so we could already pass 'Server Guided' directly.
+        this.convivaVideoAnalytics.reportAdBreakStarted(
+            SGAI_AD_TYPE as any,
+            Constants.AdPlayer.CONTENT,
+            calculateInterstitialAdBreakInfo(interstitial, this.adBreakCounter)
+        );
         this.adBreakCounter++;
         const adMetadata: ConvivaMetadata = {
-            'c3.ad.technology': 'Server Guided',
-            // @ts-expect-error: getSessionId() is not present in type declarations.
-            'c3.csid': `${this.convivaVideoAnalytics.getSessionId()}`,
-            contentAssetName: this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA',
+            ...this.collectBaseAdMetadata(),
+            'c3.ad.technology': SGAI_AD_TYPE,
             [Constants.ASSET_NAME]: 'NA',
             [Constants.IS_LIVE]: Constants.StreamType.UNKNOWN
         };
