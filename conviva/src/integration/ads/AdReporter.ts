@@ -26,6 +26,7 @@ declare module 'theoplayer' {
         convivaAdEventsExtension?: EventDispatcher<AdsEventMap>;
     }
 
+    // Note: remove once `message` property is exposed as part of the player's API.
     interface InterstitialEvent<TType extends string> {
         /**
          * The error message, only present on 'interstitialerror' events.
