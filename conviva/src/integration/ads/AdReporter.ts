@@ -16,6 +16,7 @@ import {
     calculateInterstitialAdBreakInfo,
     collectAdMetadata,
     collectPlayerInfo,
+    isPastInterstitial,
     SGAI_AD_TYPE,
     updateAdMetadataForGoogleIma
 } from '../../utils/Utils';
@@ -152,7 +153,11 @@ export class AdReporter {
      */
     private readonly onInterstitialError = (event: InterstitialEvent<'interstitialerror'>) => {
         const { interstitial } = event;
-        if (interstitial?.type !== 'adbreak' || this.currentAdBreak !== undefined) {
+        if (
+            interstitial?.type !== 'adbreak' ||
+            this.currentAdBreak !== undefined ||
+            isPastInterstitial(interstitial, this.player.currentTime)
+        ) {
             return;
         }
         const message = event.message || 'No ad available';
