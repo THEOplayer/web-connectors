@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 3.3.2
+
+### 🐛 Issues
+
+- Report THEOads interstitial errors as failed ads.
+
 ## 3.3.1
 
 ### 🐛 Issues
