@@ -14,6 +14,7 @@ import type {
     ChromelessPlayer,
     GoogleDAIConfiguration,
     GoogleImaAd,
+    Interstitial,
     TheoAdDescription,
     TypedSource,
     UplynkAd,
@@ -50,10 +51,15 @@ export function collectDefaultDeviceMetadata(): ConvivaDeviceMetadata {
     };
 }
 
+/**
+ * SGAI isn't officially supported by Conviva yet, so we report it with our own string for now.
+ */
+export const SGAI_AD_TYPE = 'Server Guided';
+
 export function calculateAdType(adOrBreak: Ad | AdBreak) {
     switch (adOrBreak.integration) {
         case 'theoads': {
-            return 'Server Guided';
+            return SGAI_AD_TYPE;
         }
         case undefined:
         case '':
@@ -95,6 +101,39 @@ export function calculateCurrentAdBreakInfo(adBreak: AdBreak, adBreakIndex: numb
         [Constants.POD_DURATION]: adBreak.maxDuration!,
         [Constants.POD_INDEX]: adBreakIndex
     };
+}
+
+export function calculateInterstitialAdBreakPosition(interstitial: Interstitial): string {
+    const startTime = interstitial.startTime;
+    if (startTime === 0) {
+        return Constants.AdPosition.PREROLL;
+    }
+    if (startTime < 0 || !isFinite(startTime)) {
+        return Constants.AdPosition.POSTROLL;
+    }
+    return Constants.AdPosition.MIDROLL;
+}
+
+export function calculateInterstitialAdBreakInfo(interstitial: Interstitial, adBreakIndex: number): ConvivaAdBreakInfo {
+    return {
+        [Constants.POD_POSITION]: calculateInterstitialAdBreakPosition(interstitial),
+        [Constants.POD_DURATION]: interstitial.duration ?? 0,
+        [Constants.POD_INDEX]: adBreakIndex
+    };
+}
+
+/**
+ * Whether the interstitial's ad break lies entirely behind the given player time, for example a break
+ * in the DVR window of a live stream when tuning in. Such breaks can report an error without ever
+ * having been an actual ad attempt, so they should not be reported as failed ads.
+ */
+export function isPastInterstitial(interstitial: Interstitial, currentTime: number): boolean {
+    const startTime = interstitial.startTime;
+    if (startTime < 0 || !isFinite(startTime)) {
+        // A post-roll is never in the past.
+        return false;
+    }
+    return startTime + (interstitial.duration ?? 0) < currentTime;
 }
 
 export function calculateConvivaOptions(config: ConvivaConfiguration): ConvivaOptions {

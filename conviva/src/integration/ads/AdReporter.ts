@@ -6,20 +6,32 @@ import type {
     AdsEventMap,
     ChromelessPlayer,
     EventDispatcher,
-    GoogleImaAd
+    GoogleImaAd,
+    InterstitialEvent
 } from 'theoplayer';
 import { type AdAnalytics, Constants, type ConvivaMetadata, type VideoAnalytics } from '../../utils/ConvivaSdk';
 import {
     calculateAdType,
     calculateCurrentAdBreakInfo,
+    calculateInterstitialAdBreakInfo,
     collectAdMetadata,
     collectPlayerInfo,
+    isPastInterstitial,
+    SGAI_AD_TYPE,
     updateAdMetadataForGoogleIma
 } from '../../utils/Utils';
 
 declare module 'theoplayer' {
     interface Ads {
         convivaAdEventsExtension?: EventDispatcher<AdsEventMap>;
+    }
+
+    // Note: remove once `message` property is exposed as part of the player's API.
+    interface InterstitialEvent<TType extends string> {
+        /**
+         * The error message, only present on 'interstitialerror' events.
+         */
+        message?: string;
     }
 }
 
@@ -46,6 +58,22 @@ export class AdReporter {
         this.convivaAdAnalytics.setAdPlayerInfo(collectPlayerInfo());
         this.contentInfo = contentInfo;
         this.addEventListeners();
+    }
+
+    /**
+     * Ad metadata shared between successful and failed ad reporting.
+     * Every session ad or content has its session ID. In order to “attach” an ad to its respective content session,
+     * there are two tags that are critical:
+     * - `c3.csid`: the content’s sessionID;
+     * - `contentAssetName`: the content's assetName.
+     */
+    private collectBaseAdMetadata(): ConvivaMetadata {
+        const adMetadata: ConvivaMetadata = {};
+        // @ts-expect-error: getSessionId() is not present in type declarations.
+        adMetadata['c3.csid'] = `${this.convivaVideoAnalytics.getSessionId()}`;
+        adMetadata.contentAssetName =
+            this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
+        return adMetadata;
     }
 
     private readonly onAdBreakBegin = (event: AdBreakEvent<'adbreakbegin'>) => {
@@ -75,18 +103,9 @@ export class AdReporter {
         if (currentAd.integration === 'google-ima') {
             updateAdMetadataForGoogleIma(currentAd as GoogleImaAd, adMetadata);
         }
-
-        // Every session ad or content has its session ID. In order to “attach” an ad to its respective content session,
-        // there are two tags that are critical:
-        // - `c3.csid`: the content’s sessionID;
-        // - `contentAssetName`: the content's assetName.
-        // @ts-expect-error: getSessionId() is not present in type declarations.
-        adMetadata['c3.csid'] = `${this.convivaVideoAnalytics.getSessionId()}`;
-        adMetadata.contentAssetName =
-            this.contentInfo()[Constants.ASSET_NAME] ?? this.player.source?.metadata?.title ?? 'NA';
+        Object.assign(adMetadata, this.collectBaseAdMetadata());
 
         // [Required] The ad technology as CLIENT_SIDE/SERVER_SIDE
-        //  SGAI isn't officially supported by conviva yet, overwrite with our own string for now.
         adMetadata['c3.ad.technology'] = calculateAdType(currentAd);
 
         this.convivaAdAnalytics.setAdInfo(adMetadata);
@@ -95,7 +114,7 @@ export class AdReporter {
         // Report playing state in case of SSAI or SGAI.
         if (
             calculateAdType(currentAd) === Constants.AdType.SERVER_SIDE ||
-            calculateAdType(currentAd) === 'Server Guided'
+            calculateAdType(currentAd) === SGAI_AD_TYPE
         ) {
             this.convivaAdAnalytics.reportAdMetric(Constants.Playback.PLAYER_STATE, Constants.PlayerState.PLAYING);
         }
@@ -126,6 +145,39 @@ export class AdReporter {
 
     private readonly onAdError = (event: any) => {
         this.convivaAdAnalytics.reportAdFailed(event.message || 'Ad Request Failed');
+    };
+
+    /**
+     * A THEOads (SGAI) ad break can fail before any ad is available, for example when the ad server
+     * returns an empty VAST response. In that case no ad break or ad events are dispatched, so report
+     * the attempted ad break as a failed ad to keep Conviva's ad attempt and fill rate metrics correct.
+     */
+    private readonly onInterstitialError = (event: InterstitialEvent<'interstitialerror'>) => {
+        const { interstitial } = event;
+        if (
+            interstitial?.type !== 'adbreak' ||
+            this.currentAdBreak !== undefined ||
+            isPastInterstitial(interstitial, this.player.currentTime)
+        ) {
+            return;
+        }
+        const message = event.message || 'No ad available';
+        // Conviva assured they expect a string, so we could already pass 'Server Guided' directly.
+        this.convivaVideoAnalytics.reportAdBreakStarted(
+            SGAI_AD_TYPE as any,
+            Constants.AdPlayer.CONTENT,
+            calculateInterstitialAdBreakInfo(interstitial, this.adBreakCounter)
+        );
+        this.adBreakCounter++;
+        const adMetadata: ConvivaMetadata = {
+            ...this.collectBaseAdMetadata(),
+            'c3.ad.technology': SGAI_AD_TYPE,
+            [Constants.ASSET_NAME]: 'NA',
+            [Constants.IS_LIVE]: Constants.StreamType.UNKNOWN
+        };
+        this.convivaAdAnalytics.setAdInfo(adMetadata);
+        this.convivaAdAnalytics.reportAdFailed(message);
+        this.convivaVideoAnalytics.reportAdBreakEnded();
     };
 
     private readonly onPlaying = () => {
@@ -170,6 +222,7 @@ export class AdReporter {
             dispatcher?.addEventListener('adbuffering', this.onAdBuffering);
             dispatcher?.addEventListener('aderror', this.onAdError);
         });
+        this.player.theoads?.addEventListener('interstitialerror', this.onInterstitialError);
     }
 
     private removeEventListeners(): void {
@@ -185,6 +238,7 @@ export class AdReporter {
             dispatcher?.removeEventListener('adbuffering', this.onAdBuffering);
             dispatcher?.removeEventListener('aderror', this.onAdError);
         });
+        this.player.theoads?.removeEventListener('interstitialerror', this.onInterstitialError);
     }
 
     private startCurrentAd(): void {
