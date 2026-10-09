@@ -10,6 +10,7 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/nielsen-connector.esm.js",
+      "webpack": "./dist/nielsen-connector.esm.js",
       "require": "./dist/nielsen-connector.umd.js"
     },
     "./dist/*": "./dist/*",

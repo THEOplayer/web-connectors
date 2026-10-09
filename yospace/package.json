@@ -19,6 +19,7 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/yospace-connector.esm.js",
+      "webpack": "./dist/yospace-connector.esm.js",
       "require": "./dist/yospace-connector.umd.js"
     },
     "./dist/*": "./dist/*",

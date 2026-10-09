@@ -89,8 +89,10 @@ export class GemiusTHEOIntegration {
         this.player.removeEventListener('seeking', this.onSeeking);
         this.player.removeEventListener('ended', this.onEnded);
         this.player.removeEventListener('volumechange', this.onVolumeChange);
-        this.player.videoTracks.removeEventListener('addtrack', this.onAddTrack);
-        this.player.videoTracks.removeEventListener('removetrack', this.onRemoveTrack);
+        if (this.player.videoTracks) {
+            this.player.videoTracks.removeEventListener('addtrack', this.onAddTrack);
+            this.player.videoTracks.removeEventListener('removetrack', this.onRemoveTrack);
+        }
         if (this.player.ads) {
             this.player.ads.removeEventListener('adbreakbegin', this.onAdBreakBegin);
             this.player.ads.removeEventListener('adbreakend', this.onAdBreakEnd);

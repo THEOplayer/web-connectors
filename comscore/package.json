@@ -10,6 +10,7 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/comscore-connector.esm.js",
+      "webpack": "./dist/comscore-connector.esm.js",
       "require": "./dist/comscore-connector.umd.js"
     },
     "./dist/*": "./dist/*",
