@@ -1,0 +1,54 @@
+{
+  "name": "@theoplayer/lens-connector-web",
+  "version": "0.0.0",
+  "description": "A connector implementing Dolby OptiView Lens for web.",
+  "type": "module",
+  "main": "dist/lens-connector.umd.js",
+  "module": "dist/lens-connector.esm.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/lens-connector.esm.js",
+      "require": "./dist/lens-connector.umd.js"
+    },
+    "./dist/*": "./dist/*",
+    "./package": "./package.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "bundle": "rollup -c rollup.config.mjs",
+    "watch": "npm run bundle -- --watch",
+    "build": "npm run clean && npm run bundle",
+    "serve": "http-server ./.. -o /lens/test/pages/main_esm.html",
+    "test": "npm run test:typecheck && npm run test:unit",
+    "test:typecheck": "tsc --project . --noEmit",
+    "test:unit": "vitest --run"
+  },
+  "author": "THEO Technologies NV",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/THEOplayer/web-connectors.git",
+    "directory": "lens"
+  },
+  "bugs": {
+    "url": "https://github.com/THEOplayer/web-connectors/issues"
+  },
+  "homepage": "https://github.com/THEOplayer/web-connectors/tree/main/lens#readme",
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE.md",
+    "package.json"
+  ],
+  "peerDependencies": {
+    "@dolby-optiview/lens-sdk": "^0.6.0",
+    "theoplayer": "^8 || ^9 || ^10 || ^11"
+  },
+  "devDependencies": {
+    "@dolby-optiview/lens-sdk": "0.6.0"
+  }
+}

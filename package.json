@@ -14,7 +14,8 @@
     "gemius",
     "nielsen",
     "yospace",
-    "conviva"
+    "conviva",
+    "lens"
   ],
   "scripts": {
     "changeset:version": "changeset version && node .changeset/post-process.mjs",
