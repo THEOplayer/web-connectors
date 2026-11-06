@@ -2,63 +2,345 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>Lens connector test page</title>
+    <title>Lens connector demo</title>
     <link rel="stylesheet" type="text/css" href="./../../../node_modules/theoplayer/ui.css"/>
     <style>
-        #reports { font: 12px monospace; white-space: pre-wrap; max-height: 40vh; overflow: auto; }
+        body { font: 14px system-ui, sans-serif; margin: 0 auto; max-width: 1400px; padding: 12px; }
+        fieldset { border: 1px solid #ccc; border-radius: 6px; margin: 0 0 10px; }
+        label { margin-right: 12px; }
+        input[type=text], input[type=password] { width: 20em; }
+        button { margin: 2px; }
+        #layout { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 12px; }
+        #status { font-family: monospace; margin: 6px 0; }
+        #staging-label { font-weight: bold; }
+        .panel { border: 1px solid #ccc; border-radius: 6px; height: 300px; overflow: auto; }
+        h3 { margin: 10px 0 4px; }
+        table { border-collapse: collapse; font: 12px monospace; width: 100%; }
+        th, td { border-bottom: 1px solid #eee; padding: 2px 6px; text-align: left; white-space: nowrap; }
+        th { background: #f6f6f6; position: sticky; top: 0; }
+        tr.row { cursor: pointer; }
+        tr.row:hover { background: #f3f8ff; }
+        tr.ns-lens td.e { font-weight: bold; }
+        tr.raw td { white-space: pre-wrap; background: #fafafa; }
+        td.sent { color: #0a7a0a; }
+        td.held { color: #777; }
+        td.failed { color: #c00; }
+        #log { font: 12px monospace; margin: 0; padding: 4px; white-space: pre-wrap; }
+        #log .step { color: #06c; font-weight: bold; }
     </style>
 </head>
 <body>
-<div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
-<pre id="reports"></pre>
+<h2>THEOplayer Lens connector demo</h2>
+
+<fieldset>
+    <legend>Settings (saved in this browser; Apply reloads the page)</legend>
+    <label>THEOplayer license <input id="license" type="password" placeholder="paste your license"/></label>
+    <label>Extra JSON destination <input id="destination" type="text" placeholder="https://… (optional)"/></label>
+    <button id="apply">Apply</button>
+</fieldset>
+
+<fieldset>
+    <legend>Reporting</legend>
+    <label id="staging-label"><input id="staging" type="checkbox"/> Send to the OptiView staging ingest</label>
+    Off: what would be sent is shown under "Outgoing to staging" but stays in this page. Switch it before a session
+    starts, so staging gets the whole session.
+</fieldset>
+
+<fieldset>
+    <legend>Playback</legend>
+    <select id="preset"></select>
+    <input id="custom" type="text" placeholder="or a custom manifest URL"/>
+    <button id="load">Load</button>
+    <button id="unload">Unload</button>
+    <button id="destroy">Destroy player</button>
+    <button id="recreate">Recreate player</button>
+    |
+    <button id="run">Run scenario</button>
+    <button id="stop" disabled>Stop scenario</button>
+</fieldset>
+
+<div id="status"></div>
+
+<div id="layout">
+    <div>
+        <div id="player-container"></div>
+        <h3>Lens reports <button id="clear">Clear</button> <button id="copy">Copy JSON</button></h3>
+        <div class="panel">
+            <table>
+                <thead><tr>
+                    <th>time</th><th>sid</th><th>sn</th><th>ns</th><th>e</th><th>sta</th><th>st</th><th>sf</th>
+                    <th>pt</th><th>bl</th><th>bitrate</th><th>mtp</th><th>ec</th><th>cid</th>
+                </tr></thead>
+                <tbody id="reports"></tbody>
+            </table>
+        </div>
+        <h3>Outgoing to staging</h3>
+        <div class="panel">
+            <table>
+                <thead><tr><th>time</th><th>reports</th><th>delivery</th><th>first report</th></tr></thead>
+                <tbody id="outgoing"></tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <h3>Scenario steps and adapter facts</h3>
+        <div class="panel" style="height: 760px"><pre id="log"></pre></div>
+    </div>
+</div>
+
 <script type="importmap">
     {
       "imports": {
         "theoplayer": "./../../../node_modules/theoplayer/THEOplayer.esm.js",
-        "@dolby-optiview/lens-sdk": "./../../../node_modules/@dolby-optiview/lens-sdk/dist/index.js"
+        "@dolby-optiview/lens-sdk": "./../../../node_modules/@dolby-optiview/lens-sdk/dist/index.js",
+        "@dolby-optiview/lens-sdk/dev": "./../../../node_modules/@dolby-optiview/lens-sdk/dist/dev.js"
       }
     }
 </script>
 <script type="module">
     import { Player } from 'theoplayer';
-    import { Lens } from '@dolby-optiview/lens-sdk';
+    import { DEVELOPMENT_INGEST_URL, enableDevelopmentBackend } from '@dolby-optiview/lens-sdk/dev';
     import { LensConnector } from './../../dist/lens-connector.esm.js';
 
-    // Show what Lens posts to the test destination instead of sending it anywhere.
-    const destination = 'https://collector.invalid/lens';
-    const output = document.querySelector('#reports');
-    const fetch = window.fetch;
-    window.fetch = (url, init) => {
-        if (String(url) !== destination) return fetch(url, init);
-        for (const report of JSON.parse(init.body).reports) {
-            output.textContent = `${JSON.stringify(report)}\n${output.textContent}`;
+    const BIG_BUCK_BUNNY = { src: 'https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8', type: 'application/x-mpegurl' };
+    const PRESETS = {
+        'HLS VOD (Big Buck Bunny)': [BIG_BUCK_BUNNY],
+        'HLS VOD (Elephants Dream)': [{ src: 'https://cdn.theoplayer.com/video/elephants-dream/playlist.m3u8', type: 'application/x-mpegurl' }],
+        'DASH VOD': [{ src: 'https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd', type: 'application/dash+xml' }],
+        'DASH live': [{ src: 'https://livesim2.dashif.org/livesim2/testpic_2s/Manifest.mpd', type: 'application/dash+xml' }],
+        'Broken (fatal error)': [{ src: 'https://cdn.theoplayer.com/does-not-exist/index.m3u8', type: 'application/x-mpegurl' }]
+    };
+    // The same content ID on every platform's demo, so the scenario's sessions are easy to find in the backend.
+    const SCENARIO_CONTENT_ID = 'lens-connector-demo-scenario';
+    const CAPTURE_URL = 'https://lens-demo.invalid/collect';
+    const $ = (id) => document.getElementById(id);
+    const timestamp = (time = Date.now()) => new Date(time).toISOString().slice(11, 23);
+
+    const settings = {
+        license: localStorage.getItem('lens-demo.license') ?? '',
+        destination: localStorage.getItem('lens-demo.destination') ?? ''
+    };
+    $('license').value = settings.license;
+    $('destination').value = settings.destination;
+    $('apply').onclick = () => {
+        localStorage.setItem('lens-demo.license', $('license').value.trim());
+        localStorage.setItem('lens-demo.destination', $('destination').value.trim());
+        location.reload();
+    };
+    $('staging').checked = localStorage.getItem('lens-demo.staging') === 'true';
+    $('staging').onchange = () => localStorage.setItem('lens-demo.staging', String($('staging').checked));
+    for (const name of Object.keys(PRESETS)) $('preset').append(new Option(name, name));
+
+    const format = (value) => {
+        if (value === undefined || value === null) return '';
+        if (Array.isArray(value)) return value.map((item) => (typeof item === 'object' ? item.value + (item.ot ? '/' + item.ot : '') : item)).join(',');
+        return String(value);
+    };
+
+    function appendRow(tbody, cells, raw, classes = {}) {
+        const row = tbody.insertRow();
+        row.className = 'row ' + (classes.row ?? '');
+        const tds = cells.map((cell, index) => {
+            const td = row.insertCell();
+            td.textContent = format(cell);
+            if (classes[index]) td.className = classes[index];
+            return td;
+        });
+        row.onclick = () => {
+            if (row.nextSibling?.classList?.contains('raw')) return row.nextSibling.remove();
+            const rawRow = document.createElement('tr');
+            rawRow.className = 'raw';
+            const td = rawRow.insertCell();
+            td.colSpan = cells.length;
+            td.textContent = raw();
+            row.after(rawRow);
+        };
+        row.scrollIntoView({ block: 'nearest' });
+        return tds;
+    }
+
+    // In-page mock receivers: a JSON destination that renders every report, and the posts bound for the staging
+    // ingest, which go out only while sending is on.
+    const reports = [];
+    let outgoing = 0;
+    const nativeFetch = window.fetch.bind(window);
+    window.fetch = async (url, init) => {
+        const target = String(url);
+        if (target === CAPTURE_URL) {
+            for (const report of JSON.parse(init.body).reports) addReport(report);
+            return new Response(null, { status: 204 });
         }
-        return Promise.resolve(new Response(null, { status: 204 }));
+        if (target !== DEVELOPMENT_INGEST_URL) return nativeFetch(url, init);
+        outgoing++;
+        const lines = String(init.body).split('\n');
+        const cells = [timestamp(), lines.length, '', lines[0].slice(0, 120)];
+        const delivery = appendRow($('outgoing'), cells, () => lines.join('\n\n'))[2];
+        if (!$('staging').checked) {
+            delivery.textContent = 'kept in page';
+            delivery.className = 'held';
+            return new Response(null, { status: 204 });
+        }
+        try {
+            const response = await nativeFetch(url, init);
+            delivery.textContent = `sent: HTTP ${response.status}`;
+            delivery.className = response.ok ? 'sent' : 'failed';
+            return response;
+        } catch (error) {
+            delivery.textContent = `failed: ${error.message}`;
+            delivery.className = 'failed';
+            throw error;
+        }
     };
 
-    const element = document.querySelector('#THEOplayer');
-    const player = new Player(element, {
-        ui: {
-            fluid: true
-        },
-        libraryLocation: './../../../node_modules/theoplayer/',
-        license: 'CUSTOMER_LICENSE_GOES_HERE'
-    });
+    function addReport(report) {
+        reports.push(report);
+        const bitrate = report.br ? `br ${format(report.br)}` : report.ab ? `ab ${format(report.ab)}` : report.tab ? `tab ${format(report.tab)}` : report.tb ? `tb ${format(report.tb)}` : '';
+        const cells = [
+            timestamp(report.ts), (report.sid ?? '').slice(0, 8), report.sn, report.ns,
+            report.e + (report.cen ? ` ${report.cen}` : ''), report.sta, report.st, report.sf, format(report.pt),
+            format(report.bl), bitrate, format(report.mtp), format(report.ec), (report.cid ?? '').slice(-32)
+        ];
+        appendRow($('reports'), cells, () => JSON.stringify(report, null, 2), { row: `ns-${report.ns}`, 4: 'e' });
+    }
 
-    Lens.configure({ backend: 'disabled' });
-    window.connector = new LensConnector(player, {
-        destinations: [{ url: destination, format: 'json' }]
-    });
+    function log(text, className) {
+        const line = document.createElement('span');
+        if (className) line.className = className;
+        line.textContent = `${timestamp()} ${text}\n`;
+        $('log').append(line);
+        $('log').parentElement.scrollTop = $('log').parentElement.scrollHeight;
+    }
+    function logFact(fact) {
+        const { type, properties, ...rest } = fact;
+        log(type + (Object.keys(rest).length ? ' ' + JSON.stringify(rest) : ''));
+    }
 
-    player.source = {
-        sources: [
-            {
-                src: 'https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8',
-                type: 'application/x-mpegurl'
+    $('clear').onclick = () => {
+        reports.length = 0;
+        outgoing = 0;
+        $('reports').textContent = '';
+        $('outgoing').textContent = '';
+        $('log').textContent = '';
+    };
+    $('copy').onclick = () => navigator.clipboard.writeText(JSON.stringify(reports, null, 2));
+
+    enableDevelopmentBackend();
+    const destinations = [{ url: CAPTURE_URL, format: 'json', heartbeat: true }];
+    if (settings.destination) destinations.push({ url: settings.destination, format: 'json' });
+
+    let player;
+    let connector;
+    let destroyed = false;
+    let scenarioSource;
+    function createPlayer() {
+        if (player && !destroyed) player.destroy();
+        const element = document.createElement('div');
+        element.className = 'theoplayer-container video-js theoplayer-skin';
+        $('player-container').replaceChildren(element);
+        player = new Player(element, {
+            ui: { fluid: true },
+            libraryLocation: './../../../node_modules/theoplayer/',
+            license: settings.license || undefined
+        });
+        player.muted = true;
+        connector = new LensConnector(player, {
+            destinations,
+            contentId: (source) => (source === scenarioSource ? SCENARIO_CONTENT_ID : undefined)
+        });
+        connector.adapter.subscribe(logFact);
+        destroyed = false;
+        player.addEventListener('destroy', () => (destroyed = true));
+        window.player = player;
+        window.connector = connector;
+    }
+    function load() {
+        const custom = $('custom').value.trim();
+        player.source = { sources: custom ? [{ src: custom }] : PRESETS[$('preset').value] };
+    }
+    $('load').onclick = load;
+    $('unload').onclick = () => (player.source = undefined);
+    $('destroy').onclick = () => !destroyed && player.destroy();
+    $('recreate').onclick = () => {
+        createPlayer();
+        load();
+    };
+
+    // The baked-in scenario. Keep the steps and their timing the same on every platform's demo, so their sessions
+    // can be compared in the backend.
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const nextEvent = (type, timeoutMs) =>
+        new Promise((resolve, reject) => {
+            const timer = setTimeout(() => {
+                player.removeEventListener(type, onEvent);
+                reject(new Error(`no ${type} within ${timeoutMs / 1000} s`));
+            }, timeoutMs);
+            const onEvent = () => {
+                clearTimeout(timer);
+                player.removeEventListener(type, onEvent);
+                resolve();
+            };
+            player.addEventListener(type, onEvent);
+        });
+    const SCENARIO = [
+        ['load Big Buck Bunny (HLS VOD) and play until it plays', () => {
+            scenarioSource = { sources: [BIG_BUCK_BUNNY] };
+            player.source = scenarioSource;
+            player.muted = false;
+            player.play();
+            return nextEvent('playing', 20000);
+        }],
+        ['play 8 s', () => sleep(8000)],
+        ['pause 3 s', () => (player.pause(), sleep(3000))],
+        ['resume 5 s', () => (player.play(), sleep(5000))],
+        ['seek to 120 s and wait for it', () => ((player.currentTime = 120), nextEvent('seeked', 15000))],
+        ['play 5 s', () => sleep(5000)],
+        ['mute 3 s', () => ((player.muted = true), sleep(3000))],
+        ['unmute 2 s', () => ((player.muted = false), sleep(2000))],
+        ['play at 2x 5 s', () => ((player.playbackRate = 2), sleep(5000))],
+        ['play at 1x 2 s', () => ((player.playbackRate = 1), sleep(2000))],
+        // Browsers only enter fullscreen on a user gesture, so the presentation change is in-page picture-in-picture.
+        ['picture-in-picture 5 s', () => (player.presentation.requestMode('picture-in-picture'), sleep(5000))],
+        ['inline 3 s', () => (player.presentation.requestMode('inline'), sleep(3000))],
+        ['seek to 8 s before the end and play to the end', () => ((player.currentTime = player.duration - 8), nextEvent('ended', 30000))],
+        ['hold 3 s', () => sleep(3000)],
+        ['unload the source', () => (player.source = undefined)]
+    ];
+    let stopRequested = false;
+    $('stop').onclick = () => (stopRequested = true);
+    $('run').onclick = async () => {
+        $('run').disabled = true;
+        $('stop').disabled = false;
+        stopRequested = false;
+        if (destroyed) createPlayer();
+        const sessions = new Set();
+        log(`scenario starts, sending to staging ${$('staging').checked ? 'on' : 'off'}, content ID ${SCENARIO_CONTENT_ID}`, 'step');
+        try {
+            for (const [index, [name, step]] of SCENARIO.entries()) {
+                if (stopRequested) throw new Error('stopped');
+                log(`step ${index + 1}/${SCENARIO.length}: ${name}`, 'step');
+                await step();
+                if (connector.handle.session) sessions.add(connector.handle.session.sessionId);
             }
-        ]
+            log(`scenario done, session ${[...sessions].join(', ') || 'none'}`, 'step');
+        } catch (error) {
+            log(`scenario aborted: ${error.message}; session ${[...sessions].join(', ') || 'none'}`, 'step');
+        } finally {
+            $('run').disabled = false;
+            $('stop').disabled = true;
+        }
     };
-    window.player = player;
+
+    setInterval(() => {
+        const session = connector.handle.session;
+        $('status').textContent =
+            `THEOplayer ${connector.adapter.playerVersion} · player: ${destroyed ? 'destroyed' : 'alive'} · ` +
+            `session: ${session ? session.sessionId : 'none'} · reports: ${reports.length} · ` +
+            `staging posts: ${outgoing} (${$('staging').checked ? 'sending' : 'kept in page'})` +
+            (settings.license ? '' : ' · no license set: THEOplayer will refuse to play');
+    }, 500);
+
+    createPlayer();
+    load();
 </script>
 </body>
 </html>

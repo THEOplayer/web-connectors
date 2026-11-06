@@ -21,7 +21,7 @@
     "bundle": "rollup -c rollup.config.mjs",
     "watch": "npm run bundle -- --watch",
     "build": "npm run clean && npm run bundle",
-    "serve": "http-server ./.. -o /lens/test/pages/",
+    "serve": "http-server ./.. -o /lens/test/pages/main_esm.html",
     "test": "npm run test:typecheck && npm run test:unit",
     "test:typecheck": "tsc --project . --noEmit",
     "test:unit": "vitest --run"

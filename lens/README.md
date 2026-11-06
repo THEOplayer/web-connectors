@@ -83,6 +83,22 @@ The connector ends the session and stops reporting when the player is destroyed,
 lensConnector.destroy();
 ```
 
+## Demo
+
+`test/pages/main_esm.html` plays sources through the connector and shows, in the page, the reports Lens sends and the
+facts the connector gives it. Build the connector and serve the repository:
+
+```bash
+npm run build -w lens
+npm run serve -w lens
+```
+
+Paste a THEOplayer license in the page's settings. With "Send to the OptiView staging ingest" on, the reports go to the
+development ingest through the Lens SDK's dev add-on; with it off, they stay in the page. "Run scenario" plays a fixed
+sequence of about a minute (play, pause, seek, mute, rate, picture-in-picture, play to the end) under the content ID
+`lens-connector-demo-scenario`, meant to be repeated by the other platforms' demos so their sessions can be compared in
+the backend.
+
 ## Limitations
 
 - THEOplayer exposes the quality being played, not the one being loaded. Lens therefore reports the top and lowest
