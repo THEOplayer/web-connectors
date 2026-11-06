@@ -1,0 +1,63 @@
+import type { ChromelessPlayer } from 'theoplayer';
+import { Lens, type LensHandle, type LensJoinOptions, type LensPlayerAdapter } from '@dolby-optiview/lens-sdk';
+import { type ContentIdProvider, THEOplayerAdapter } from './THEOplayerAdapter';
+
+/**
+ * The configuration of a {@link LensConnector}: the options of `Lens.join`, without the `player`, which the connector
+ * provides.
+ */
+export interface LensConfiguration extends Omit<LensJoinOptions, 'player'> {
+    /**
+     * Returns the content ID (1-128 printable ASCII) to report for a source. Without it, or when it returns
+     * `undefined`, Lens derives one from the source URL. Required to report sources without a URL, such as Google DAI
+     * streams.
+     */
+    contentId?: ContentIdProvider;
+}
+
+/**
+ * The connector between a THEOplayer instance and Dolby OptiView Lens.
+ *
+ * The connector joins Lens with a player adapter for the given player, so Lens reports playback on its own: sessions,
+ * playback states, errors and the player's CMCD keys.
+ */
+export class LensConnector {
+    /**
+     * The Lens handle the connector joined with. Use it to emit your own events, set consent, or flush.
+     */
+    readonly handle: LensHandle;
+
+    /**
+     * The Lens player adapter for the player. Another SDK reporting to Lens joins with this same adapter to share the
+     * player's session.
+     */
+    readonly adapter: LensPlayerAdapter;
+
+    private readonly player: ChromelessPlayer;
+
+    /**
+     * Creates a connector for the given player and joins Lens.
+     *
+     * @param player The THEOplayer instance to report.
+     * @param configuration The options to join Lens with.
+     */
+    constructor(player: ChromelessPlayer, configuration: LensConfiguration) {
+        const { contentId, ...joinOptions } = configuration;
+        this.player = player;
+        this.adapter = new THEOplayerAdapter(player, contentId);
+        this.handle = Lens.join({ ...joinOptions, player: this.adapter });
+        player.addEventListener('destroy', this.onDestroy);
+    }
+
+    /**
+     * Ends the session and stops reporting the player. The connector is destroyed with its player.
+     */
+    destroy(): void {
+        this.player.removeEventListener('destroy', this.onDestroy);
+        this.handle.dispose();
+    }
+
+    private readonly onDestroy = (): void => {
+        this.destroy();
+    };
+}
