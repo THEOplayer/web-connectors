@@ -282,28 +282,48 @@
             player.addEventListener(type, onEvent);
         });
     const SCENARIO = [
-        ['load Big Buck Bunny (HLS VOD) and play until it plays', () => {
+        ['load Big Buck Bunny', () => {
             scenarioSource = { sources: [BIG_BUCK_BUNNY] };
             player.source = scenarioSource;
             player.muted = false;
-            player.play();
-            return nextEvent('playing', 20000);
         }],
-        ['play 8 s', () => sleep(8000)],
+        ['play 10 s', async () => {
+            player.play();
+            await nextEvent('playing', 20000);
+            await sleep(10000);
+        }],
         ['pause 3 s', () => (player.pause(), sleep(3000))],
-        ['resume 5 s', () => (player.play(), sleep(5000))],
-        ['seek to 120 s and wait for it', () => ((player.currentTime = 120), nextEvent('seeked', 15000))],
-        ['play 5 s', () => sleep(5000)],
-        ['mute 3 s', () => ((player.muted = true), sleep(3000))],
-        ['unmute 2 s', () => ((player.muted = false), sleep(2000))],
-        ['play at 2x 5 s', () => ((player.playbackRate = 2), sleep(5000))],
-        ['play at 1x 2 s', () => ((player.playbackRate = 1), sleep(2000))],
+        ['play 5 s', () => (player.play(), sleep(5000))],
+        ['seek to 120 s, play 5 s', async () => {
+            player.currentTime = 120;
+            await nextEvent('seeked', 15000);
+            await sleep(5000);
+        }],
+        ['mute 3 s, unmute 2 s', async () => {
+            player.muted = true;
+            await sleep(3000);
+            player.muted = false;
+            await sleep(2000);
+        }],
+        ['rate 2x 5 s, back to 1x 2 s', async () => {
+            player.playbackRate = 2;
+            await sleep(5000);
+            player.playbackRate = 1;
+            await sleep(2000);
+        }],
         // Browsers only enter fullscreen on a user gesture, so the presentation change is in-page picture-in-picture.
-        ['picture-in-picture 5 s', () => (player.presentation.requestMode('picture-in-picture'), sleep(5000))],
-        ['inline 3 s', () => (player.presentation.requestMode('inline'), sleep(3000))],
-        ['seek to 8 s before the end and play to the end', () => ((player.currentTime = player.duration - 8), nextEvent('ended', 30000))],
-        ['hold 3 s', () => sleep(3000)],
-        ['unload the source', () => (player.source = undefined)]
+        ['picture-in-picture 5 s, back to inline 2 s', async () => {
+            player.presentation.requestMode('picture-in-picture');
+            await sleep(5000);
+            player.presentation.requestMode('inline');
+            await sleep(2000);
+        }],
+        ['seek to 5 s before the end, play to the end, wait 2 s, unload', async () => {
+            player.currentTime = player.duration - 5;
+            await nextEvent('ended', 30000);
+            await sleep(2000);
+            player.source = undefined;
+        }]
     ];
     let stopRequested = false;
     $('stop').onclick = () => (stopRequested = true);
