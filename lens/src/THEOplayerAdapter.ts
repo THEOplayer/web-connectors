@@ -28,7 +28,7 @@ import type {
 } from '@dolby-optiview/lens-sdk';
 
 /**
- * Returns the content ID to report for a source. Return `undefined` to keep the connector's own: the asset key or
+ * Returns the content ID to report for a source. Return `undefined` or an empty string to keep the connector's own: the asset key or
  * `contentSourceID/videoID` of a Google DAI stream, else the one Lens derives from the source URL.
  */
 export type ContentIdProvider = (source: SourceDescription) => string | undefined;
@@ -234,7 +234,7 @@ export class THEOplayerAdapter implements LensPlayerAdapter {
             return;
         }
         const daiContentId = googleDAIContentId(typedSource);
-        const contentId = this.contentId?.(description) ?? daiContentId;
+        const contentId = this.contentId?.(description) || daiContentId;
         const { preload } = this.player;
         this.source = {
             // A Google DAI source is named by its asset, not by the stream URL it resolves to.

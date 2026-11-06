@@ -135,6 +135,8 @@ describe('THEOplayerAdapter', () => {
         expect(last()).toMatchObject({ type: 'source', source: { contentId: 'movie-1' } });
         player.setSource({ sources: { ssai: live } as never });
         expect(last()).toMatchObject({ type: 'source', source: { contentId: 'live-asset' } });
+        player.setSource({ sources: { ssai: live } as never, metadata: { title: '' } });
+        expect(last()).toMatchObject({ type: 'source', source: { contentId: 'live-asset' } });
     });
 
     it('reports the removal of the source', () => {
