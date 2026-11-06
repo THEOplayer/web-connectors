@@ -94,7 +94,8 @@ npm run serve -w lens
 ```
 
 Paste a THEOplayer license in the page's settings. With "Send to the OptiView staging ingest" on, the reports go to the
-development ingest through the Lens SDK's dev add-on; with it off, they stay in the page. "Run scenario" plays a fixed
+development ingest through the Lens SDK's dev add-on; with it off, they stay in the page. "Your destination" adds an
+endpoint of your own, in CMCD or JSON; it must answer the CORS preflight from the page. "Run scenario" plays a fixed
 sequence of about a minute (play, pause, seek, mute, rate, picture-in-picture, play to the end) under the content ID
 `lens-connector-demo-scenario`, meant to be repeated by the other platforms' demos so their sessions can be compared in
 the backend.

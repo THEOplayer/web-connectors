@@ -35,15 +35,27 @@
 <fieldset>
     <legend>Settings (saved in this browser; Apply reloads the page)</legend>
     <label>THEOplayer license <input id="license" type="password" placeholder="paste your license"/></label>
-    <label>Extra JSON destination <input id="destination" type="text" placeholder="https://… (optional)"/></label>
     <button id="apply">Apply</button>
 </fieldset>
 
 <fieldset>
     <legend>Reporting</legend>
     <label id="staging-label"><input id="staging" type="checkbox"/> Send to the OptiView staging ingest</label>
-    Off: what would be sent is shown under "Outgoing to staging" but stays in this page. Switch it before a session
+    Off: what would be sent is shown under "Outgoing posts" but stays in this page. Switch it before a session
     starts, so staging gets the whole session.
+    <div>
+        <label>Your destination <input id="destination" type="text" placeholder="https://… (optional)"/></label>
+        <label>Format
+            <select id="destination-format">
+                <option value="cmcd">CMCD (application/cmcd)</option>
+                <option value="json">JSON (application/json)</option>
+            </select>
+        </label>
+        <button id="apply-destination">Apply destination</button>
+        <span id="destination-note"></span>
+    </div>
+    Lens fixes destinations when it joins, so applying recreates the player and ends the current session. The endpoint
+    must answer the CORS preflight from this page: <code>application/cmcd</code> posts always send one.
 </fieldset>
 
 <fieldset>
@@ -74,10 +86,10 @@
                 <tbody id="reports"></tbody>
             </table>
         </div>
-        <h3>Outgoing to staging</h3>
+        <h3>Outgoing posts</h3>
         <div class="panel">
             <table>
-                <thead><tr><th>time</th><th>reports</th><th>delivery</th><th>first report</th></tr></thead>
+                <thead><tr><th>time</th><th>to</th><th>reports</th><th>delivery</th><th>first report</th></tr></thead>
                 <tbody id="outgoing"></tbody>
             </table>
         </div>
@@ -118,13 +130,14 @@
 
     const settings = {
         license: localStorage.getItem('lens-demo.license') ?? '',
-        destination: localStorage.getItem('lens-demo.destination') ?? ''
+        destination: localStorage.getItem('lens-demo.destination') ?? '',
+        destinationFormat: localStorage.getItem('lens-demo.destination-format') ?? 'cmcd'
     };
     $('license').value = settings.license;
     $('destination').value = settings.destination;
+    $('destination-format').value = settings.destinationFormat;
     $('apply').onclick = () => {
         localStorage.setItem('lens-demo.license', $('license').value.trim());
-        localStorage.setItem('lens-demo.destination', $('destination').value.trim());
         location.reload();
     };
     $('staging').checked = localStorage.getItem('lens-demo.staging') === 'true';
@@ -160,9 +173,10 @@
     }
 
     // In-page mock receivers: a JSON destination that renders every report, and the posts bound for the staging
-    // ingest, which go out only while sending is on.
+    // ingest, which go out only while sending is on, and for your destination.
     const reports = [];
-    let outgoing = 0;
+    const outgoing = { staging: 0, yours: 0 };
+    let joinedDestination = '';
     const nativeFetch = window.fetch.bind(window);
     window.fetch = async (url, init) => {
         const target = String(url);
@@ -170,12 +184,14 @@
             for (const report of JSON.parse(init.body).reports) addReport(report);
             return new Response(null, { status: 204 });
         }
-        if (target !== DEVELOPMENT_INGEST_URL) return nativeFetch(url, init);
-        outgoing++;
-        const lines = String(init.body).split('\n');
-        const cells = [timestamp(), lines.length, '', lines[0].slice(0, 120)];
-        const delivery = appendRow($('outgoing'), cells, () => lines.join('\n\n'))[2];
-        if (!$('staging').checked) {
+        const to = target === DEVELOPMENT_INGEST_URL ? 'staging' : target === joinedDestination ? 'yours' : undefined;
+        if (!to) return nativeFetch(url, init);
+        outgoing[to]++;
+        const body = String(init.body);
+        const lines = body.startsWith('{') ? JSON.parse(body).reports.map((report) => JSON.stringify(report)) : body.split('\n');
+        const cells = [timestamp(), to === 'staging' ? 'staging' : 'your destination', lines.length, '', lines[0].slice(0, 120)];
+        const delivery = appendRow($('outgoing'), cells, () => lines.join('\n\n'))[3];
+        if (to === 'staging' && !$('staging').checked) {
             delivery.textContent = 'kept in page';
             delivery.className = 'held';
             return new Response(null, { status: 204 });
@@ -217,7 +233,7 @@
 
     $('clear').onclick = () => {
         reports.length = 0;
-        outgoing = 0;
+        outgoing.staging = outgoing.yours = 0;
         $('reports').textContent = '';
         $('outgoing').textContent = '';
         $('log').textContent = '';
@@ -225,8 +241,30 @@
     $('copy').onclick = () => navigator.clipboard.writeText(JSON.stringify(reports, null, 2));
 
     enableDevelopmentBackend();
-    const destinations = [{ url: CAPTURE_URL, format: 'json', heartbeat: true }];
-    if (settings.destination) destinations.push({ url: settings.destination, format: 'json' });
+    function destinations() {
+        joinedDestination = settings.destination;
+        const extra = settings.destination ? [{ url: settings.destination, format: settings.destinationFormat }] : [];
+        return [{ url: CAPTURE_URL, format: 'json', heartbeat: true }, ...extra];
+    }
+    $('apply-destination').onclick = () => {
+        const url = $('destination').value.trim();
+        if (url) {
+            try {
+                if (!/^https?:$/.test(new URL(url).protocol)) throw new Error();
+            } catch {
+                $('destination-note').textContent = 'not an http(s) URL';
+                return;
+            }
+        }
+        settings.destination = url;
+        settings.destinationFormat = $('destination-format').value;
+        localStorage.setItem('lens-demo.destination', url);
+        localStorage.setItem('lens-demo.destination-format', settings.destinationFormat);
+        $('destination-note').textContent = url ? `reporting to it as ${settings.destinationFormat.toUpperCase()}` : 'none';
+        createPlayer();
+        load();
+    };
+    $('destination-note').textContent = settings.destination ? `reporting to it as ${settings.destinationFormat.toUpperCase()}` : '';
 
     let player;
     let connector;
@@ -244,12 +282,14 @@
         });
         player.muted = true;
         connector = new LensConnector(player, {
-            destinations,
+            destinations: destinations(),
             contentId: (source) => (source === scenarioSource ? SCENARIO_CONTENT_ID : undefined)
         });
         connector.adapter.subscribe(logFact);
         destroyed = false;
-        player.addEventListener('destroy', () => (destroyed = true));
+        // THEOplayer fires `destroy` later, when a replaced player may already be gone from `player`.
+        const created = player;
+        created.addEventListener('destroy', () => created === player && (destroyed = true));
         window.player = player;
         window.connector = connector;
     }
@@ -329,6 +369,7 @@
     $('stop').onclick = () => (stopRequested = true);
     $('run').onclick = async () => {
         $('run').disabled = true;
+        $('apply-destination').disabled = true;
         $('stop').disabled = false;
         stopRequested = false;
         if (destroyed) createPlayer();
@@ -346,6 +387,7 @@
             log(`scenario aborted: ${error.message}; session ${[...sessions].join(', ') || 'none'}`, 'step');
         } finally {
             $('run').disabled = false;
+            $('apply-destination').disabled = false;
             $('stop').disabled = true;
         }
     };
@@ -355,7 +397,8 @@
         $('status').textContent =
             `THEOplayer ${connector.adapter.playerVersion} · player: ${destroyed ? 'destroyed' : 'alive'} · ` +
             `session: ${session ? session.sessionId : 'none'} · reports: ${reports.length} · ` +
-            `staging posts: ${outgoing} (${$('staging').checked ? 'sending' : 'kept in page'})` +
+            `staging posts: ${outgoing.staging} (${$('staging').checked ? 'sending' : 'kept in page'})` +
+            (joinedDestination ? ` · posts to your destination: ${outgoing.yours}` : '') +
             (settings.license ? '' : ' · no license set: THEOplayer will refuse to play');
     }, 500);
 
