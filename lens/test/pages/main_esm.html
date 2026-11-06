@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Lens connector test page</title>
+    <link rel="stylesheet" type="text/css" href="./../../../node_modules/theoplayer/ui.css"/>
+    <style>
+        #reports { font: 12px monospace; white-space: pre-wrap; max-height: 40vh; overflow: auto; }
+    </style>
+</head>
+<body>
+<div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+<pre id="reports"></pre>
+<script type="importmap">
+    {
+      "imports": {
+        "theoplayer": "./../../../node_modules/theoplayer/THEOplayer.esm.js",
+        "@dolby-optiview/lens-sdk": "./../../../node_modules/@dolby-optiview/lens-sdk/dist/index.js"
+      }
+    }
+</script>
+<script type="module">
+    import { Player } from 'theoplayer';
+    import { Lens } from '@dolby-optiview/lens-sdk';
+    import { LensConnector } from './../../dist/lens-connector.esm.js';
+
+    // Show what Lens posts to the test destination instead of sending it anywhere.
+    const destination = 'https://collector.invalid/lens';
+    const output = document.querySelector('#reports');
+    const fetch = window.fetch;
+    window.fetch = (url, init) => {
+        if (String(url) !== destination) return fetch(url, init);
+        for (const report of JSON.parse(init.body).reports) {
+            output.textContent = `${JSON.stringify(report)}\n${output.textContent}`;
+        }
+        return Promise.resolve(new Response(null, { status: 204 }));
+    };
+
+    const element = document.querySelector('#THEOplayer');
+    const player = new Player(element, {
+        ui: {
+            fluid: true
+        },
+        libraryLocation: './../../../node_modules/theoplayer/',
+        license: 'CUSTOMER_LICENSE_GOES_HERE'
+    });
+
+    Lens.configure({ backend: 'disabled' });
+    window.connector = new LensConnector(player, {
+        namespace: 'demo',
+        destinations: [{ url: destination, format: 'json' }]
+    });
+
+    player.source = {
+        sources: [
+            {
+                src: 'https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8',
+                type: 'application/x-mpegurl'
+            }
+        ]
+    };
+    window.player = player;
+</script>
+</body>
+</html>
