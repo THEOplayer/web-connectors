@@ -3,6 +3,7 @@ import type {
     ChromelessPlayer,
     CurrentSourceChangeEvent,
     ErrorEvent,
+    GoogleDAITypedSource,
     MediaTrack,
     Quality,
     RemoveTrackEvent,
@@ -27,7 +28,8 @@ import type {
 } from '@dolby-optiview/lens-sdk';
 
 /**
- * Returns the content ID to report for a source, or `undefined` to let Lens derive one from the source URL.
+ * Returns the content ID to report for a source. Return `undefined` to keep the connector's own: the asset key or
+ * `contentSourceID/videoID` of a Google DAI stream, else the one Lens derives from the source URL.
  */
 export type ContentIdProvider = (source: SourceDescription) => string | undefined;
 
@@ -43,11 +45,31 @@ const PRESENTATION_MODES: Record<string, LensPresentationMode | undefined> = {
 
 const SUBTITLE_KINDS = ['subtitles', 'captions'];
 
+const LOW_LATENCY_TYPES = ['application/vnd.theo.hesp+json', 'millicast'];
+
 function typedSources(description: SourceDescription | undefined): TypedSource[] {
     const sources = description?.sources;
     if (!sources) return [];
     return (Array.isArray(sources) ? sources : [sources]).map((source) =>
         typeof source === 'string' ? { src: source } : source
+    );
+}
+
+function googleDAIContentId(source: TypedSource | undefined): string | undefined {
+    const ssai = (source as GoogleDAITypedSource | undefined)?.ssai;
+    if (ssai?.integration !== 'google-dai') return undefined;
+    if (ssai.availabilityType === 'live') return ssai.assetKey || undefined;
+    return ssai.contentSourceID && ssai.videoID ? `${ssai.contentSourceID}/${ssai.videoID}` : undefined;
+}
+
+/** Explicitly low latency, or a protocol that only plays that way; a THEOlive channel can be either. */
+function isLowLatency(source: TypedSource | undefined): boolean {
+    if (!source) return false;
+    const type = source.type?.toLowerCase() ?? '';
+    return (
+        source.lowLatency === true ||
+        source.latencyConfiguration !== undefined ||
+        LOW_LATENCY_TYPES.indexOf(type) !== -1
     );
 }
 
@@ -93,6 +115,7 @@ export class THEOplayerAdapter implements LensPlayerAdapter {
     private source: LensPlayerSource | null = null;
     private typedSource: TypedSource | undefined;
     private playRequested = false;
+    private pushedProperties: string | undefined;
     private live: boolean | undefined;
     private bufferStable: boolean | undefined;
     private hasMediaData: boolean | undefined;
@@ -108,7 +131,7 @@ export class THEOplayerAdapter implements LensPlayerAdapter {
     subscribe(listener: (fact: LensPlayerFact) => void): () => void {
         if (this.listeners.length === 0) this.attach();
         this.listeners.push(listener);
-        listener({ type: 'initial', source: this.source, properties: this.properties() });
+        listener({ type: 'initial', source: this.source, properties: this.push(this.properties()) });
         return () => {
             const index = this.listeners.indexOf(listener);
             if (index === -1) return;
@@ -210,10 +233,12 @@ export class THEOplayerAdapter implements LensPlayerAdapter {
             this.source = null;
             return;
         }
-        const contentId = this.contentId?.(description);
+        const daiContentId = googleDAIContentId(typedSource);
+        const contentId = this.contentId?.(description) ?? daiContentId;
         const { preload } = this.player;
         this.source = {
-            ...(typedSource?.src && { url: typedSource.src }),
+            // A Google DAI source is named by its asset, not by the stream URL it resolves to.
+            ...(!daiContentId && typedSource?.src && { url: typedSource.src }),
             ...(contentId && { contentId }),
             ...(typedSource?.type && { mimeType: typedSource.type }),
             autoplay: this.player.autoplay,
@@ -225,10 +250,9 @@ export class THEOplayerAdapter implements LensPlayerAdapter {
     private properties(withTracks = true): LensPlayerProperties {
         const { player, live } = this;
         const tracks = withTracks ? this.tracks() : [];
-        const lowLatency = live === false ? false : live && this.typedSource?.lowLatency ? true : undefined;
         return {
             ...(live !== undefined && { live }),
-            ...(lowLatency !== undefined && { lowLatency }),
+            ...(isLowLatency(this.typedSource) && { lowLatency: true }),
             ...(tracks.length > 0 && { tracks }),
             ...(player.abr.targetBuffer !== undefined && { targetBuffer: player.abr.targetBuffer }),
             ...(this.bufferStable !== undefined && { bufferStable: this.bufferStable }),
@@ -313,7 +337,10 @@ export class THEOplayerAdapter implements LensPlayerAdapter {
         this.emitSource(false);
     }
 
-    /** THEOplayer fires no `play` for playback requested while a source loads; playback under way implies one. */
+    /**
+     * Setting a source while playing and calling `play()` plays the new source without a `play` event; playback under
+     * way implies the request.
+     */
     private ensurePlayRequested(): void {
         if (!this.playRequested && !this.player.paused) this.onPlay();
     }
@@ -326,13 +353,27 @@ export class THEOplayerAdapter implements LensPlayerAdapter {
         this.emit({
             type: 'source',
             source: this.source,
-            properties: this.properties(false),
+            properties: this.push(this.properties(false)),
             ...(continuation && { continuation })
         });
     }
 
+    /** Records the properties Lens last received, so a `change` is only pushed when one of them changes. */
+    private push(properties: LensPlayerProperties): LensPlayerProperties {
+        this.pushedProperties = JSON.stringify(properties);
+        return properties;
+    }
+
     private readonly onChange = (): void => {
-        this.emit({ type: 'change', properties: this.properties() });
+        let properties: LensPlayerProperties;
+        try {
+            properties = this.properties();
+        } catch {
+            // THEOplayer removes its tracks while it is being destroyed, once its getters have stopped working.
+            return;
+        }
+        if (JSON.stringify(properties) === this.pushedProperties) return;
+        this.emit({ type: 'change', properties: this.push(properties) });
     };
 
     private readonly onSourceChange = (): void => {

@@ -41,7 +41,6 @@ describe('THEOplayerAdapter', () => {
                 source: { url: HLS.src, mimeType: HLS.type, autoplay: true, preload: 'metadata' },
                 properties: {
                     live: false,
-                    lowLatency: false,
                     targetBuffer: 20,
                     bufferStable: true,
                     hasMediaData: true,
@@ -111,12 +110,31 @@ describe('THEOplayerAdapter', () => {
         expect(facts.map((fact) => fact.type)).toEqual(['play', 'playing', 'waiting']);
     });
 
-    it('reports the content ID the integrator provides', () => {
+    it('names a Google DAI source by its asset, not by a URL', () => {
+        subscribe();
+        const live = { integration: 'google-dai', availabilityType: 'live', assetKey: 'live-asset' };
+        player.setSource({ sources: { src: 'https://dai.example.com/stream.m3u8', ssai: live } as never });
+        expect(last()).toEqual(
+            expect.objectContaining({ source: { contentId: 'live-asset', autoplay: false, preload: 'metadata' } })
+        );
+        const vod = {
+            integration: 'google-dai',
+            availabilityType: 'vod',
+            contentSourceID: '2548831',
+            videoID: 'tears'
+        };
+        player.setSource({ sources: { ssai: vod } as never });
+        expect(last()).toMatchObject({ source: { contentId: '2548831/tears' } });
+    });
+
+    it('reports the content ID the integrator provides over its own', () => {
         adapter = new THEOplayerAdapter(player.asPlayer, (source) => source.metadata?.title);
         subscribe();
-        player.setSource({ sources: { ssai: { integration: 'google-dai' } } as never, metadata: { title: 'movie-1' } });
+        const live = { integration: 'google-dai', availabilityType: 'live', assetKey: 'live-asset' };
+        player.setSource({ sources: { ssai: live } as never, metadata: { title: 'movie-1' } });
         expect(last()).toMatchObject({ type: 'source', source: { contentId: 'movie-1' } });
-        expect((last() as { source: object }).source).not.toHaveProperty('url');
+        player.setSource({ sources: { ssai: live } as never });
+        expect(last()).toMatchObject({ type: 'source', source: { contentId: 'live-asset' } });
     });
 
     it('reports the removal of the source', () => {
@@ -179,6 +197,31 @@ describe('THEOplayerAdapter', () => {
         player.duration = Infinity;
         player.dispatch('durationchange');
         expect(last()).toMatchObject({ type: 'change', properties: { live: true, lowLatency: true } });
+    });
+
+    it('reports low latency for a latency configuration or a low-latency protocol', () => {
+        for (const source of [
+            { ...HLS, latencyConfiguration: { targetOffset: 3 } },
+            { src: 'https://cdn.example.com/channel.json', type: 'application/vnd.theo.hesp+json' },
+            { src: 'stream-name', type: 'millicast' }
+        ]) {
+            player.source = { sources: [source] };
+            facts = [];
+            subscribe();
+            expect(lastProperties()).toMatchObject({ lowLatency: true });
+            unsubscribe();
+        }
+    });
+
+    it('leaves low latency unknown for a THEOlive channel and for VOD', () => {
+        for (const source of [{ src: 'channel-id', type: 'theolive' }, DASH]) {
+            player.source = { sources: [source] };
+            player.duration = source === DASH ? 60 : Infinity;
+            facts = [];
+            subscribe();
+            expect(lastProperties()).not.toHaveProperty('lowLatency');
+            unsubscribe();
+        }
     });
 
     it('leaves low latency unknown for a live source that does not ask for it', () => {
@@ -278,6 +321,16 @@ describe('THEOplayerAdapter', () => {
         expect(lastProperties()).toMatchObject({ visibility: 'hidden' });
         player.visibility.observers[0](0.5);
         expect(lastProperties()).toMatchObject({ visibility: 'visible' });
+    });
+
+    it('pushes a change only when a property changed', () => {
+        subscribe();
+        player.dispatch('volumechange');
+        player.presentation.dispatch('presentationmodechange');
+        expect(facts.map((fact) => fact.type)).toEqual(['initial']);
+        player.volume = 0.5;
+        player.dispatch('volumechange');
+        expect(facts.map((fact) => fact.type)).toEqual(['initial', 'change']);
     });
 
     it('reports playback facts', () => {

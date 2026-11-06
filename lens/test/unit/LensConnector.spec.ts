@@ -1,7 +1,7 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Lens } from '@dolby-optiview/lens-sdk';
 import { LensConnector } from '../../src/LensConnector';
-import { FakePlayer } from './FakePlayer';
+import { FakeMediaTrack, FakePlayer } from './FakePlayer';
 
 const DESTINATION = 'https://collector.example.com/lens';
 
@@ -64,6 +64,21 @@ describe('LensConnector', () => {
         connector.destroy();
     });
 
+    it('starts no session for a play request made before the source', async () => {
+        const connector = connect();
+        // THEOplayer fires `play` without a source, then stays paused once one is set.
+        player.dispatch('play');
+        player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
+        player.readyState = 4;
+        player.dispatch('readystatechange');
+        expect(connector.handle.session).toBeNull();
+        player.paused = false;
+        player.dispatch('play');
+        // Had the first request started the session, the media held before this one would not show as preloaded.
+        await vi.waitFor(() => expect(states()).toEqual(['d', 's']));
+        connector.destroy();
+    });
+
     it('reports a fatal player error and ends the session', async () => {
         const connector = connect();
         player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
@@ -79,6 +94,7 @@ describe('LensConnector', () => {
         const warn = vi.spyOn(console, 'warn');
         const connector = connect();
         player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
+        player.videoTracks.add(new FakeMediaTrack(1, true));
         player.dispatch('play');
         await vi.waitFor(() => expect(states()).toEqual(['s']));
         player.destroy();

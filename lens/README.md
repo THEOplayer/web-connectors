@@ -51,8 +51,8 @@ A destination that filters on namespaces must list them to receive them.
 
 ### Content ID
 
-Lens derives the content ID (`cid`) from the source URL. To report your own, or to report sources without a URL, such
-as Google DAI streams, return it from `contentId`:
+Lens derives the content ID (`cid`) from the source URL. A Google DAI stream is named by its asset key, or by
+`contentSourceID/videoID`. To report your own, return it from `contentId`; return `undefined` to keep the default:
 
 ```javascript
 const lensConnector = new LensConnector(player, {
@@ -88,4 +88,6 @@ lensConnector.destroy();
 - THEOplayer exposes the quality being played, not the one being loaded. Lens therefore reports the top and lowest
   bitrates (`tb`/`lb`, or `tab`/`lab` for HLS), and the playhead bitrate (`pb`) outside HLS, but not the encoded
   bitrate (`br`) or bitrate changes (`bc`).
+- Only errors that stop playback are reported. Recoverable ones, such as a failed segment request that is retried, are
+  not.
 - Ads are not reported as such: Lens sees what the content player does during an ad break.

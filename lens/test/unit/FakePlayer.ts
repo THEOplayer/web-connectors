@@ -91,7 +91,13 @@ export class FakeTrackList<T> extends Dispatcher {
     }
 }
 
-/** The subset of the THEOplayer API the adapter reads, driven by hand. */
+/**
+ * The subset of the THEOplayer API the adapter reads, driven by hand.
+ *
+ * The event orders it and the specs encode come from a real player, not the API docs: THEOplayer 11.0.0 in Chrome on
+ * `test/pages/main_esm.html` (play, seek, pause, a source switch while playing, a failing source, destroying the
+ * player), and 8.14.0 and 11.15.0 for the source switch without a `play` event. Recheck them there when they change.
+ */
 export class FakePlayer extends Dispatcher {
     source: SourceDescription | undefined;
     autoplay = false;
@@ -141,15 +147,21 @@ export class FakePlayer extends Dispatcher {
         this.dispatch('sourcechange', { source });
     }
 
-    /** Destroys the player the way THEOplayer does: its APIs are gone by the time `destroy` fires. */
+    /**
+     * Destroys the player the way THEOplayer does: its APIs are gone when its track lists remove their tracks, and by
+     * the time `destroy` fires.
+     */
     destroy(): void {
-        for (const api of ['videoTracks', 'audioTracks', 'textTracks', 'presentation', 'visibility']) {
+        const lists = [this.videoTracks, this.audioTracks];
+        const apis = ['videoTracks', 'audioTracks', 'textTracks', 'presentation', 'visibility', 'abr', 'playbackRate'];
+        for (const api of [...apis, 'muted', 'volume', 'readyState', 'duration', 'source']) {
             Object.defineProperty(this, api, {
                 get() {
                     throw new TypeError(`${api} of a destroyed player`);
                 }
             });
         }
+        for (const list of lists) list.tracks.slice().forEach((track) => list.remove(track));
         this.dispatch('destroy');
     }
 

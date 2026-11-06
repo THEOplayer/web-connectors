@@ -11,8 +11,8 @@ const NAMESPACE = 'theoplayer';
 export interface LensConfiguration extends Omit<LensJoinOptions, 'namespace' | 'player'> {
     /**
      * Returns the content ID (1-128 printable ASCII) to report for a source. Without it, or when it returns
-     * `undefined`, Lens derives one from the source URL. Required to report sources without a URL, such as Google DAI
-     * streams.
+     * `undefined`, a Google DAI stream is named by its asset key or `contentSourceID/videoID`, and other sources by
+     * the content ID Lens derives from their URL.
      */
     contentId?: ContentIdProvider;
 }
