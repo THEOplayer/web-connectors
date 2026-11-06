@@ -23,7 +23,7 @@ npm install @theoplayer/lens-connector-web @dolby-optiview/lens-sdk
 
 ## Usage
 
-Create one connector per player. The configuration takes the options of `Lens.join`, except `player`:
+Create one connector per player:
 
 ```javascript
 import { Player } from 'theoplayer';
@@ -31,17 +31,23 @@ import { LensConnector } from '@theoplayer/lens-connector-web';
 
 const player = new Player(element, configuration);
 
+const lensConnector = new LensConnector(player);
+```
+
+Lens reports to the OptiView ingest by default. The configuration takes the options of `Lens.join`, except `namespace`
+and `player`, for example to add destinations of your own:
+
+```javascript
 const lensConnector = new LensConnector(player, {
-    namespace: 'my_app',
     destinations: [{ url: 'https://collector.example.com/lens', format: 'json' }]
 });
 ```
 
-`namespace` names your product in Lens: its heartbeats and your own events carry it. The playback reports themselves
-are sent in Lens's `lens` namespace, so a destination that filters on namespaces must list `lens` to receive them.
+To report only to your own destinations, call `Lens.configure({ backend: 'disabled' })` from `@dolby-optiview/lens-sdk`
+before creating the connector.
 
-Lens reports to the OptiView ingest by default. To report only to your own destinations, call
-`Lens.configure({ backend: 'disabled' })` from `@dolby-optiview/lens-sdk` before creating the connector.
+The playback reports are sent in Lens's `lens` namespace, and the connector's heartbeats in the `theoplayer` namespace.
+A destination that filters on namespaces must list them to receive them.
 
 ### Content ID
 
@@ -50,24 +56,24 @@ as Google DAI streams, return it from `contentId`:
 
 ```javascript
 const lensConnector = new LensConnector(player, {
-    namespace: 'my_app',
     contentId: (source) => source.metadata?.title
 });
 ```
 
 ### Your own events
 
-`lensConnector.handle` is the Lens handle the connector joined with. Use it to emit your own events, to set consent, or
-to flush:
+To report events of your own, join Lens in your own registered namespace with `lensConnector.adapter`. Lens reports one
+session per player adapter, so your events and the player's playback share that session. Another SDK that reports this
+player to Lens joins with the adapter the same way.
 
 ```javascript
-lensConnector.handle.emitCustom('chapterStart', { custom: { chapter: 3 } });
+import { Lens } from '@dolby-optiview/lens-sdk';
+
+const lens = Lens.join({ namespace: 'my_namespace', player: lensConnector.adapter });
+lens.emitCustom('chapterStart', { custom: { chapter: 3 } });
 ```
 
-### Other SDKs
-
-Lens reports one session per player adapter. Another SDK that reports this player to Lens should join with
-`lensConnector.adapter`, so that both report into the same session.
+`lensConnector.handle` is the Lens handle the connector joined with. Use it to set consent or to flush.
 
 ### Destroying
 

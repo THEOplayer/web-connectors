@@ -13,7 +13,6 @@ describe('LensConnector', () => {
 
     const connect = () =>
         new LensConnector(player.asPlayer, {
-            namespace: 'app',
             heartbeatMs: 0,
             destinations: [{ url: DESTINATION, format: 'json' }]
         });
@@ -53,6 +52,16 @@ describe('LensConnector', () => {
         expect(connector.handle.session).not.toBeNull();
         connector.destroy();
         await vi.waitFor(() => expect(states()).toEqual(['s', 'p', 'q']));
+    });
+
+    it('reports its heartbeats in the theoplayer namespace', async () => {
+        const connector = new LensConnector(player.asPlayer, {
+            destinations: [{ url: DESTINATION, format: 'json', heartbeat: true }]
+        });
+        player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
+        player.dispatch('play');
+        await vi.waitFor(() => expect(reports).toContainEqual(expect.objectContaining({ e: 't', ns: 'theoplayer' })));
+        connector.destroy();
     });
 
     it('reports a fatal player error and ends the session', async () => {

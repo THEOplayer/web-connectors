@@ -2,11 +2,13 @@ import type { ChromelessPlayer } from 'theoplayer';
 import { Lens, type LensHandle, type LensJoinOptions, type LensPlayerAdapter } from '@dolby-optiview/lens-sdk';
 import { type ContentIdProvider, THEOplayerAdapter } from './THEOplayerAdapter';
 
+const NAMESPACE = 'theoplayer';
+
 /**
- * The configuration of a {@link LensConnector}: the options of `Lens.join`, without the `player`, which the connector
- * provides.
+ * The configuration of a {@link LensConnector}: the options of `Lens.join`, without the `namespace` and the `player`,
+ * which the connector provides.
  */
-export interface LensConfiguration extends Omit<LensJoinOptions, 'player'> {
+export interface LensConfiguration extends Omit<LensJoinOptions, 'namespace' | 'player'> {
     /**
      * Returns the content ID (1-128 printable ASCII) to report for a source. Without it, or when it returns
      * `undefined`, Lens derives one from the source URL. Required to report sources without a URL, such as Google DAI
@@ -23,7 +25,8 @@ export interface LensConfiguration extends Omit<LensJoinOptions, 'player'> {
  */
 export class LensConnector {
     /**
-     * The Lens handle the connector joined with. Use it to emit your own events, set consent, or flush.
+     * The Lens handle the connector joined with, in the `theoplayer` namespace. Use it to set consent or flush. To
+     * report events of your own, join Lens in your own namespace with {@link LensConnector.adapter}.
      */
     readonly handle: LensHandle;
 
@@ -41,11 +44,11 @@ export class LensConnector {
      * @param player The THEOplayer instance to report.
      * @param configuration The options to join Lens with.
      */
-    constructor(player: ChromelessPlayer, configuration: LensConfiguration) {
+    constructor(player: ChromelessPlayer, configuration: LensConfiguration = {}) {
         const { contentId, ...joinOptions } = configuration;
         this.player = player;
         this.adapter = new THEOplayerAdapter(player, contentId);
-        this.handle = Lens.join({ ...joinOptions, player: this.adapter });
+        this.handle = Lens.join({ ...joinOptions, namespace: NAMESPACE, player: this.adapter });
         player.addEventListener('destroy', this.onDestroy);
     }
 
