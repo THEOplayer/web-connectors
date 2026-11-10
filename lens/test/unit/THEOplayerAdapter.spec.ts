@@ -25,6 +25,7 @@ describe('THEOplayerAdapter', () => {
     });
 
     it('names the player', () => {
+        expect(adapter.target).toBe(player);
         expect(adapter.playerName).toBe('THEOplayer');
         expect(adapter.playerVersion).toMatch(/^\d+\.\d+\.\d+/);
     });

@@ -26,13 +26,13 @@ export interface LensConfiguration extends Omit<LensJoinOptions, 'namespace' | '
 export class LensConnector {
     /**
      * The Lens handle the connector joined with, in the `theoplayer` namespace. Use it to set consent or flush. To
-     * report events of your own, join Lens in your own namespace with {@link LensConnector.adapter}.
+     * report events of your own, join Lens in your own namespace with the player.
      */
     readonly handle: LensHandle;
 
     /**
-     * The Lens player adapter for the player. Another SDK reporting to Lens joins with this same adapter to share the
-     * player's session.
+     * The Lens player adapter the connector joined with. Lens keys the player's session on the player, so another SDK
+     * reporting to Lens joins with the player itself to share it.
      */
     readonly adapter: LensPlayerAdapter;
 

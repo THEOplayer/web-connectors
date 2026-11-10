@@ -105,6 +105,7 @@ function rendition(quality: Quality, combinedBitrate: boolean): LensRendition {
  * Reports a THEOplayer instance to Lens through its public API.
  */
 export class THEOplayerAdapter implements LensPlayerAdapter {
+    readonly target: ChromelessPlayer;
     readonly playerName = 'THEOplayer';
     readonly playerVersion = version;
 
@@ -125,6 +126,7 @@ export class THEOplayerAdapter implements LensPlayerAdapter {
 
     constructor(player: ChromelessPlayer, contentId?: ContentIdProvider) {
         this.player = player;
+        this.target = player;
         this.contentId = contentId;
     }
 

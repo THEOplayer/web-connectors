@@ -45,10 +45,10 @@
     "package.json"
   ],
   "peerDependencies": {
-    "@dolby-optiview/lens-sdk": "^0.6.0",
+    "@dolby-optiview/lens-sdk": "^0.6.2",
     "theoplayer": "^8 || ^9 || ^10 || ^11"
   },
   "devDependencies": {
-    "@dolby-optiview/lens-sdk": "0.6.0"
+    "@dolby-optiview/lens-sdk": "0.6.2"
   }
 }

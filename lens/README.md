@@ -62,14 +62,14 @@ const lensConnector = new LensConnector(player, {
 
 ### Your own events
 
-To report events of your own, join Lens in your own registered namespace with `lensConnector.adapter`. Lens reports one
-session per player adapter, so your events and the player's playback share that session. Another SDK that reports this
-player to Lens joins with the adapter the same way.
+To report events of your own, join Lens in your own registered namespace with the player. Lens keys a session on the
+player, so your events and the player's playback share that session. Another SDK that reports this player to Lens joins
+with the player the same way.
 
 ```javascript
 import { Lens } from '@dolby-optiview/lens-sdk';
 
-const lens = Lens.join({ namespace: 'my_namespace', player: lensConnector.adapter });
+const lens = Lens.join({ namespace: 'my_namespace', player });
 lens.emitCustom('chapterStart', { custom: { chapter: 3 } });
 ```
 

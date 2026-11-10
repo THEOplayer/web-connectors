@@ -54,6 +54,23 @@ describe('LensConnector', () => {
         await vi.waitFor(() => expect(states()).toEqual(['s', 'p', 'q']));
     });
 
+    for (const keyFirst of [true, false]) {
+        it(`shares its session with a handle joined on the player, ${keyFirst ? 'before' : 'after'} it`, async () => {
+            const warn = vi.spyOn(console, 'warn');
+            const joinKey = () => Lens.join({ namespace: 'ads', player: player.asPlayer });
+            const ads = keyFirst ? joinKey() : undefined;
+            const connector = connect();
+            const handle = ads ?? joinKey();
+            player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
+            player.dispatch('play');
+            await vi.waitFor(() => expect(connector.handle.session).not.toBeNull());
+            expect(handle.session?.sessionId).toBe(connector.handle.session?.sessionId);
+            expect(warn).not.toHaveBeenCalled();
+            handle.dispose();
+            connector.destroy();
+        });
+    }
+
     it('reports its heartbeats in the theoplayer namespace', async () => {
         const connector = new LensConnector(player.asPlayer, {
             destinations: [{ url: DESTINATION, format: 'json', heartbeat: true }]
