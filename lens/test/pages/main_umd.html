@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Lens connector test page</title>
+    <link rel="stylesheet" type="text/css" href="./../../../node_modules/theoplayer/ui.css"/>
+    <script type="text/javascript" src="./../../../node_modules/theoplayer/THEOplayer.js"></script>
+    <script type="text/javascript" src="./../../../node_modules/@dolby-optiview/lens-sdk/dist/lens-sdk.legacy.min.js"></script>
+    <script type="text/javascript" src="./../../dist/lens-connector.umd.js"></script>
+</head>
+<body>
+<div id="THEOplayer" class="theoplayer-container video-js theoplayer-skin"></div>
+<script>
+    const element = document.querySelector('#THEOplayer');
+    const player = new THEOplayer.Player(element, {
+        ui: {
+            fluid: true
+        },
+        libraryLocation: './../../../node_modules/theoplayer/',
+        license: 'CUSTOMER_LICENSE_GOES_HERE'
+    });
+
+    const connector = new THEOplayerLensConnector.LensConnector(player, {
+        destinations: [{ url: 'CUSTOMER_DESTINATION_GOES_HERE', format: 'json' }]
+    });
+
+    player.source = {
+        sources: [
+            {
+                src: 'https://cdn.theoplayer.com/video/big_buck_bunny/big_buck_bunny.m3u8',
+                type: 'application/x-mpegurl'
+            }
+        ]
+    };
+</script>
+</body>
+</html>
