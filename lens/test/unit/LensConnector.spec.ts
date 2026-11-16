@@ -81,14 +81,13 @@ describe('LensConnector', () => {
         connector.destroy();
     });
 
-    it('starts no session for a play request made before the source', async () => {
+    it('starts no reporting for a play request made before the source', async () => {
         const connector = connect();
         // THEOplayer fires `play` without a source, then stays paused once one is set.
         player.dispatch('play');
         player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
         player.readyState = 4;
         player.dispatch('readystatechange');
-        expect(connector.handle.session).toBeNull();
         player.paused = false;
         player.dispatch('play');
         // Had the first request started the session, the media held before this one would not show as preloaded.
@@ -107,8 +106,43 @@ describe('LensConnector', () => {
         connector.destroy();
     });
 
+    it('links the player CMCD data to the Lens session', () => {
+        player.cmcd = { linkedSessionId: undefined };
+        const connector = connect();
+        expect(player.cmcd.linkedSessionId).toBeUndefined();
+        player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
+        const first = connector.handle.session?.sessionId;
+        expect(first).toBeDefined();
+        expect(player.cmcd.linkedSessionId).toBe(first);
+        player.setSource({ sources: [{ src: 'https://cdn.example.com/other.m3u8' }] });
+        expect(player.cmcd.linkedSessionId).toBe(connector.handle.session?.sessionId);
+        expect(player.cmcd.linkedSessionId).not.toBe(first);
+        player.setSource(undefined);
+        expect(player.cmcd.linkedSessionId).toBe(connector.handle.session?.sessionId);
+        connector.destroy();
+        expect(player.cmcd.linkedSessionId).toBeUndefined();
+    });
+
+    it('links a session decided before it joined', () => {
+        player.cmcd = { linkedSessionId: undefined };
+        const ads = Lens.join({ namespace: 'ads', player: player.asPlayer });
+        const session = ads.startSession();
+        const connector = connect();
+        expect(player.cmcd.linkedSessionId).toBe(session.sessionId);
+        connector.destroy();
+        ads.dispose();
+    });
+
+    it('leaves a player without player.cmcd alone', () => {
+        const connector = connect();
+        player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
+        connector.destroy();
+        expect(player.cmcd).toBeUndefined();
+    });
+
     it('stops reporting when the player is destroyed', async () => {
         const warn = vi.spyOn(console, 'warn');
+        player.cmcd = { linkedSessionId: undefined };
         const connector = connect();
         player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
         player.videoTracks.add(new FakeMediaTrack(1, true));

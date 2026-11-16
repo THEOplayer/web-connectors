@@ -1,8 +1,20 @@
 import type { ChromelessPlayer } from 'theoplayer';
-import { Lens, type LensHandle, type LensJoinOptions, type LensPlayerAdapter } from '@dolby-optiview/lens-sdk';
+import {
+    Lens,
+    type LensHandle,
+    type LensJoinOptions,
+    type LensPlayerAdapter,
+    type LensSession,
+    type LensSessionChangeEvent
+} from '@dolby-optiview/lens-sdk';
 import { type ContentIdProvider, THEOplayerAdapter } from './THEOplayerAdapter';
 
 const NAMESPACE = 'theoplayer';
+
+/** `player.cmcd`, from THEOplayer 11.16.0 on, and only in builds with CMCD. */
+interface PlayerCmcd {
+    readonly cmcd?: { linkedSessionId: string | undefined };
+}
 
 /**
  * The configuration of a {@link LensConnector}: the options of `Lens.join`, without the `namespace` and the `player`,
@@ -21,7 +33,8 @@ export interface LensConfiguration extends Omit<LensJoinOptions, 'namespace' | '
  * The connector between a THEOplayer instance and Dolby OptiView Lens.
  *
  * The connector joins Lens with a player adapter for the given player, so Lens reports playback on its own: sessions,
- * playback states, errors and the player's CMCD keys.
+ * playback states, errors and the player's CMCD keys. Where the player has `player.cmcd`, the connector keeps its
+ * `linkedSessionId` equal to the Lens session, so the player's own CMCD data links to it.
  */
 export class LensConnector {
     /**
@@ -37,6 +50,8 @@ export class LensConnector {
     readonly adapter: LensPlayerAdapter;
 
     private readonly player: ChromelessPlayer;
+    private readonly removeSessionListener: () => void;
+    private playerDestroyed = false;
 
     /**
      * Creates a connector for the given player and joins Lens.
@@ -49,6 +64,9 @@ export class LensConnector {
         this.player = player;
         this.adapter = new THEOplayerAdapter(player, contentId);
         this.handle = Lens.join({ ...joinOptions, namespace: NAMESPACE, player: this.adapter });
+        this.removeSessionListener = this.handle.addEventListener('sessionchange', this.onSessionChange);
+        // Registering does not replay the session Lens may already have decided.
+        this.linkSession(this.handle.session);
         player.addEventListener('destroy', this.onDestroy);
     }
 
@@ -57,10 +75,23 @@ export class LensConnector {
      */
     destroy(): void {
         this.player.removeEventListener('destroy', this.onDestroy);
+        this.removeSessionListener();
         this.handle.dispose();
+        // A destroyed player's getters throw, and it has nothing left to link.
+        if (!this.playerDestroyed) this.linkSession(null);
     }
 
+    private linkSession(session: LensSession | null): void {
+        const { cmcd } = this.player as PlayerCmcd;
+        if (cmcd) cmcd.linkedSessionId = session?.sessionId;
+    }
+
+    private readonly onSessionChange = (event: LensSessionChangeEvent): void => {
+        this.linkSession(event.session);
+    };
+
     private readonly onDestroy = (): void => {
+        this.playerDestroyed = true;
         this.destroy();
     };
 }

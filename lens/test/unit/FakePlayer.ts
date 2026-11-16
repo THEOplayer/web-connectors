@@ -113,6 +113,8 @@ export class FakePlayer extends Dispatcher {
     muted = false;
     volume = 1;
     currentProgramDateTime: Date | null = null;
+    /** `player.cmcd`, which older players and builds without CMCD lack. */
+    cmcd: { linkedSessionId: string | undefined } | undefined;
     readonly metrics = { currentBandwidthEstimate: 0, droppedVideoFrames: 0 };
     readonly element = { clientWidth: 640, clientHeight: 360 };
     readonly abr: { targetBuffer?: number } = { targetBuffer: 20 };
@@ -154,7 +156,7 @@ export class FakePlayer extends Dispatcher {
     destroy(): void {
         const lists = [this.videoTracks, this.audioTracks];
         const apis = ['videoTracks', 'audioTracks', 'textTracks', 'presentation', 'visibility', 'abr', 'playbackRate'];
-        for (const api of [...apis, 'muted', 'volume', 'readyState', 'duration', 'source']) {
+        for (const api of [...apis, 'muted', 'volume', 'readyState', 'duration', 'source', 'cmcd']) {
             Object.defineProperty(this, api, {
                 get() {
                     throw new TypeError(`${api} of a destroyed player`);

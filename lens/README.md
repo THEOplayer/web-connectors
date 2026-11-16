@@ -49,6 +49,9 @@ before creating the connector.
 The playback reports are sent in Lens's `lens` namespace, and the connector's heartbeats in the `theoplayer` namespace.
 A destination that filters on namespaces must list them to receive them.
 
+On THEOplayer 11.16.0 and later, the connector also keeps `player.cmcd.linkedSessionId` equal to the Lens session, so
+the player's own CMCD data carries `lsid` and links to it.
+
 ### Content ID
 
 Lens derives the content ID (`cid`) from the source URL. A Google DAI stream is named by its asset key, or by
