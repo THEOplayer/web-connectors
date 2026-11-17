@@ -13,7 +13,7 @@ const NAMESPACE = 'theoplayer';
 
 /** THEOplayer's internal `player.cmcd` (11.16.0+, builds with CMCD); it is not in the published typings. */
 interface PlayerCmcd {
-    readonly cmcd?: { linkedSessionId: string | undefined };
+    readonly cmcd?: { lensSessionId: string | undefined };
 }
 
 /**
@@ -83,7 +83,7 @@ export class LensConnector {
 
     private linkSession(session: LensSession | null): void {
         const { cmcd } = this.player as PlayerCmcd;
-        if (cmcd) cmcd.linkedSessionId = session?.sessionId;
+        if (cmcd) cmcd.lensSessionId = session?.sessionId;
     }
 
     private readonly onSessionChange = (event: LensSessionChangeEvent): void => {

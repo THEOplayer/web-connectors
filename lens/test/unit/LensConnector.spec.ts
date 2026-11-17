@@ -107,28 +107,28 @@ describe('LensConnector', () => {
     });
 
     it('links the player CMCD data to the Lens session', () => {
-        player.cmcd = { linkedSessionId: undefined };
+        player.cmcd = { lensSessionId: undefined };
         const connector = connect();
-        expect(player.cmcd.linkedSessionId).toBeUndefined();
+        expect(player.cmcd.lensSessionId).toBeUndefined();
         player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
         const first = connector.handle.session?.sessionId;
         expect(first).toBeDefined();
-        expect(player.cmcd.linkedSessionId).toBe(first);
+        expect(player.cmcd.lensSessionId).toBe(first);
         player.setSource({ sources: [{ src: 'https://cdn.example.com/other.m3u8' }] });
-        expect(player.cmcd.linkedSessionId).toBe(connector.handle.session?.sessionId);
-        expect(player.cmcd.linkedSessionId).not.toBe(first);
+        expect(player.cmcd.lensSessionId).toBe(connector.handle.session?.sessionId);
+        expect(player.cmcd.lensSessionId).not.toBe(first);
         player.setSource(undefined);
-        expect(player.cmcd.linkedSessionId).toBe(connector.handle.session?.sessionId);
+        expect(player.cmcd.lensSessionId).toBe(connector.handle.session?.sessionId);
         connector.destroy();
-        expect(player.cmcd.linkedSessionId).toBeUndefined();
+        expect(player.cmcd.lensSessionId).toBeUndefined();
     });
 
     it('links a session decided before it joined', () => {
-        player.cmcd = { linkedSessionId: undefined };
+        player.cmcd = { lensSessionId: undefined };
         const ads = Lens.join({ namespace: 'ads', player: player.asPlayer });
         const session = ads.startSession();
         const connector = connect();
-        expect(player.cmcd.linkedSessionId).toBe(session.sessionId);
+        expect(player.cmcd.lensSessionId).toBe(session.sessionId);
         connector.destroy();
         ads.dispose();
     });
@@ -142,7 +142,7 @@ describe('LensConnector', () => {
 
     it('stops reporting when the player is destroyed', async () => {
         const warn = vi.spyOn(console, 'warn');
-        player.cmcd = { linkedSessionId: undefined };
+        player.cmcd = { lensSessionId: undefined };
         const connector = connect();
         player.setSource({ sources: [{ src: 'https://cdn.example.com/movie.m3u8' }] });
         player.videoTracks.add(new FakeMediaTrack(1, true));

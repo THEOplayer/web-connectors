@@ -114,7 +114,7 @@ export class FakePlayer extends Dispatcher {
     volume = 1;
     currentProgramDateTime: Date | null = null;
     /** `player.cmcd`, which older players and builds without CMCD lack. */
-    cmcd: { linkedSessionId: string | undefined } | undefined;
+    cmcd: { lensSessionId: string | undefined } | undefined;
     readonly metrics = { currentBandwidthEstimate: 0, droppedVideoFrames: 0 };
     readonly element = { clientWidth: 640, clientHeight: 360 };
     readonly abr: { targetBuffer?: number } = { targetBuffer: 20 };

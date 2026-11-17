@@ -415,7 +415,7 @@
             `session: ${session ? session.sessionId : 'none'} · reports: ${reports.length} · ` +
             `staging posts: ${outgoing.staging} (${$('staging').checked ? 'sending' : 'kept in page'})` +
             (joinedDestination ? ` · posts to your destination: ${outgoing.yours}` : '') +
-            ` · player lsid: ${destroyed ? '-' : player.cmcd ? player.cmcd.linkedSessionId ?? 'none' : 'n/a (no player.cmcd)'}` +
+            ` · player lsid: ${destroyed ? '-' : player.cmcd ? player.cmcd.lensSessionId ?? 'none' : 'n/a (no player.cmcd)'}` +
             (settings.license ? '' : ' · no license set: THEOplayer will refuse to play');
     }, 500);
 
