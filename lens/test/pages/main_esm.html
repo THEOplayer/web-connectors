@@ -3,7 +3,20 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Lens connector demo</title>
-    <link rel="stylesheet" type="text/css" href="./../../../node_modules/theoplayer/ui.css"/>
+    <script>
+        // ?theoplayer=<folder> plays a THEOplayer build served from that folder, e.g. an unreleased branch; it must be
+        // same-origin, for THEOplayer's workers.
+        window.THEOPLAYER_LOCATION = new URLSearchParams(location.search).get('theoplayer') ?? './../../../node_modules/theoplayer/';
+        if (!window.THEOPLAYER_LOCATION.endsWith('/')) window.THEOPLAYER_LOCATION += '/';
+        document.write(`<link rel="stylesheet" type="text/css" href="${window.THEOPLAYER_LOCATION}ui.css"/>`);
+        document.write(`<script type="importmap">${JSON.stringify({
+            imports: {
+                theoplayer: `${window.THEOPLAYER_LOCATION}THEOplayer.esm.js`,
+                '@dolby-optiview/lens-sdk': './../../../node_modules/@dolby-optiview/lens-sdk/dist/index.js',
+                '@dolby-optiview/lens-sdk/dev': './../../../node_modules/@dolby-optiview/lens-sdk/dist/dev.js'
+            }
+        })}<\/script>`);
+    </script>
     <style>
         body { font: 14px system-ui, sans-serif; margin: 0 auto; max-width: 1400px; padding: 12px; }
         fieldset { border: 1px solid #ccc; border-radius: 6px; margin: 0 0 10px; }
@@ -51,11 +64,14 @@
                 <option value="json">JSON (application/json)</option>
             </select>
         </label>
+        <label><input id="incore" type="checkbox"/> Also send THEOplayer's own CMCD there</label>
         <button id="apply-destination">Apply destination</button>
         <span id="destination-note"></span>
     </div>
     Lens fixes destinations when it joins, so applying recreates the player and ends the current session. The endpoint
-    must answer the CORS preflight from this page: <code>application/cmcd</code> posts always send one.
+    must answer the CORS preflight from this page: <code>application/cmcd</code> posts always send one. THEOplayer's
+    own CMCD (event mode, player configuration) carries <code>lsid</code>, the Lens session it links to, from
+    THEOplayer 11.16.0 on; THEOplayer posts it itself, so it shows at the endpoint, not under "Outgoing posts". <code>?destination=…&amp;format=cmcd&amp;incore=1</code> presets these.
 </fieldset>
 
 <fieldset>
@@ -100,15 +116,6 @@
     </div>
 </div>
 
-<script type="importmap">
-    {
-      "imports": {
-        "theoplayer": "./../../../node_modules/theoplayer/THEOplayer.esm.js",
-        "@dolby-optiview/lens-sdk": "./../../../node_modules/@dolby-optiview/lens-sdk/dist/index.js",
-        "@dolby-optiview/lens-sdk/dev": "./../../../node_modules/@dolby-optiview/lens-sdk/dist/dev.js"
-      }
-    }
-</script>
 <script type="module">
     import { Player } from 'theoplayer';
     import { DEVELOPMENT_INGEST_URL, enableDevelopmentBackend } from '@dolby-optiview/lens-sdk/dev';
@@ -128,14 +135,20 @@
     const $ = (id) => document.getElementById(id);
     const timestamp = (time = Date.now()) => new Date(time).toISOString().slice(11, 23);
 
+    const params = new URLSearchParams(location.search);
+    for (const [param, key] of [['destination', 'destination'], ['format', 'destination-format'], ['incore', 'incore']]) {
+        if (params.has(param)) localStorage.setItem(`lens-demo.${key}`, params.get(param));
+    }
     const settings = {
         license: localStorage.getItem('lens-demo.license') ?? '',
         destination: localStorage.getItem('lens-demo.destination') ?? '',
-        destinationFormat: localStorage.getItem('lens-demo.destination-format') ?? 'cmcd'
+        destinationFormat: localStorage.getItem('lens-demo.destination-format') ?? 'cmcd',
+        inCore: ['1', 'true'].includes(localStorage.getItem('lens-demo.incore') ?? '')
     };
     $('license').value = settings.license;
     $('destination').value = settings.destination;
     $('destination-format').value = settings.destinationFormat;
+    $('incore').checked = settings.inCore;
     $('apply').onclick = () => {
         localStorage.setItem('lens-demo.license', $('license').value.trim());
         location.reload();
@@ -258,8 +271,10 @@
         }
         settings.destination = url;
         settings.destinationFormat = $('destination-format').value;
+        settings.inCore = $('incore').checked;
         localStorage.setItem('lens-demo.destination', url);
         localStorage.setItem('lens-demo.destination-format', settings.destinationFormat);
+        localStorage.setItem('lens-demo.incore', String(settings.inCore));
         $('destination-note').textContent = url ? `reporting to it as ${settings.destinationFormat.toUpperCase()}` : 'none';
         createPlayer();
         load();
@@ -277,8 +292,9 @@
         $('player-container').replaceChildren(element);
         player = new Player(element, {
             ui: { fluid: true },
-            libraryLocation: './../../../node_modules/theoplayer/',
-            license: settings.license || undefined
+            libraryLocation: window.THEOPLAYER_LOCATION,
+            license: settings.license || undefined,
+            ...(settings.inCore && settings.destination && { cmcd: { eventEndpoints: [{ url: settings.destination }] } })
         });
         player.muted = true;
         connector = new LensConnector(player, {
@@ -399,6 +415,7 @@
             `session: ${session ? session.sessionId : 'none'} · reports: ${reports.length} · ` +
             `staging posts: ${outgoing.staging} (${$('staging').checked ? 'sending' : 'kept in page'})` +
             (joinedDestination ? ` · posts to your destination: ${outgoing.yours}` : '') +
+            ` · player lsid: ${destroyed ? '-' : player.cmcd ? player.cmcd.linkedSessionId ?? 'none' : 'n/a (no player.cmcd)'}` +
             (settings.license ? '' : ' · no license set: THEOplayer will refuse to play');
     }, 500);
 
