@@ -49,8 +49,8 @@ before creating the connector.
 The playback reports are sent in Lens's `lens` namespace, and the connector's heartbeats in the `theoplayer` namespace.
 A destination that filters on namespaces must list them to receive them.
 
-On THEOplayer 11.16.0 and later, the connector also keeps `player.cmcd.linkedSessionId` equal to the Lens session, so
-the player's own CMCD data carries `lsid` and links to it.
+On THEOplayer 11.16.0 and later, the connector also links the player's own CMCD data to the Lens session: its reports
+carry the Lens session ID as `lsid`.
 
 ### Content ID
 

@@ -11,7 +11,7 @@ import { type ContentIdProvider, THEOplayerAdapter } from './THEOplayerAdapter';
 
 const NAMESPACE = 'theoplayer';
 
-/** `player.cmcd`, from THEOplayer 11.16.0 on, and only in builds with CMCD. */
+/** THEOplayer's internal `player.cmcd` (11.16.0+, builds with CMCD); it is not in the published typings. */
 interface PlayerCmcd {
     readonly cmcd?: { linkedSessionId: string | undefined };
 }
@@ -33,8 +33,8 @@ export interface LensConfiguration extends Omit<LensJoinOptions, 'namespace' | '
  * The connector between a THEOplayer instance and Dolby OptiView Lens.
  *
  * The connector joins Lens with a player adapter for the given player, so Lens reports playback on its own: sessions,
- * playback states, errors and the player's CMCD keys. Where the player has `player.cmcd`, the connector keeps its
- * `linkedSessionId` equal to the Lens session, so the player's own CMCD data links to it.
+ * playback states, errors and the player's CMCD keys. On THEOplayer 11.16.0 and later, it also links the player's
+ * own CMCD data to the Lens session.
  */
 export class LensConnector {
     /**
