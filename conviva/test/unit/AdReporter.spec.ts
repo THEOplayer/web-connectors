@@ -83,13 +83,9 @@ describe('AdReporter', () => {
                 expect.objectContaining({ podPosition: Constants.AdPosition.MIDROLL })
             );
             expect(videoAnalytics.reportAdBreakEnded).toHaveBeenCalledTimes(1);
-            const podStart = vi.mocked(videoAnalytics.reportAdBreakStarted).mock.invocationCallOrder[0];
-            const setAdInfo = vi.mocked(adAnalytics.setAdInfo).mock.invocationCallOrder[0];
-            const adFailed = vi.mocked(adAnalytics.reportAdFailed).mock.invocationCallOrder[0];
-            const podEnd = vi.mocked(videoAnalytics.reportAdBreakEnded).mock.invocationCallOrder[0];
-            expect(podStart).toBeLessThan(setAdInfo);
-            expect(setAdInfo).toBeLessThan(adFailed);
-            expect(adFailed).toBeLessThan(podEnd);
+            expect(videoAnalytics.reportAdBreakStarted).toHaveBeenCalledBefore(vi.mocked(adAnalytics.setAdInfo));
+            expect(adAnalytics.setAdInfo).toHaveBeenCalledBefore(vi.mocked(adAnalytics.reportAdFailed));
+            expect(adAnalytics.reportAdFailed).toHaveBeenCalledBefore(vi.mocked(videoAnalytics.reportAdBreakEnded));
         });
 
         it('reports a failed pre-roll ad break with its ad position', () => {
