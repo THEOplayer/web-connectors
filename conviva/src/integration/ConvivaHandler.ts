@@ -16,6 +16,7 @@ import {
 import type { YospaceConnector } from '@theoplayer/yospace-connector-web';
 import { CONVIVA_CALLBACK_FUNCTIONS } from './ConvivaCallbackFunctions';
 import {
+    calculateAdType,
     calculateBufferLength,
     calculateConvivaOptions,
     calculateEncodingType,
@@ -58,6 +59,7 @@ export class ConvivaHandler {
 
     private currentSource: SourceDescription | undefined;
     private playbackRequested: boolean = false;
+    private contentMetadataPending: boolean = false;
 
     private yospaceConnector: YospaceConnector | undefined;
 
@@ -188,6 +190,7 @@ export class ConvivaHandler {
         this.player.addEventListener('currentsourcechange', this.onCurrentSourceChange);
         this.player.addEventListener('ended', this.onEnded);
         this.player.addEventListener('durationchange', this.onDurationChange);
+        this.player.addEventListener('timeupdate', this.onTimeUpdate);
         this.player.addEventListener('destroy', this.onDestroy);
 
         this.player.network.addEventListener('offline', this.onNetworkOffline);
@@ -209,6 +212,7 @@ export class ConvivaHandler {
         this.player.removeEventListener('currentsourcechange', this.onCurrentSourceChange);
         this.player.removeEventListener('ended', this.onEnded);
         this.player.removeEventListener('durationchange', this.onDurationChange);
+        this.player.removeEventListener('timeupdate', this.onTimeUpdate);
         this.player.removeEventListener('destroy', this.onDestroy);
 
         this.player.network.removeEventListener('offline', this.onNetworkOffline);
@@ -289,20 +293,38 @@ export class ConvivaHandler {
             ...collectPlaybackConfigMetadata(this.player),
             ...collectAdDescriptionMetadata(this.player)
         };
-        // Do not override the `isLive` value if already set by the consumer, as the value
-        // is read-only for a given session.
-        if (!this.customMetadata[Constants.IS_LIVE] && !this.convivaMetadata[Constants.IS_LIVE]) {
-            // Only pass `isLive` property if we have a valid duration
-            const streamType = calculateStreamType(this.player);
-            if (streamType) {
-                metadata[Constants.IS_LIVE] = streamType;
+        // While an ad is routed, `player.duration` is the ad's, so neither the content length
+        // nor the stream type may be derived from it.
+        if (this.isClientSideAdActive()) {
+            this.contentMetadataPending = true;
+        } else {
+            // Do not override the `isLive` value if already set by the consumer, as the value
+            // is read-only for a given session.
+            if (!this.customMetadata[Constants.IS_LIVE] && !this.convivaMetadata[Constants.IS_LIVE]) {
+                // Only pass `isLive` property if we have a valid duration
+                const streamType = calculateStreamType(this.player);
+                if (streamType) {
+                    metadata[Constants.IS_LIVE] = streamType;
+                }
+            }
+            // Only pass a finite duration value, never NaN or Infinite.
+            if (isFinite(this.player.duration)) {
+                metadata[Constants.DURATION] = this.player.duration;
             }
         }
-        // Only pass a finite duration value, never NaN or Infinite.
-        if (isFinite(this.player.duration)) {
-            metadata[Constants.DURATION] = this.player.duration;
-        }
         this.setContentInfo(metadata);
+    }
+
+    private isClientSideAdActive(): boolean {
+        const ads = this.player.ads;
+        if (!ads?.playing) {
+            return false;
+        }
+        // Without a break, `playing` means the ad player is already routed. With one, only
+        // client-side breaks make `player.duration` the ad's; server-side breaks keep the
+        // stream's duration.
+        const adBreak = ads.currentAdBreak;
+        return adBreak == null || calculateAdType(adBreak) !== Constants.AdType.SERVER_SIDE;
     }
 
     private readonly onPlaying = () => {
@@ -379,6 +401,17 @@ export class ConvivaHandler {
         this.maybeReportPlaybackEnded();
         this.currentSource = this.player.source;
         this.customMetadata = {};
+        this.contentMetadataPending = false;
+    };
+
+    private readonly onTimeUpdate = () => {
+        // A content `timeupdate` is the first signal that content is routed and progressing:
+        // ad integrations can dispatch `playing` and even `adbreakend` while the ad player
+        // still owns playback and `duration`.
+        if (this.contentMetadataPending && this.playbackRequested && !this.isClientSideAdActive()) {
+            this.contentMetadataPending = false;
+            this.reportMetadata();
+        }
     };
 
     private readonly onCurrentSourceChange = (event: CurrentSourceChangeEvent) => {
@@ -409,6 +442,8 @@ export class ConvivaHandler {
     };
 
     private releaseSession(): void {
+        this.contentMetadataPending = false;
+
         this.adReporter?.destroy();
         this.uplynkAdReporter?.destroy();
         this.yospaceAdReporter?.destroy();
