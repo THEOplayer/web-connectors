@@ -355,7 +355,12 @@ export class ConvivaHandler {
 
     private readonly onError = (errorEvent: ErrorEvent) => {
         const metadata: ConvivaMetadata = {};
-        if (Number.isNaN(this.player.duration)) {
+        if (
+            Number.isNaN(this.player.duration) ||
+            (this.isClientSideAdActive() &&
+                this.customMetadata[Constants.DURATION] == null &&
+                this.convivaMetadata[Constants.DURATION] == null)
+        ) {
             metadata[Constants.DURATION] = -1;
         }
         const error = errorEvent.errorObject;
