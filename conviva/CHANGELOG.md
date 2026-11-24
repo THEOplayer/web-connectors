@@ -1,5 +1,11 @@
 # @theoplayer/conviva-connector-web
 
+## 3.3.3
+
+### 🐛 Issues
+
+- Fixed an issue where failed OptiView Ads ad breaks were reported to Conviva without an ad position.
+
 ## 3.3.2
 
 ### 🐛 Issues
