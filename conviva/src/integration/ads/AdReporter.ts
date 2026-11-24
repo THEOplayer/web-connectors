@@ -14,6 +14,7 @@ import {
     calculateAdType,
     calculateCurrentAdBreakInfo,
     calculateInterstitialAdBreakInfo,
+    calculateInterstitialAdBreakPosition,
     collectAdMetadata,
     collectPlayerInfo,
     isPastInterstitial,
@@ -172,6 +173,7 @@ export class AdReporter {
         const adMetadata: ConvivaMetadata = {
             ...this.collectBaseAdMetadata(),
             'c3.ad.technology': SGAI_AD_TYPE,
+            'c3.ad.position': calculateInterstitialAdBreakPosition(interstitial),
             [Constants.ASSET_NAME]: 'NA',
             [Constants.IS_LIVE]: Constants.StreamType.UNKNOWN
         };
