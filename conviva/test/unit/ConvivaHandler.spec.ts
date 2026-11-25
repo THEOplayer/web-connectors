@@ -148,6 +148,8 @@ describe('ConvivaHandler', () => {
             expect(contentInfoCalls()).not.toContainEqual(
                 expect.objectContaining({ [Constants.DURATION]: AD_DURATION })
             );
+            timeupdate();
+            expect(callsWithDuration()).toHaveLength(1);
         });
 
         it('reports the content duration only once after the break', () => {
@@ -216,6 +218,8 @@ describe('ConvivaHandler', () => {
             expect(contentInfoCalls()).not.toContainEqual(
                 expect.objectContaining({ [Constants.DURATION]: AD_DURATION })
             );
+            timeupdate();
+            expect(callsWithDuration()).toHaveLength(1);
         });
 
         it('still reports the content duration when the preroll fails and no ad break ever starts', () => {

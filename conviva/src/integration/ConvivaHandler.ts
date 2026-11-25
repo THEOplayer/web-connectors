@@ -298,6 +298,7 @@ export class ConvivaHandler {
         if (this.isClientSideAdActive()) {
             this.contentMetadataPending = true;
         } else {
+            this.contentMetadataPending = false;
             // Do not override the `isLive` value if already set by the consumer, as the value
             // is read-only for a given session.
             if (!this.customMetadata[Constants.IS_LIVE] && !this.convivaMetadata[Constants.IS_LIVE]) {
@@ -414,7 +415,6 @@ export class ConvivaHandler {
         // ad integrations can dispatch `playing` and even `adbreakend` while the ad player
         // still owns playback and `duration`.
         if (this.contentMetadataPending && this.playbackRequested && !this.isClientSideAdActive()) {
-            this.contentMetadataPending = false;
             this.reportMetadata();
         }
     };
