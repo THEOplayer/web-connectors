@@ -2,24 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChromelessPlayer } from 'theoplayer';
 import { AdReporter } from '../../src/integration/ads/AdReporter';
 import { type AdAnalytics, Constants, type VideoAnalytics } from '../../src/utils/ConvivaSdk';
-
-type Listener = (event: any) => void;
-
-class Dispatcher {
-    private listeners: Record<string, Listener[]> = {};
-
-    addEventListener(type: string, fn: Listener) {
-        (this.listeners[type] ??= []).push(fn);
-    }
-
-    removeEventListener(type: string, fn: Listener) {
-        this.listeners[type] = (this.listeners[type] ?? []).filter((l) => l !== fn);
-    }
-
-    dispatch(type: string, event: unknown) {
-        (this.listeners[type] ?? []).forEach((fn) => fn(event));
-    }
-}
+import { Dispatcher } from './util/Dispatcher';
 
 describe('AdReporter', () => {
     let reporter: AdReporter;
